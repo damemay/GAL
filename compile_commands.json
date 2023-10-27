@@ -1,0 +1,58 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-g",
+      "-std=c++20",
+      "-o",
+      "game",
+      "glp/external/glad.c"
+    ],
+    "directory": "/home/mar/gl",
+    "file": "/home/mar/gl/glp/external/glad.c",
+    "output": "/home/mar/gl/game"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-g",
+      "-std=c++20",
+      "-o",
+      "game",
+      "glp/external/stbi.c"
+    ],
+    "directory": "/home/mar/gl",
+    "file": "/home/mar/gl/glp/external/stbi.c",
+    "output": "/home/mar/gl/game"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-g",
+      "-std=c++20",
+      "-o",
+      "game",
+      "glp/external/cgltf.c"
+    ],
+    "directory": "/home/mar/gl",
+    "file": "/home/mar/gl/glp/external/cgltf.c",
+    "output": "/home/mar/gl/game"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-g",
+      "-std=c++20",
+      "-o",
+      "game",
+      "main.cc"
+    ],
+    "directory": "/home/mar/gl",
+    "file": "/home/mar/gl/main.cc",
+    "output": "/home/mar/gl/game"
+  }
+]
