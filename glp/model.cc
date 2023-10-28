@@ -1,87 +1,113 @@
-#define TINYGLTF_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-
 #include <cassert>
 
 #include "model.hh"
-#include "utils.h"
+#include "utils.hh"
 
-static std::vector<GLuint> gen_buffer_objects(const tinygltf::Model& model) {
-    std::vector<GLuint> bufs(model.buffers.size(), 0);
+constexpr GLuint POSITION_ATTRIBUTE_INDEX       = 0;
+constexpr GLuint NORMAL_ATTRIBUTE_INDEX         = 1;
+constexpr GLuint TEXCOORD0_ATTRIBUTE_INDEX      = 2;
+constexpr GLuint JOINTS_ATTRIBUTE_INDEX         = 3;
+constexpr GLuint WEIGHTS_ATTRIBUTE_INDEX        = 4;
 
-    glGenBuffers((GLsizei)model.buffers.size(), bufs.data());
-
-    for(size_t i=0; i<model.buffers.size(); ++i) {
-        glBindBuffer(GL_ARRAY_BUFFER, bufs[i]);
-        glBufferData(GL_ARRAY_BUFFER, model.buffers[i].data.size(), model.buffers[i].data.data(), 0);
+bool Model::attribute_mesh(const std::string& name, const GLuint index, Mesh*& new_mesh, const tinygltf::Model& model, const tinygltf::Primitive& primitive) {
+    if(primitive.attributes.find(name) != end(primitive.attributes)) {
+        auto& accessor_index = primitive.attributes.find(name)->second;
+        auto& accessor = model.accessors[accessor_index];
+        auto& buffer_view = model.bufferViews[accessor.bufferView];
+        auto& buffer_index = buffer_view.buffer;
+        new_mesh->vao_index = buffer_index;
+        new_mesh->count = accessor.count;
+    
+        glBindVertexArray(VAO[buffer_index]);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO[buffer_index]);
+        glVertexAttribPointer(index, accessor.type, accessor.componentType, GL_FALSE,
+                buffer_view.byteStride, (const GLvoid*)(accessor.byteOffset + buffer_view.byteOffset));
+        glEnableVertexAttribArray(index);
+        glp_logv("attributed %ss", name.c_str());
+        return true;
     }
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    return bufs;
+    return false;
 }
 
-static bool find_and_point(const std::string& attr_n, const GLuint index,
-        const tinygltf::Model& model, const tinygltf::Primitive& prim, const std::vector<GLuint>& bufs) {
-    if(prim.attributes.find(attr_n) == prim.attributes.end()) return false;
-    const auto& acc = model.accessors[prim.attributes.find(attr_n)->second];
-    const auto& buf_v = model.bufferViews[acc.bufferView];
-    const auto buf_idx = buf_v.buffer;
-    glEnableVertexAttribArray(index);
-    if(GL_ARRAY_BUFFER!=buf_v.target) return false;
-    glBindBuffer(GL_ARRAY_BUFFER, bufs[buf_idx]);
-    const auto byte_off = acc.byteOffset + buf_v.byteOffset;
-    glVertexAttribPointer(index, acc.type, acc.componentType, GL_FALSE, (GLsizei)buf_v.byteStride, (const GLvoid*)byte_off);
-    return true;
-}
+Mesh* Model::load_mesh(const tinygltf::Model& model, const tinygltf::Mesh& mesh) {
+    auto new_mesh = new Mesh();
+    for(size_t j=0; j<mesh.primitives.size(); j++) {
+        auto& prim = mesh.primitives[j];
+        if(prim.mode > -1) new_mesh->mode = prim.mode;
+        auto& attr = prim.attributes;
+    
+        attribute_mesh("POSITION", POSITION_ATTRIBUTE_INDEX, new_mesh, model, prim);
+        attribute_mesh("NORMAL", NORMAL_ATTRIBUTE_INDEX, new_mesh, model, prim);
+        attribute_mesh("TEXCOORD_0", TEXCOORD0_ATTRIBUTE_INDEX, new_mesh, model, prim);
+        attribute_mesh("JOINTS_0", JOINTS_ATTRIBUTE_INDEX, new_mesh, model, prim);
+        attribute_mesh("WEIGHTS_0", WEIGHTS_ATTRIBUTE_INDEX, new_mesh, model, prim);
 
-static std::vector<GLuint> gen_vaos(const tinygltf::Model& model, const std::vector<GLuint>& bufs, std::vector<vao_range>& mesh2vao) {
-    std::vector<GLuint> vaos;
-
-    mesh2vao.resize(model.meshes.size());
-
-    const GLuint ATTRIB_POSITION_IDX = 0;
-    const GLuint ATTRIB_NORMAL_IDX = 0;
-    const GLuint ATTRIB_TEXCOORD0_IDX = 0;
-
-    for(size_t i=0; i<model.meshes.size(); ++i) {
-        const auto& mesh = model.meshes[i];
-        auto& vao_r = mesh2vao[i];
-        vao_r.begin = (GLsizei)vaos.size();
-        vao_r.count = (GLsizei)mesh.primitives.size();
-
-        vaos.resize(vaos.size() + mesh.primitives.size());
-        glGenVertexArrays(vao_r.count, &vaos[vao_r.begin]);
-
-        for(size_t pi=0; pi<mesh.primitives.size(); ++pi) {
-            const auto vao = vaos[vao_r.begin+pi];
-            const auto& prim = mesh.primitives[pi];
-
-            glBindVertexArray(vao);
-            if(!find_and_point("POSITION", ATTRIB_POSITION_IDX, model, prim, bufs))
-                glp_log("error when looking up position attribute in gltf");
-            if(!find_and_point("NORMAL", ATTRIB_NORMAL_IDX, model, prim, bufs))
-                glp_log("error when looking up normal attribute in gltf");
-            if(!find_and_point("TEXCOORD_0", ATTRIB_TEXCOORD0_IDX, model, prim, bufs))
-                glp_log("error when looking up normal attribute in gltf");
-            if(prim.indices >= 0) {
-                const auto& acc = model.accessors[prim.indices];
-                const auto& buf_v = model.bufferViews[acc.bufferView];
-                const auto buf_idx = buf_v.buffer;
-                assert(GL_ELEMENT_ARRAY_BUFFER == buf_v.target);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufs[buf_idx]);
-            }
+        int indices = prim.indices;
+        if(indices > -1) {
+            auto& accessor_index = indices;
+            auto& accessor = model.accessors[accessor_index];
+            auto& buffer_view = model.bufferViews[accessor.bufferView];
+            auto& buffer_index = buffer_view.buffer;
+            new_mesh->has_indices = true;
+            new_mesh->indices.count = accessor.count;
+            new_mesh->indices.offset = buffer_view.byteOffset + accessor.byteOffset;
+            new_mesh->indices.type = accessor.componentType;
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO[buffer_index]);
         }
     }
     glBindVertexArray(0);
-
-    glp_logv("gltf total vaos number: %zu", vaos.size());
-
-    return vaos;
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    return new_mesh;
 }
 
-bool Model::load(std::string filename) {
-    glp_logv("loading gltf %s", filename.c_str());
+void Model::load_node(Node* parent, const tinygltf::Node& node, const tinygltf::Model& model) {
+    Node* new_node = new Node();
+    new_node->parent = parent;
+
+    glp_logv("parent: %p", parent);
+
+    if(!node.translation.empty())
+        new_node->translation = glm::make_vec3(node.translation.data());
+    
+    if(!node.rotation.empty())
+        new_node->rotation = glm::make_quat(node.rotation.data());
+    
+    if(!node.scale.empty())
+        new_node->scale = glm::make_vec3(node.scale.data());
+    
+    if(!node.matrix.empty())
+        new_node->matrix = glm::make_mat4x4(node.matrix.data());
+
+    if(node.mesh > -1)
+        new_node->mesh = load_mesh(model, model.meshes[node.mesh]);
+
+    if(!node.children.empty())
+        for(const auto& child: node.children)
+            load_node(new_node, model.nodes[child], model);
+
+    glp_logv("children count: %lu", new_node->children.size());
+
+    if(parent) parent->children.push_back(new_node);
+    else nodes.push_back(new_node);
+}
+
+void Model::gen_buffers(const tinygltf::Model& model) {
+    VBO.resize(model.buffers.size(), 0);
+    glGenBuffers(VBO.size(), VBO.data());
+    for(size_t i=0; i<VBO.size(); i++) {
+        glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
+        auto& buffer = model.buffers[i];
+        glBufferData(GL_ARRAY_BUFFER, buffer.data.size(),
+                buffer.data.data(), GL_STATIC_DRAW);
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    VAO.resize(VBO.size(), 0);
+    glGenVertexArrays(VBO.size(), VAO.data());
+}
+
+bool Model::load(const std::string& filename) {
+    glp_logv("loading %s", filename.c_str());
 
     tinygltf::TinyGLTF ctx;
     tinygltf::Model model;
@@ -93,21 +119,68 @@ bool Model::load(std::string filename) {
     
     bool loaded = binary ? ctx.LoadBinaryFromFile(&model, &err, &warn, filename) : ctx.LoadASCIIFromFile(&model, &err, &warn, filename);
     if(!loaded) {
-        glp_logv("could not load gltf: %s", err.c_str());
+        glp_logv("could not load: %s", err.c_str());
         return false;
     }
 
-    buffer_objects = gen_buffer_objects(model);
-    vaos = gen_vaos(model, buffer_objects, mesh_vaos);
+    gen_buffers(model);
+
+    for(size_t i=0; i<model.scenes[0].nodes.size(); i++)
+        load_node(nullptr, model.nodes[i], model);
+    glp_logv("node count: %lu", nodes.size());
+
+    for(const tinygltf::Texture& tex: model.textures) {
+        auto image = model.images[tex.source];
+        textures.emplace_back(image);
+    }
+    glp_logv("texture count: %lu", textures.size());
 
     glp_logv("loaded %s", filename.c_str());
     return true;
 }
 
-Model::Model(std::string path) {
+void Model::render_node(Node* node, glm::mat4 transform, const glm::mat4& mat, const std::string& uniform) {
+    transform *= node->matrix;
+    transform *= glm::translate(glm::mat4(1.0f), node->translation) * glm::mat4(node->rotation) * glm::scale(glm::mat4(1.0f), node->scale);
+
+    if(node->mesh) {
+        auto& mesh = node->mesh;
+    
+        shader->bind();
+        shader->set(uniform, mat);
+        shader->set("model", transform);
+    
+        for(size_t i=0; i<textures.size(); i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+            glBindTexture(GL_TEXTURE_2D, textures[i].get());
+            char tex_name[128];
+            sprintf(tex_name, "tex%lu", i);
+            shader->set(tex_name, (int)i);
+        }
+        glBindVertexArray(VAO[mesh->vao_index]);
+        if(!mesh->has_indices) glDrawArrays(mesh->mode, 0, mesh->count);
+        else glDrawElements(mesh->mode, mesh->indices.count,
+                mesh->indices.type, (const GLvoid*)mesh->indices.offset);
+    
+        shader->unbind();
+    }
+
+    if(!node->children.empty())
+        for(auto& child: node->children)
+            render_node(child, transform, mat, uniform);
+}
+
+void Model::render(const glm::mat4& mat, const std::string& uniform) {
+    for(auto& node: nodes) render_node(node, glm::mat4(1.0f), mat, uniform);
+}
+
+Model::Model(const std::string& path, Shader& shader_) {
     if(!load(path)) throw "Could not create Model with GLTF file";
+    shader = &shader_;
 }
 
 Model::~Model() {
-
+    for(auto& node: nodes) delete node;
+    glDeleteBuffers(VBO.size(), VBO.data());
+    glDeleteVertexArrays(VAO.size(), VAO.data());
 }

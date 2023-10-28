@@ -9,9 +9,24 @@
       "game",
       "glp/external/glad.c"
     ],
-    "directory": "/home/mar/gl",
-    "file": "/home/mar/gl/glp/external/glad.c",
-    "output": "/home/mar/gl/game"
+    "directory": "/home/mar/gl-gltf",
+    "file": "/home/mar/gl-gltf/glp/external/glad.c",
+    "output": "/home/mar/gl-gltf/game"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-g",
+      "-std=c++20",
+      "-lSDL2",
+      "-o",
+      "game",
+      "glp/sdl.cc"
+    ],
+    "directory": "/home/mar/gl-gltf",
+    "file": "/home/mar/gl-gltf/glp/sdl.cc",
+    "output": "/home/mar/gl-gltf/game"
   },
   {
     "arguments": [
@@ -21,11 +36,11 @@
       "-std=c++20",
       "-o",
       "game",
-      "glp/external/stbi.c"
+      "glp/model.cc"
     ],
-    "directory": "/home/mar/gl",
-    "file": "/home/mar/gl/glp/external/stbi.c",
-    "output": "/home/mar/gl/game"
+    "directory": "/home/mar/gl-gltf",
+    "file": "/home/mar/gl-gltf/glp/model.cc",
+    "output": "/home/mar/gl-gltf/game"
   },
   {
     "arguments": [
@@ -33,26 +48,13 @@
       "-c",
       "-g",
       "-std=c++20",
-      "-o",
-      "game",
-      "glp/external/cgltf.c"
-    ],
-    "directory": "/home/mar/gl",
-    "file": "/home/mar/gl/glp/external/cgltf.c",
-    "output": "/home/mar/gl/game"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-g",
-      "-std=c++20",
+      "-lSDL2",
       "-o",
       "game",
       "main.cc"
     ],
-    "directory": "/home/mar/gl",
-    "file": "/home/mar/gl/main.cc",
-    "output": "/home/mar/gl/game"
+    "directory": "/home/mar/gl-gltf",
+    "file": "/home/mar/gl-gltf/main.cc",
+    "output": "/home/mar/gl-gltf/game"
   }
 ]

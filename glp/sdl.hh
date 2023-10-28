@@ -17,7 +17,7 @@
     #include <vitaGL.h>
 #endif
 
-#include "utils.h"
+#include "utils.hh"
 
 class Window {
     private:
@@ -47,6 +47,8 @@ class Window {
         inline bool is_running() { return run; }
         inline void stop() { run = false; }
         inline float get_dt() { return dt; }
+        inline size_t get_width() { return width; }
+        inline size_t get_height() { return height; }
 
         inline void loop_start() {
             glClearColor(0.0f, 0.5f, 0.9f, 0.0f);
