@@ -7,12 +7,11 @@
 #include "glp/external/glm/gtc/type_ptr.hpp"
 
 int main(int argc, char* argv[]) {
-    if(argc<2) glp_log("{path}"), exit(1);
+    if(argc!=3) glp_log("[model path] [assimp (1) or protobuf (0)]"), exit(1);
     Window sdl {"glp", 1280, 720};
 
     Shader shader{"../res/shaders/cube.vert", "../res/shaders/cube.frag"};
-    Model gltf {argv[1], true};
-    if(util::glerr()) glp_log("eh");
+    Model gltf (argv[1], atoi(argv[2]));
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);

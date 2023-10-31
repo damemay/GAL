@@ -1,9 +1,12 @@
 #include <cassert>
 #include <cstddef>
+#include <fstream>
+#include <google/protobuf/stubs/common.h>
 #include <string>
 
 #include "model.hh"
 #include "utils.hh"
+#include "../utils/model.pb.h"
 
 constexpr GLuint POSITION_ATTRIBUTE_INDEX       = 0;
 constexpr GLuint NORMAL_ATTRIBUTE_INDEX         = 1;
@@ -64,6 +67,7 @@ Mesh::~Mesh() {
 
 Model::Model(const std::string& path, bool assimp) {
     if(assimp) assimp_load(path);
+    else protobuf_load(path);
 }
 
 void Model::assimp_load(const std::string& path) {
@@ -148,4 +152,78 @@ void Model::render(Shader& shader) {
 
 Model::~Model() {
     for(auto& mesh: meshes) delete mesh;
+}
+
+
+void Model::fill_protobuf(glp_util::Model* pb) {
+    for(const auto& mesh: meshes) {
+        auto pb_mesh = pb->add_meshes();
+
+        for(const auto& vert: mesh->vertices) {
+            auto pb_vert = pb_mesh->add_vertices();
+            auto pb_pos = pb_vert->mutable_position();
+            pb_pos->set_x(vert.position.x);
+            pb_pos->set_y(vert.position.y);
+            pb_pos->set_z(vert.position.z);
+            auto pb_norm = pb_vert->mutable_normal();
+            pb_norm->set_x(vert.normal.x);
+            pb_norm->set_y(vert.normal.y);
+            pb_norm->set_z(vert.normal.z);
+            auto pb_uv = pb_vert->mutable_uv();
+            pb_uv->set_x(vert.uv.x);
+            pb_uv->set_y(vert.uv.y);
+        }
+
+        for(const auto& idx: mesh->indices)
+            pb_mesh->add_indices(idx);
+
+        for(const auto& tex: mesh->textures)
+            pb_mesh->add_textures(tex->path);
+    }
+}
+
+void Model::protobuf_load(const std::string& path) {
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+    glp_util::Model model;
+
+    std::fstream input(path, std::ios::in | std::ios::binary);
+    if(!model.ParseFromIstream(&input)) {
+        glp_logv("failed to load model from protobuf %s", path.c_str());
+        return;
+    }
+
+    for(size_t i=0; i<model.meshes_size(); i++) {
+        auto pb_mesh = model.meshes(i);
+        std::vector<Vertex> vertices;
+        std::vector<unsigned int> idxs;
+        std::vector<Texture*> texs;
+
+        for(size_t j=0; j<pb_mesh.vertices_size(); j++) {
+            auto pb_vert = pb_mesh.vertices(j);
+            auto pb_pos = pb_vert.position();
+            auto pb_norm = pb_vert.normal();
+            auto pb_uv = pb_vert.uv();
+            vertices.emplace_back(
+                    glm::vec3(pb_pos.x(), pb_pos.y(), pb_pos.z()),
+                    glm::vec3(pb_norm.x(), pb_norm.y(), pb_norm.z()),
+                    glm::vec2(pb_uv.x(), pb_uv.y()));
+        }
+
+        for(size_t j=0; j<pb_mesh.indices_size(); j++) {
+            auto pb_idx = pb_mesh.indices(j);
+            idxs.push_back(pb_idx);
+        }
+
+        for(size_t j=0; j<pb_mesh.textures_size(); j++) {
+            glp_logv("%s", pb_mesh.textures(j).c_str());
+            auto tex = new Texture{pb_mesh.textures(j)};
+            texs.push_back(tex);
+        }
+
+        auto mesh = new Mesh(vertices, idxs, texs);
+        meshes.push_back(mesh);
+    }
+
+    google::protobuf::ShutdownProtobufLibrary();
 }

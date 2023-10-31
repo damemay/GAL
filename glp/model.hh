@@ -6,6 +6,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "../utils/model.pb.h"
 
 #ifndef __vita__
     #include "external/glad/glad.h"
@@ -58,8 +59,11 @@ class Model {
         Mesh* assimp_mesh_process(aiMesh* mesh, const aiScene* scene);
         std::vector<Texture*> assimp_textures_load(aiMaterial* mat, aiTextureType type);
 
+        void protobuf_load(const std::string& path);
+
     public:
         void render(Shader& shader);
+        void fill_protobuf(glp_util::Model* pb);
 
         Model(const std::string& path, bool assimp);
         ~Model();
