@@ -13,7 +13,7 @@ add_executable(${EXEC_NAME}
     ../glp/utils.cc
     ../glp/sdl.cc
     ../glp/shader.cc
-    ../glp/model.cc
+    model.cc
     model.pb.cc
     main.cc
 )
