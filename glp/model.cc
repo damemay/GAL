@@ -216,7 +216,6 @@ void Model::protobuf_load(const std::string& path) {
         }
 
         for(size_t j=0; j<pb_mesh.textures_size(); j++) {
-            glp_logv("%s", pb_mesh.textures(j).c_str());
             auto tex = new Texture{pb_mesh.textures(j)};
             texs.push_back(tex);
         }
