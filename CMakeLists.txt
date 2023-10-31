@@ -10,7 +10,7 @@ set(EXEC_NAME game)
 
 add_executable(${EXEC_NAME}
     glp/external/glad.c
-    glp/external/tinygltf.cc
+    glp/external/stbi.c
     glp/utils.cc
     glp/sdl.cc
     glp/shader.cc
@@ -21,5 +21,6 @@ add_executable(${EXEC_NAME}
 target_link_libraries(${EXEC_NAME}
     SDL2
     GL
+    assimp
     m
 )

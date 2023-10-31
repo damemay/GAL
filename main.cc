@@ -11,9 +11,11 @@ int main(int argc, char* argv[]) {
     Window sdl {"glp", 1280, 720};
 
     Shader shader{"../res/shaders/cube.vert", "../res/shaders/cube.frag"};
-    Model gltf {argv[1], shader};
+    Model gltf {argv[1], true};
+    if(util::glerr()) glp_log("eh");
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
     auto cam_pos = glm::vec3(0.0f, 0.0f, 3.0f);
     auto cam_front = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -37,16 +39,20 @@ int main(int argc, char* argv[]) {
             }
         }
         sdl.loop_start();
+        if(util::glerr()) glp_log("CLEAR");
 
         glm::mat4 view = glm::lookAt(cam_pos, cam_pos+cam_front, cam_up);
         glm::mat4 projection = glm::mat4(1.0f);
         projection = glm::perspective(glm::radians(60.0f), 
                     (float)sdl.get_width()/(float)sdl.get_height(), 0.1f, 1000.0f);
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        glm::mat4 viewproj = projection * view;
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        glm::mat4 mvp = projection * view * model;
 
-        gltf.render(viewproj, "vp");
-        util::glerr();
+        shader.bind();
+        shader.set("mvp", mvp);
+        gltf.render(shader);
 
         sdl.loop_end();
     }

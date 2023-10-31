@@ -1,11 +1,8 @@
 #pragma once
 
-#define TINYGLTF_NO_STB_IMAGE_WRITE
-#define TINYGLTF_USE_CPP14
-#include "external/tiny_gltf.h"
-
 #include <map>
 #include <string>
+#include <vector>
 
 #ifndef __vita__
     #include "external/glad/glad.h"
@@ -57,13 +54,13 @@ class Shader {
         Shader& operator=(const Shader&) = delete;
 };
 
-class Texture {
-    private:
-        GLuint handle;
+struct Texture {
+        GLuint id{0};
+        std::string path{};
 
-    public:
-        inline GLuint get() { return handle; }
-
-        Texture(const tinygltf::Image& image);
+        Texture(const std::string& path);
         ~Texture();
+
+        Texture(const Texture&) = delete;
+        Texture& operator=(const Texture&) = delete;
 };

@@ -1,8 +1,11 @@
 #pragma once
 
-#define TINYGLTF_NO_STB_IMAGE_WRITE
-#define TINYGLTF_USE_CPP14
-#include "external/tiny_gltf.h"
+#include <limits>
+#include <vector>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #ifndef __vita__
     #include "external/glad/glad.h"
@@ -21,52 +24,43 @@
 
 #include "shader.hh"
 
-struct IndexData {
-    size_t count{0};
-    size_t offset{0};
-    int type{-1};
+struct Vertex {
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec2 uv;
 };
 
-struct Mesh {
-    bool has_indices{false};
-    IndexData indices;
-    uint8_t vao_index{0};
-    size_t count;
-    GLenum mode{0};
-};
+class Mesh {
+    private:
+        GLuint VAO, VBO, EBO;
+        
+    public:
+        std::vector<Vertex>             vertices;
+        std::vector<unsigned int>       indices;
+        std::vector<Texture*>           textures;
 
-struct Node {
-    Node* parent;
+        void render(Shader& shader);
 
-    Mesh* mesh {nullptr};
+        Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex);
+        ~Mesh();
 
-    glm::vec3 translation       {0.0f, 0.0f, 0.0f};
-    glm::quat rotation          {0.0f, 0.0f, 0.0f, 1.0f};
-    glm::vec3 scale             {1.0f, 1.0f, 1.0f};
-    glm::mat4 matrix            {1.0f};
-
-    std::vector<Node*> children;
-
-    inline ~Node() { delete mesh; for(auto& child: children) delete child; }
+        Mesh(const Mesh&) = delete;
+        Mesh& operator=(const Mesh&) = delete;
 };
 
 class Model {
     private:
-        std::vector<GLuint> VBO;
-        std::vector<GLuint> VAO;
-        std::vector<Node*> nodes;
-        std::vector<Texture> textures;
-        Shader* shader;
+        std::vector<Mesh*> meshes;
+        std::string directory;
 
-        bool attribute_mesh(const std::string& name, const GLuint index, Mesh*& new_mesh, const tinygltf::Model& model, const tinygltf::Primitive& primitive);
-        Mesh* load_mesh(const tinygltf::Model& model, const tinygltf::Mesh& mesh);
-        void load_node(Node* parent, const tinygltf::Node& node, const tinygltf::Model& model);
-        void gen_buffers(const tinygltf::Model& model);
-        bool load(const std::string& path);
-        void render_node(Node* node, glm::mat4 transform, const glm::mat4& mat, const std::string& uniform);
+        void assimp_load(const std::string& path);
+        void assimp_node_process(aiNode* node, const aiScene* scene);
+        Mesh* assimp_mesh_process(aiMesh* mesh, const aiScene* scene);
+        std::vector<Texture*> assimp_textures_load(aiMaterial* mat, aiTextureType type);
 
     public:
-        Model(const std::string& path, Shader& shader);
-        void render(const glm::mat4& mat, const std::string& uniform);
+        void render(Shader& shader);
+
+        Model(const std::string& path, bool assimp);
         ~Model();
 };

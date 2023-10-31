@@ -1,4 +1,6 @@
 #include <cassert>
+#include <cstddef>
+#include <string>
 
 #include "model.hh"
 #include "utils.hh"
@@ -9,178 +11,141 @@ constexpr GLuint TEXCOORD0_ATTRIBUTE_INDEX      = 2;
 constexpr GLuint JOINTS_ATTRIBUTE_INDEX         = 3;
 constexpr GLuint WEIGHTS_ATTRIBUTE_INDEX        = 4;
 
-bool Model::attribute_mesh(const std::string& name, const GLuint index, Mesh*& new_mesh, const tinygltf::Model& model, const tinygltf::Primitive& primitive) {
-    if(primitive.attributes.find(name) != end(primitive.attributes)) {
-        auto& accessor_index = primitive.attributes.find(name)->second;
-        auto& accessor = model.accessors[accessor_index];
-        auto& buffer_view = model.bufferViews[accessor.bufferView];
-        auto& buffer_index = buffer_view.buffer;
-        new_mesh->vao_index = buffer_index;
-        new_mesh->count = accessor.count;
-    
-        glBindVertexArray(VAO[buffer_index]);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO[buffer_index]);
-        glVertexAttribPointer(index, accessor.type, accessor.componentType, GL_FALSE,
-                buffer_view.byteStride, (const GLvoid*)(accessor.byteOffset + buffer_view.byteOffset));
-        glEnableVertexAttribArray(index);
-        glp_logv("attributed %ss", name.c_str());
-        return true;
-    }
-    return false;
-}
+Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex)
+    : vertices{vert}, indices{idx}, textures{tex} {
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
 
-Mesh* Model::load_mesh(const tinygltf::Model& model, const tinygltf::Mesh& mesh) {
-    auto new_mesh = new Mesh();
-    for(size_t j=0; j<mesh.primitives.size(); j++) {
-        auto& prim = mesh.primitives[j];
-        if(prim.mode > -1) new_mesh->mode = prim.mode;
-        auto& attr = prim.attributes;
-    
-        attribute_mesh("POSITION", POSITION_ATTRIBUTE_INDEX, new_mesh, model, prim);
-        attribute_mesh("NORMAL", NORMAL_ATTRIBUTE_INDEX, new_mesh, model, prim);
-        attribute_mesh("TEXCOORD_0", TEXCOORD0_ATTRIBUTE_INDEX, new_mesh, model, prim);
-        attribute_mesh("JOINTS_0", JOINTS_ATTRIBUTE_INDEX, new_mesh, model, prim);
-        attribute_mesh("WEIGHTS_0", WEIGHTS_ATTRIBUTE_INDEX, new_mesh, model, prim);
+    glBindVertexArray(VAO);
 
-        int indices = prim.indices;
-        if(indices > -1) {
-            auto& accessor_index = indices;
-            auto& accessor = model.accessors[accessor_index];
-            auto& buffer_view = model.bufferViews[accessor.bufferView];
-            auto& buffer_index = buffer_view.buffer;
-            new_mesh->has_indices = true;
-            new_mesh->indices.count = accessor.count;
-            new_mesh->indices.offset = buffer_view.byteOffset + accessor.byteOffset;
-            new_mesh->indices.type = accessor.componentType;
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO[buffer_index]);
-        }
-    }
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(Vertex),
+            vertices.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(unsigned int),
+            indices.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(POSITION_ATTRIBUTE_INDEX,
+            3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(POSITION_ATTRIBUTE_INDEX);
+
+    glVertexAttribPointer(NORMAL_ATTRIBUTE_INDEX,
+            3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(NORMAL_ATTRIBUTE_INDEX);
+
+    glVertexAttribPointer(TEXCOORD0_ATTRIBUTE_INDEX,
+            2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+    glEnableVertexAttribArray(TEXCOORD0_ATTRIBUTE_INDEX);
+
     glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    return new_mesh;
 }
 
-void Model::load_node(Node* parent, const tinygltf::Node& node, const tinygltf::Model& model) {
-    Node* new_node = new Node();
-    new_node->parent = parent;
-
-    glp_logv("parent: %p", parent);
-
-    if(!node.translation.empty())
-        new_node->translation = glm::make_vec3(node.translation.data());
-    
-    if(!node.rotation.empty())
-        new_node->rotation = glm::make_quat(node.rotation.data());
-    
-    if(!node.scale.empty())
-        new_node->scale = glm::make_vec3(node.scale.data());
-    
-    if(!node.matrix.empty())
-        new_node->matrix = glm::make_mat4x4(node.matrix.data());
-
-    if(node.mesh > -1)
-        new_node->mesh = load_mesh(model, model.meshes[node.mesh]);
-
-    if(!node.children.empty())
-        for(const auto& child: node.children)
-            load_node(new_node, model.nodes[child], model);
-
-    glp_logv("children count: %lu", new_node->children.size());
-
-    if(parent) parent->children.push_back(new_node);
-    else nodes.push_back(new_node);
-}
-
-void Model::gen_buffers(const tinygltf::Model& model) {
-    VBO.resize(model.buffers.size(), 0);
-    glGenBuffers(VBO.size(), VBO.data());
-    for(size_t i=0; i<VBO.size(); i++) {
-        glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
-        auto& buffer = model.buffers[i];
-        glBufferData(GL_ARRAY_BUFFER, buffer.data.size(),
-                buffer.data.data(), GL_STATIC_DRAW);
+void Mesh::render(Shader& shader) {
+    for(uint32_t i=0; i<textures.size(); i++) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        shader.set("tex" + std::to_string(i), (int)i);
+        glBindTexture(GL_TEXTURE_2D, textures[i]->id);
     }
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glActiveTexture(GL_TEXTURE0);
 
-    VAO.resize(VBO.size(), 0);
-    glGenVertexArrays(VBO.size(), VAO.data());
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
 
-bool Model::load(const std::string& filename) {
-    glp_logv("loading %s", filename.c_str());
+Mesh::~Mesh() {
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+    for(auto& tex: textures) delete tex;
+}
 
-    tinygltf::TinyGLTF ctx;
-    tinygltf::Model model;
-    std::string err, warn;
+Model::Model(const std::string& path, bool assimp) {
+    if(assimp) assimp_load(path);
+}
 
-    bool binary = false;
-    size_t extpos = filename.rfind('.', filename.length());
-    if(extpos != std::string::npos) binary = (filename.substr(extpos+1, filename.length() - extpos) == "glb");
-    
-    bool loaded = binary ? ctx.LoadBinaryFromFile(&model, &err, &warn, filename) : ctx.LoadASCIIFromFile(&model, &err, &warn, filename);
-    if(!loaded) {
-        glp_logv("could not load: %s", err.c_str());
-        return false;
+void Model::assimp_load(const std::string& path) {
+    Assimp::Importer import;
+    const aiScene* scene = import.ReadFile(path, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FlipUVs);
+
+    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+        glp_logv("assimp returned %s", import.GetErrorString());
+        return;
+    }
+    directory = path.substr(0, path.find_last_of('/'));
+
+    assimp_node_process(scene->mRootNode, scene);
+}
+
+void Model::assimp_node_process(aiNode* node, const aiScene* scene) {
+    for(size_t i=0; i<node->mNumMeshes; i++) {
+        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+        meshes.push_back(assimp_mesh_process(mesh, scene));
     }
 
-    gen_buffers(model);
-
-    for(size_t i=0; i<model.scenes[0].nodes.size(); i++)
-        load_node(nullptr, model.nodes[i], model);
-    glp_logv("node count: %lu", nodes.size());
-
-    for(const tinygltf::Texture& tex: model.textures) {
-        auto image = model.images[tex.source];
-        textures.emplace_back(image);
-    }
-    glp_logv("texture count: %lu", textures.size());
-
-    glp_logv("loaded %s", filename.c_str());
-    return true;
+    for(size_t i=0; i<node->mNumChildren; i++)
+        assimp_node_process(node->mChildren[i], scene);
 }
 
-void Model::render_node(Node* node, glm::mat4 transform, const glm::mat4& mat, const std::string& uniform) {
-    transform *= node->matrix;
-    transform *= glm::translate(glm::mat4(1.0f), node->translation) * glm::mat4(node->rotation) * glm::scale(glm::mat4(1.0f), node->scale);
+Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
+    std::vector<Vertex> verts;
+    std::vector<unsigned int> idxs;
+    std::vector<Texture*> texs;
 
-    if(node->mesh) {
-        auto& mesh = node->mesh;
-    
-        shader->bind();
-        shader->set(uniform, mat);
-        shader->set("model", transform);
-    
-        for(size_t i=0; i<textures.size(); i++) {
-            glActiveTexture(GL_TEXTURE0 + i);
-            glBindTexture(GL_TEXTURE_2D, textures[i].get());
-            char tex_name[128];
-            sprintf(tex_name, "tex%lu", i);
-            shader->set(tex_name, (int)i);
-        }
-        glBindVertexArray(VAO[mesh->vao_index]);
-        if(!mesh->has_indices) glDrawArrays(mesh->mode, 0, mesh->count);
-        else glDrawElements(mesh->mode, mesh->indices.count,
-                mesh->indices.type, (const GLvoid*)mesh->indices.offset);
-    
-        shader->unbind();
+    for(size_t i=0; i<mesh->mNumVertices; i++) {
+        Vertex vertex {
+            glm::vec3(mesh->mVertices[i].x,
+                    mesh->mVertices[i].y,
+                    mesh->mVertices[i].z),
+            mesh->mNormals ?
+                glm::vec3(mesh->mNormals[i].x,
+                        mesh->mNormals[i].y,
+                        mesh->mNormals[i].z) :
+                glm::vec3(0.0f, 0.0f, 0.0f),
+            mesh->mTextureCoords[0] ? 
+                glm::vec2(mesh->mTextureCoords[0][i].x,
+                        mesh->mTextureCoords[0][i].y) :
+                glm::vec2(0.0f, 0.0f),
+        };
+        verts.push_back(vertex);
     }
 
-    if(!node->children.empty())
-        for(auto& child: node->children)
-            render_node(child, transform, mat, uniform);
+    for(size_t i=0; i<mesh->mNumFaces; i++) {
+        aiFace* face = &mesh->mFaces[i];
+        for(size_t j=0; j<face->mNumIndices; j++)
+            idxs.push_back(face->mIndices[j]);
+    }
+
+    if(mesh->mMaterialIndex >= 0) {
+        auto material = scene->mMaterials[mesh->mMaterialIndex];
+
+        auto diffuse = assimp_textures_load(material, aiTextureType_DIFFUSE);
+        texs.insert(texs.end(), diffuse.begin(), diffuse.end());
+    }
+    
+    return new Mesh(verts, idxs, texs);
 }
 
-void Model::render(const glm::mat4& mat, const std::string& uniform) {
-    for(auto& node: nodes) render_node(node, glm::mat4(1.0f), mat, uniform);
+std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType type) {
+    std::vector<Texture*> texs;
+
+    for(size_t i=0; i<mat->GetTextureCount(type); i++) {
+        aiString str;
+        mat->GetTexture(type, i, &str);
+        std::string full_path = directory + '/' + str.C_Str();
+        auto tex = new Texture{full_path};
+        texs.push_back(tex);
+    }
+
+    return texs;
 }
 
-Model::Model(const std::string& path, Shader& shader_) {
-    if(!load(path)) throw "Could not create Model with GLTF file";
-    shader = &shader_;
+void Model::render(Shader& shader) {
+    for(auto& mesh: meshes) mesh->render(shader);
 }
 
 Model::~Model() {
-    for(auto& node: nodes) delete node;
-    glDeleteBuffers(VBO.size(), VBO.data());
-    glDeleteVertexArrays(VAO.size(), VAO.data());
+    for(auto& mesh: meshes) delete mesh;
 }
