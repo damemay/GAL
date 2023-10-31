@@ -1,12 +1,19 @@
 #include <cassert>
 #include <cstddef>
 #include <fstream>
-#include <google/protobuf/stubs/common.h>
 #include <string>
 
 #include "model.hh"
 #include "utils.hh"
 #include "../utils/model.pb.h"
+
+SkeletonNode* SkeletonNode::find(std::string name_) {
+    if(name == name_) return this;
+    for(auto& child: children)
+        if(auto s = child.find(name)) return s;
+
+    return nullptr;
+}
 
 Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx)
     : vertices{vert}, indices{idx} {
@@ -62,7 +69,7 @@ Mesh::~Mesh() {
 
 Model::Model(const std::string& path, bool assimp) {
     if(assimp) assimp_load(path);
-    else protobuf_load(path);
+    // else protobuf_load(path);
 }
 
 void Model::assimp_load(const std::string& path) {
@@ -88,23 +95,19 @@ void Model::assimp_load(const std::string& path) {
 
     glp_logv("model texture count: %lu", textures.size());
 
-    if(scene->HasAnimations()) {
-        for(size_t i=0; i<scene->mNumAnimations; i++) {
-            auto ai_anim = scene->mAnimations[i];
-            Animation anim;
-            anim.name = ai_anim->mName.C_Str();
-            anim.duration = ai_anim->mDuration;
-            anim.ticks_per_second = ai_anim->mTicksPerSecond;
-            glp_logv("found new animation in model: %s", anim.name.c_str());
+    if(!assimp_skeleton_import(scene->mRootNode, root_node))
+        glp_log("model without skeleton");
 
-            animations.push_back(anim);
-        }
-    }
+    if(scene->HasAnimations())
+        for(size_t i=0; i<scene->mNumAnimations; i++)
+            assimp_animation_load(scene->mAnimations[i]);
+
+    glp_logv("model animation count: %lu", animations.size());
+
 }
 
-int Model::assimp_skeleton_import(aiNode* ai_node, SkeletonNode& node) {
-    SkeletonNode t_node;
-    t_node.bone_index = -1;
+int Model::assimp_skeleton_import(aiNode* ai_node, SkeletonNode& parent) {
+    SkeletonNode t_node{};
     t_node.name = ai_node->mName.C_Str();
 
     bool has_bone = false;
@@ -117,18 +120,58 @@ int Model::assimp_skeleton_import(aiNode* ai_node, SkeletonNode& node) {
     }
 
     bool has_usable_child = false;
+    t_node.children.resize(ai_node->mNumChildren);
     for(size_t i=0; i<ai_node->mNumChildren; i++) {
-        if(assimp_skeleton_import(ai_node->mChildren[i], t_node.children[0]) == 0) {
+        if(assimp_skeleton_import(ai_node->mChildren[i], t_node.children[i])) {
             has_usable_child = true;
         }
     }
 
     if(has_usable_child || has_bone) {
-        node = t_node;
-        return 0;
+        parent = t_node;
+        return 1;
     }
 
-    return 1;
+    return 0;
+}
+
+void Model::assimp_animation_load(aiAnimation* ai_anim) {
+    Animation anim;
+    anim.name = ai_anim->mName.C_Str();
+    anim.duration = ai_anim->mDuration;
+    anim.ticks_per_second = ai_anim->mTicksPerSecond;
+    glp_logv("found new animation in model: %s", anim.name.c_str());
+    
+    for(size_t j=0; j<ai_anim->mNumChannels; j++) {
+        auto ai_chan = ai_anim->mChannels[j];
+        AnimationChannel channel;
+        channel.node_name = ai_chan->mNodeName.C_Str();
+    
+        for(size_t k=0; k<ai_chan->mNumPositionKeys; k++)
+            channel.position_keys.emplace_back(glm::vec3(
+                        ai_chan->mPositionKeys[k].mValue.x,
+                        ai_chan->mPositionKeys[k].mValue.y,
+                        ai_chan->mPositionKeys[k].mValue.z),
+                    ai_chan->mPositionKeys[k].mTime);
+    
+        for(size_t k=0; k<ai_chan->mNumRotationKeys; k++)
+            channel.rotation_keys.emplace_back(glm::quat(
+                        ai_chan->mRotationKeys[k].mValue.x,
+                        ai_chan->mRotationKeys[k].mValue.y,
+                        ai_chan->mRotationKeys[k].mValue.z,
+                        ai_chan->mRotationKeys[k].mValue.w),
+                    ai_chan->mRotationKeys[k].mTime);
+    
+        for(size_t k=0; k<ai_chan->mNumScalingKeys; k++)
+            channel.scale_keys.emplace_back(glm::vec3(
+                        ai_chan->mScalingKeys[k].mValue.x,
+                        ai_chan->mScalingKeys[k].mValue.y,
+                        ai_chan->mScalingKeys[k].mValue.z),
+                    ai_chan->mScalingKeys[k].mTime);
+    }
+    
+    animations.push_back(anim);
+
 }
 
 std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType type) {
@@ -212,6 +255,113 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
     }
     
     return new Mesh(verts, idxs);
+}
+
+void Model::animation_load(const Animation& animation) {
+    animation_bones.resize(bones.size());
+    for(const auto& chan: animation.channels) {
+        SkeletonNode* node = root_node.find(chan.node_name);
+        node->keys.position_keys = chan.position_keys;
+        node->keys.rotation_keys = chan.rotation_keys;
+        node->keys.scale_keys = chan.scale_keys;
+    }
+}
+
+glm::mat4 Model::animation_translate(const SkeletonNode& node, const Animation& animation) {
+    auto mat = glm::mat4(1.0f);
+    if(node.keys.position_keys.size() > 0) {
+        size_t p_key = 0, n_key = 0;
+        for(size_t i=0; i<node.keys.position_keys.size()-1; ++i) {
+            p_key = i;
+            n_key = i+1;
+            if(node.keys.position_keys[n_key].time >= animation.duration) break;
+        }
+        
+        float t_tot = node.keys.position_keys[n_key].time - node.keys.position_keys[p_key].time;
+        float t = (animation.duration - node.keys.position_keys[p_key].time) / t_tot;
+        auto vi = node.keys.position_keys[p_key].value;
+        auto vf = node.keys.position_keys[n_key].value;
+        auto lerp0 = vi * (1.0f-t);
+        auto lerp1 = vf * t;
+        auto lerp = lerp0 + lerp1;
+        mat = glm::translate(mat, lerp);
+    }
+    return mat;
+}
+
+glm::mat4 Model::animation_rotate(const SkeletonNode& node, const Animation& animation) {
+    auto mat = glm::mat4(1.0f);
+    if(node.keys.rotation_keys.size() > 0) {
+        size_t p_key = 0, n_key = 0;
+        for(size_t i=0; i<node.keys.rotation_keys.size()-1; ++i) {
+            p_key = i;
+            n_key = i+1;
+            if(node.keys.rotation_keys[n_key].time >= animation.duration) break;
+        }
+        
+        float t_tot = node.keys.rotation_keys[n_key].time - node.keys.rotation_keys[p_key].time;
+        float t = (animation.duration - node.keys.rotation_keys[p_key].time) / t_tot;
+        auto vi = node.keys.rotation_keys[p_key].value;
+        auto vf = node.keys.rotation_keys[n_key].value;
+        auto lerp = glm::slerp(vi, vf, t);
+        mat = glm::mat4(lerp);
+    }
+    return mat;
+}
+
+glm::mat4 Model::animation_scale(const SkeletonNode& node, const Animation& animation) {
+    auto mat = glm::mat4(1.0f);
+    if(node.keys.scale_keys.size() > 0) {
+        size_t p_key = 0, n_key = 0;
+        for(size_t i=0; i<node.keys.scale_keys.size()-1; ++i) {
+            p_key = i;
+            n_key = i+1;
+            if(node.keys.scale_keys[n_key].time >= animation.duration) break;
+        }
+        
+        float t_tot = node.keys.scale_keys[n_key].time - node.keys.scale_keys[p_key].time;
+        float t = (animation.duration - node.keys.scale_keys[p_key].time) / t_tot;
+        auto vi = node.keys.scale_keys[p_key].value;
+        auto vf = node.keys.scale_keys[n_key].value;
+        auto lerp0 = vi * (1.0f-t);
+        auto lerp1 = vf * t;
+        auto lerp = lerp0 + lerp1;
+        mat = glm::translate(mat, lerp);
+    }
+    return mat;
+}
+
+void Model::animation(const SkeletonNode& node, const Animation& anim) {
+    auto out = glm::mat4(1.0f);
+    auto t = animation_translate(node, anim);
+    auto r = animation_rotate(node, anim);
+    auto s = animation_scale(node, anim);
+    glm::mat4 loc = t*r*s;
+    int bone = node.bone_index;
+    if(bone > -1) {
+        auto bone_off = bones[bone].matrix;
+        out = out * loc * bone_off;
+    }
+    for(const auto& child: node.children)
+        animation(child, anim);
+}
+
+void Model::animate(uint32_t index) {
+    auto& anim = animations[index];
+    if(index > animations.size()) return;
+    animation_load(anim);
+    animation(root_node, anim);
+}
+
+void Model::animate(const std::string& name) {
+    auto it = std::find_if(animations.begin(), animations.end(),
+            [name](const Animation& anim) { return anim.name == name;});
+    if(it != animations.end()) {
+        auto index = std::distance(animations.begin(), it);
+        auto& anim = animations[index];
+        animation_load(anim);
+        animation(root_node, anim);
+    }
 }
 
 void Model::render(Shader& shader) {

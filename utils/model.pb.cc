@@ -4,223 +4,255 @@
 #include "model.pb.h"
 
 #include <algorithm>
-
-#include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/extension_set.h>
-#include <google/protobuf/wire_format_lite.h>
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/generated_message_reflection.h>
-#include <google/protobuf/reflection_ops.h>
-#include <google/protobuf/wire_format.h>
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/extension_set.h"
+#include "google/protobuf/wire_format_lite.h"
+#include "google/protobuf/descriptor.h"
+#include "google/protobuf/generated_message_reflection.h"
+#include "google/protobuf/reflection_ops.h"
+#include "google/protobuf/wire_format.h"
+#include "google/protobuf/generated_message_tctable_impl.h"
 // @@protoc_insertion_point(includes)
-#include <google/protobuf/port_def.inc>
-extern PROTOBUF_INTERNAL_EXPORT_model_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Model_Mesh_model_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_model_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Model_Mesh_Vec2_model_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_model_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Model_Mesh_Vec3_model_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_model_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Model_Mesh_Vertex_model_2eproto;
+
+// Must be included last.
+#include "google/protobuf/port_def.inc"
+PROTOBUF_PRAGMA_INIT_SEG
+namespace _pb = ::google::protobuf;
+namespace _pbi = ::google::protobuf::internal;
+namespace _fl = ::google::protobuf::internal::field_layout;
 namespace glp_util {
-class Model_Mesh_Vec3DefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Model_Mesh_Vec3> _instance;
-} _Model_Mesh_Vec3_default_instance_;
-class Model_Mesh_Vec2DefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Model_Mesh_Vec2> _instance;
-} _Model_Mesh_Vec2_default_instance_;
-class Model_Mesh_VertexDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Model_Mesh_Vertex> _instance;
-} _Model_Mesh_Vertex_default_instance_;
-class Model_MeshDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Model_Mesh> _instance;
-} _Model_Mesh_default_instance_;
-class ModelDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Model> _instance;
-} _Model_default_instance_;
+        template <typename>
+PROTOBUF_CONSTEXPR Model_Mesh_Vec3::Model_Mesh_Vec3(::_pbi::ConstantInitialized)
+    : _impl_{
+      /*decltype(_impl_._has_bits_)*/ {},
+      /*decltype(_impl_._cached_size_)*/ {},
+      /*decltype(_impl_.x_)*/ 0,
+      /*decltype(_impl_.y_)*/ 0,
+      /*decltype(_impl_.z_)*/ 0,
+    } {}
+struct Model_Mesh_Vec3DefaultTypeInternal {
+  PROTOBUF_CONSTEXPR Model_Mesh_Vec3DefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~Model_Mesh_Vec3DefaultTypeInternal() {}
+  union {
+    Model_Mesh_Vec3 _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 Model_Mesh_Vec3DefaultTypeInternal _Model_Mesh_Vec3_default_instance_;
+        template <typename>
+PROTOBUF_CONSTEXPR Model_Mesh_Vec2::Model_Mesh_Vec2(::_pbi::ConstantInitialized)
+    : _impl_{
+      /*decltype(_impl_._has_bits_)*/ {},
+      /*decltype(_impl_._cached_size_)*/ {},
+      /*decltype(_impl_.x_)*/ 0,
+      /*decltype(_impl_.y_)*/ 0,
+    } {}
+struct Model_Mesh_Vec2DefaultTypeInternal {
+  PROTOBUF_CONSTEXPR Model_Mesh_Vec2DefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~Model_Mesh_Vec2DefaultTypeInternal() {}
+  union {
+    Model_Mesh_Vec2 _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 Model_Mesh_Vec2DefaultTypeInternal _Model_Mesh_Vec2_default_instance_;
+        template <typename>
+PROTOBUF_CONSTEXPR Model_Mesh_Vertex::Model_Mesh_Vertex(::_pbi::ConstantInitialized)
+    : _impl_{
+      /*decltype(_impl_._has_bits_)*/ {},
+      /*decltype(_impl_._cached_size_)*/ {},
+      /*decltype(_impl_.position_)*/ nullptr,
+      /*decltype(_impl_.normal_)*/ nullptr,
+      /*decltype(_impl_.uv_)*/ nullptr,
+    } {}
+struct Model_Mesh_VertexDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR Model_Mesh_VertexDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~Model_Mesh_VertexDefaultTypeInternal() {}
+  union {
+    Model_Mesh_Vertex _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 Model_Mesh_VertexDefaultTypeInternal _Model_Mesh_Vertex_default_instance_;
+        template <typename>
+PROTOBUF_CONSTEXPR Model_Mesh::Model_Mesh(::_pbi::ConstantInitialized)
+    : _impl_{
+      /*decltype(_impl_.vertices_)*/ {},
+      /*decltype(_impl_.indices_)*/ {},
+      /*decltype(_impl_.textures_)*/ {},
+      /*decltype(_impl_._cached_size_)*/ {},
+    } {}
+struct Model_MeshDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR Model_MeshDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~Model_MeshDefaultTypeInternal() {}
+  union {
+    Model_Mesh _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 Model_MeshDefaultTypeInternal _Model_Mesh_default_instance_;
+        template <typename>
+PROTOBUF_CONSTEXPR Model::Model(::_pbi::ConstantInitialized)
+    : _impl_{
+      /*decltype(_impl_.meshes_)*/ {},
+      /*decltype(_impl_._cached_size_)*/ {},
+    } {}
+struct ModelDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ModelDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ModelDefaultTypeInternal() {}
+  union {
+    Model _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ModelDefaultTypeInternal _Model_default_instance_;
 }  // namespace glp_util
-static void InitDefaultsscc_info_Model_model_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
+static ::_pb::Metadata file_level_metadata_model_2eproto[5];
+static constexpr const ::_pb::EnumDescriptor**
+    file_level_enum_descriptors_model_2eproto = nullptr;
+static constexpr const ::_pb::ServiceDescriptor**
+    file_level_service_descriptors_model_2eproto = nullptr;
+const ::uint32_t TableStruct_model_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
+    protodesc_cold) = {
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, _impl_._has_bits_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, _impl_.x_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, _impl_.y_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, _impl_.z_),
+    0,
+    1,
+    2,
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec2, _impl_._has_bits_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec2, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec2, _impl_.x_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec2, _impl_.y_),
+    0,
+    1,
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, _impl_._has_bits_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, _impl_.position_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, _impl_.normal_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, _impl_.uv_),
+    0,
+    1,
+    2,
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh, _impl_.vertices_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh, _impl_.indices_),
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh, _impl_.textures_),
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::glp_util::Model, _impl_.meshes_),
+};
 
-  {
-    void* ptr = &::glp_util::_Model_default_instance_;
-    new (ptr) ::glp_util::Model();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::glp_util::Model::InitAsDefaultInstance();
+static const ::_pbi::MigrationSchema
+    schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+        {0, 11, -1, sizeof(::glp_util::Model_Mesh_Vec3)},
+        {14, 24, -1, sizeof(::glp_util::Model_Mesh_Vec2)},
+        {26, 37, -1, sizeof(::glp_util::Model_Mesh_Vertex)},
+        {40, -1, -1, sizeof(::glp_util::Model_Mesh)},
+        {51, -1, -1, sizeof(::glp_util::Model)},
+};
+
+static const ::_pb::Message* const file_default_instances[] = {
+    &::glp_util::_Model_Mesh_Vec3_default_instance_._instance,
+    &::glp_util::_Model_Mesh_Vec2_default_instance_._instance,
+    &::glp_util::_Model_Mesh_Vertex_default_instance_._instance,
+    &::glp_util::_Model_Mesh_default_instance_._instance,
+    &::glp_util::_Model_default_instance_._instance,
+};
+const char descriptor_table_protodef_model_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+    "\n\013model.proto\022\010glp_util\"\331\002\n\005Model\022$\n\006mes"
+    "hes\030\001 \003(\0132\024.glp_util.Model.Mesh\032\251\002\n\004Mesh"
+    "\022-\n\010vertices\030\001 \003(\0132\033.glp_util.Model.Mesh"
+    ".Vertex\022\017\n\007indices\030\002 \003(\r\022\020\n\010textures\030\003 \003"
+    "(\t\032\'\n\004Vec3\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 "
+    "\002(\002\032\034\n\004Vec2\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\032\207\001\n\006Ve"
+    "rtex\022+\n\010position\030\001 \002(\0132\031.glp_util.Model."
+    "Mesh.Vec3\022)\n\006normal\030\002 \002(\0132\031.glp_util.Mod"
+    "el.Mesh.Vec3\022%\n\002uv\030\003 \002(\0132\031.glp_util.Mode"
+    "l.Mesh.Vec2"
+};
+static ::absl::once_flag descriptor_table_model_2eproto_once;
+const ::_pbi::DescriptorTable descriptor_table_model_2eproto = {
+    false,
+    false,
+    371,
+    descriptor_table_protodef_model_2eproto,
+    "model.proto",
+    &descriptor_table_model_2eproto_once,
+    nullptr,
+    0,
+    5,
+    schemas,
+    file_default_instances,
+    TableStruct_model_2eproto::offsets,
+    file_level_metadata_model_2eproto,
+    file_level_enum_descriptors_model_2eproto,
+    file_level_service_descriptors_model_2eproto,
+};
+
+// This function exists to be marked as weak.
+// It can significantly speed up compilation by breaking up LLVM's SCC
+// in the .pb.cc translation units. Large translation units see a
+// reduction of more than 35% of walltime for optimized builds. Without
+// the weak attribute all the messages in the file, including all the
+// vtables and everything they use become part of the same SCC through
+// a cycle like:
+// GetMetadata -> descriptor table -> default instances ->
+//   vtables -> GetMetadata
+// By adding a weak function here we break the connection from the
+// individual vtables back into the descriptor table.
+PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_model_2eproto_getter() {
+  return &descriptor_table_model_2eproto;
 }
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Model_model_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_Model_model_2eproto}, {
-      &scc_info_Model_Mesh_model_2eproto.base,}};
-
-static void InitDefaultsscc_info_Model_Mesh_model_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::glp_util::_Model_Mesh_default_instance_;
-    new (ptr) ::glp_util::Model_Mesh();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::glp_util::Model_Mesh::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Model_Mesh_model_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_Model_Mesh_model_2eproto}, {
-      &scc_info_Model_Mesh_Vertex_model_2eproto.base,}};
-
-static void InitDefaultsscc_info_Model_Mesh_Vec2_model_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::glp_util::_Model_Mesh_Vec2_default_instance_;
-    new (ptr) ::glp_util::Model_Mesh_Vec2();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::glp_util::Model_Mesh_Vec2::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Model_Mesh_Vec2_model_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Model_Mesh_Vec2_model_2eproto}, {}};
-
-static void InitDefaultsscc_info_Model_Mesh_Vec3_model_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::glp_util::_Model_Mesh_Vec3_default_instance_;
-    new (ptr) ::glp_util::Model_Mesh_Vec3();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::glp_util::Model_Mesh_Vec3::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Model_Mesh_Vec3_model_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Model_Mesh_Vec3_model_2eproto}, {}};
-
-static void InitDefaultsscc_info_Model_Mesh_Vertex_model_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::glp_util::_Model_Mesh_Vertex_default_instance_;
-    new (ptr) ::glp_util::Model_Mesh_Vertex();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::glp_util::Model_Mesh_Vertex::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Model_Mesh_Vertex_model_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 2, 0, InitDefaultsscc_info_Model_Mesh_Vertex_model_2eproto}, {
-      &scc_info_Model_Mesh_Vec3_model_2eproto.base,
-      &scc_info_Model_Mesh_Vec2_model_2eproto.base,}};
-
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_model_2eproto[5];
-static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_model_2eproto = nullptr;
-static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_model_2eproto = nullptr;
-
-const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_model_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, _has_bits_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, x_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, y_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec3, z_),
-  0,
-  1,
-  2,
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec2, _has_bits_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec2, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec2, x_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vec2, y_),
-  0,
-  1,
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, _has_bits_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, position_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, normal_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh_Vertex, uv_),
-  0,
-  1,
-  2,
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh, vertices_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh, indices_),
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model_Mesh, textures_),
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::glp_util::Model, meshes_),
-};
-static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 8, sizeof(::glp_util::Model_Mesh_Vec3)},
-  { 11, 18, sizeof(::glp_util::Model_Mesh_Vec2)},
-  { 20, 28, sizeof(::glp_util::Model_Mesh_Vertex)},
-  { 31, -1, sizeof(::glp_util::Model_Mesh)},
-  { 39, -1, sizeof(::glp_util::Model)},
-};
-
-static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::glp_util::_Model_Mesh_Vec3_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::glp_util::_Model_Mesh_Vec2_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::glp_util::_Model_Mesh_Vertex_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::glp_util::_Model_Mesh_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::glp_util::_Model_default_instance_),
-};
-
-const char descriptor_table_protodef_model_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\013model.proto\022\010glp_util\"\331\002\n\005Model\022$\n\006mes"
-  "hes\030\001 \003(\0132\024.glp_util.Model.Mesh\032\251\002\n\004Mesh"
-  "\022-\n\010vertices\030\001 \003(\0132\033.glp_util.Model.Mesh"
-  ".Vertex\022\017\n\007indices\030\002 \003(\r\022\020\n\010textures\030\003 \003"
-  "(\t\032\'\n\004Vec3\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 "
-  "\002(\002\032\034\n\004Vec2\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\032\207\001\n\006Ve"
-  "rtex\022+\n\010position\030\001 \002(\0132\031.glp_util.Model."
-  "Mesh.Vec3\022)\n\006normal\030\002 \002(\0132\031.glp_util.Mod"
-  "el.Mesh.Vec3\022%\n\002uv\030\003 \002(\0132\031.glp_util.Mode"
-  "l.Mesh.Vec2"
-  ;
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_model_2eproto_deps[1] = {
-};
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_model_2eproto_sccs[5] = {
-  &scc_info_Model_model_2eproto.base,
-  &scc_info_Model_Mesh_model_2eproto.base,
-  &scc_info_Model_Mesh_Vec2_model_2eproto.base,
-  &scc_info_Model_Mesh_Vec3_model_2eproto.base,
-  &scc_info_Model_Mesh_Vertex_model_2eproto.base,
-};
-static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_model_2eproto_once;
-const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_model_2eproto = {
-  false, false, descriptor_table_protodef_model_2eproto, "model.proto", 371,
-  &descriptor_table_model_2eproto_once, descriptor_table_model_2eproto_sccs, descriptor_table_model_2eproto_deps, 5, 0,
-  schemas, file_default_instances, TableStruct_model_2eproto::offsets,
-  file_level_metadata_model_2eproto, 5, file_level_enum_descriptors_model_2eproto, file_level_service_descriptors_model_2eproto,
-};
-
 // Force running AddDescriptors() at dynamic initialization time.
-static bool dynamic_init_dummy_model_2eproto = (static_cast<void>(::PROTOBUF_NAMESPACE_ID::internal::AddDescriptors(&descriptor_table_model_2eproto)), true);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2
+static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_model_2eproto(&descriptor_table_model_2eproto);
 namespace glp_util {
-
 // ===================================================================
 
-void Model_Mesh_Vec3::InitAsDefaultInstance() {
-}
 class Model_Mesh_Vec3::_Internal {
  public:
-  using HasBits = decltype(std::declval<Model_Mesh_Vec3>()._has_bits_);
+  using HasBits = decltype(std::declval<Model_Mesh_Vec3>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+    8 * PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_._has_bits_);
   static void set_has_x(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
   }
@@ -235,251 +267,201 @@ class Model_Mesh_Vec3::_Internal {
   }
 };
 
-Model_Mesh_Vec3::Model_Mesh_Vec3(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+Model_Mesh_Vec3::Model_Mesh_Vec3(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:glp_util.Model.Mesh.Vec3)
 }
 Model_Mesh_Vec3::Model_Mesh_Vec3(const Model_Mesh_Vec3& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _has_bits_(from._has_bits_) {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&x_, &from.x_,
-    static_cast<size_t>(reinterpret_cast<char*>(&z_) -
-    reinterpret_cast<char*>(&x_)) + sizeof(z_));
+    : ::google::protobuf::Message(), _impl_(from._impl_) {
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:glp_util.Model.Mesh.Vec3)
 }
-
-void Model_Mesh_Vec3::SharedCtor() {
-  ::memset(&x_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&z_) -
-      reinterpret_cast<char*>(&x_)) + sizeof(z_));
+inline void Model_Mesh_Vec3::SharedCtor(::_pb::Arena* arena) {
+  (void)arena;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){},
+      /*decltype(_impl_._cached_size_)*/ {},
+      decltype(_impl_.x_){0},
+      decltype(_impl_.y_){0},
+      decltype(_impl_.z_){0},
+  };
 }
-
 Model_Mesh_Vec3::~Model_Mesh_Vec3() {
   // @@protoc_insertion_point(destructor:glp_util.Model.Mesh.Vec3)
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
-
-void Model_Mesh_Vec3::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
-}
-
-void Model_Mesh_Vec3::ArenaDtor(void* object) {
-  Model_Mesh_Vec3* _this = reinterpret_cast< Model_Mesh_Vec3* >(object);
-  (void)_this;
-}
-void Model_Mesh_Vec3::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+inline void Model_Mesh_Vec3::SharedDtor() {
+  ABSL_DCHECK(GetArenaForAllocation() == nullptr);
 }
 void Model_Mesh_Vec3::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const Model_Mesh_Vec3& Model_Mesh_Vec3::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Model_Mesh_Vec3_model_2eproto.base);
-  return *internal_default_instance();
+  _impl_._cached_size_.Set(size);
 }
 
-
-void Model_Mesh_Vec3::Clear() {
+PROTOBUF_NOINLINE void Model_Mesh_Vec3::Clear() {
 // @@protoc_insertion_point(message_clear_start:glp_util.Model.Mesh.Vec3)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
+  cached_has_bits = _impl_._has_bits_[0];
   if (cached_has_bits & 0x00000007u) {
-    ::memset(&x_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&z_) -
-        reinterpret_cast<char*>(&x_)) + sizeof(z_));
+    ::memset(&_impl_.x_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.z_) -
+        reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.z_));
   }
-  _has_bits_.Clear();
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* Model_Mesh_Vec3::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  _Internal::HasBits has_bits{};
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
-      // required float x = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 13)) {
-          _Internal::set_has_x(&has_bits);
-          x_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
-          ptr += sizeof(float);
-        } else goto handle_unusual;
-        continue;
-      // required float y = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 21)) {
-          _Internal::set_has_y(&has_bits);
-          y_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
-          ptr += sizeof(float);
-        } else goto handle_unusual;
-        continue;
-      // required float z = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 29)) {
-          _Internal::set_has_z(&has_bits);
-          z_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
-          ptr += sizeof(float);
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
-  _has_bits_.Or(has_bits);
+const char* Model_Mesh_Vec3::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* Model_Mesh_Vec3::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:glp_util.Model.Mesh.Vec3)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 0, 0, 2> Model_Mesh_Vec3::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_._has_bits_),
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    &_Model_Mesh_Vec3_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // required float x = 1;
+    {::_pbi::TcParser::FastF32S1,
+     {13, 0, 0, PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_.x_)}},
+    // required float y = 2;
+    {::_pbi::TcParser::FastF32S1,
+     {21, 1, 0, PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_.y_)}},
+    // required float z = 3;
+    {::_pbi::TcParser::FastF32S1,
+     {29, 2, 0, PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_.z_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // required float x = 1;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_.x_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    // required float y = 2;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_.y_), _Internal::kHasBitsOffset + 1, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    // required float z = 3;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_.z_), _Internal::kHasBitsOffset + 2, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+
+::uint8_t* Model_Mesh_Vec3::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:glp_util.Model.Mesh.Vec3)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
   // required float x = 1;
   if (cached_has_bits & 0x00000001u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(1, this->_internal_x(), target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        1, this->_internal_x(), target);
   }
 
   // required float y = 2;
   if (cached_has_bits & 0x00000002u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(2, this->_internal_y(), target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        2, this->_internal_y(), target);
   }
 
   // required float z = 3;
   if (cached_has_bits & 0x00000004u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(3, this->_internal_z(), target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        3, this->_internal_z(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:glp_util.Model.Mesh.Vec3)
   return target;
 }
 
-size_t Model_Mesh_Vec3::RequiredFieldsByteSizeFallback() const {
-// @@protoc_insertion_point(required_fields_byte_size_fallback_start:glp_util.Model.Mesh.Vec3)
-  size_t total_size = 0;
-
-  if (_internal_has_x()) {
-    // required float x = 1;
-    total_size += 1 + 4;
-  }
-
-  if (_internal_has_y()) {
-    // required float y = 2;
-    total_size += 1 + 4;
-  }
-
-  if (_internal_has_z()) {
-    // required float z = 3;
-    total_size += 1 + 4;
-  }
-
-  return total_size;
-}
-size_t Model_Mesh_Vec3::ByteSizeLong() const {
+::size_t Model_Mesh_Vec3::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:glp_util.Model.Mesh.Vec3)
-  size_t total_size = 0;
+  ::size_t total_size = 0;
 
-  if (((_has_bits_[0] & 0x00000007) ^ 0x00000007) == 0) {  // All required fields are present.
-    // required float x = 1;
-    total_size += 1 + 4;
-
-    // required float y = 2;
-    total_size += 1 + 4;
-
-    // required float z = 3;
-    total_size += 1 + 4;
-
-  } else {
-    total_size += RequiredFieldsByteSizeFallback();
-  }
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000007u) {
+    // required float x = 1;
+    if (cached_has_bits & 0x00000001u) {
+      total_size += 5;
+    }
+
+    // required float y = 2;
+    if (cached_has_bits & 0x00000002u) {
+      total_size += 5;
+    }
+
+    // required float z = 3;
+    if (cached_has_bits & 0x00000004u) {
+      total_size += 5;
+    }
+
   }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void Model_Mesh_Vec3::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:glp_util.Model.Mesh.Vec3)
-  GOOGLE_DCHECK_NE(&from, this);
-  const Model_Mesh_Vec3* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Model_Mesh_Vec3>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:glp_util.Model.Mesh.Vec3)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:glp_util.Model.Mesh.Vec3)
-    MergeFrom(*source);
-  }
-}
+const ::google::protobuf::Message::ClassData Model_Mesh_Vec3::_class_data_ = {
+    ::google::protobuf::Message::CopyWithSourceCheck,
+    Model_Mesh_Vec3::MergeImpl
+};
+const ::google::protobuf::Message::ClassData*Model_Mesh_Vec3::GetClassData() const { return &_class_data_; }
 
-void Model_Mesh_Vec3::MergeFrom(const Model_Mesh_Vec3& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model.Mesh.Vec3)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void Model_Mesh_Vec3::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
+  auto* const _this = static_cast<Model_Mesh_Vec3*>(&to_msg);
+  auto& from = static_cast<const Model_Mesh_Vec3&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model.Mesh.Vec3)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = from._has_bits_[0];
+  cached_has_bits = from._impl_._has_bits_[0];
   if (cached_has_bits & 0x00000007u) {
     if (cached_has_bits & 0x00000001u) {
-      x_ = from.x_;
+      _this->_impl_.x_ = from._impl_.x_;
     }
     if (cached_has_bits & 0x00000002u) {
-      y_ = from.y_;
+      _this->_impl_.y_ = from._impl_.y_;
     }
     if (cached_has_bits & 0x00000004u) {
-      z_ = from.z_;
+      _this->_impl_.z_ = from._impl_.z_;
     }
-    _has_bits_[0] |= cached_has_bits;
+    _this->_impl_._has_bits_[0] |= cached_has_bits;
   }
-}
-
-void Model_Mesh_Vec3::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:glp_util.Model.Mesh.Vec3)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Model_Mesh_Vec3::CopyFrom(const Model_Mesh_Vec3& from) {
@@ -489,35 +471,37 @@ void Model_Mesh_Vec3::CopyFrom(const Model_Mesh_Vec3& from) {
   MergeFrom(from);
 }
 
-bool Model_Mesh_Vec3::IsInitialized() const {
-  if (_Internal::MissingRequiredFields(_has_bits_)) return false;
+PROTOBUF_NOINLINE bool Model_Mesh_Vec3::IsInitialized() const {
+  if (_Internal::MissingRequiredFields(_impl_._has_bits_)) {
+    return false;
+  }
   return true;
 }
 
 void Model_Mesh_Vec3::InternalSwap(Model_Mesh_Vec3* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, z_)
-      + sizeof(Model_Mesh_Vec3::z_)
-      - PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, x_)>(
-          reinterpret_cast<char*>(&x_),
-          reinterpret_cast<char*>(&other->x_));
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_.z_)
+      + sizeof(Model_Mesh_Vec3::_impl_.z_)
+      - PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec3, _impl_.x_)>(
+          reinterpret_cast<char*>(&_impl_.x_),
+          reinterpret_cast<char*>(&other->_impl_.x_));
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Model_Mesh_Vec3::GetMetadata() const {
-  return GetMetadataStatic();
+::google::protobuf::Metadata Model_Mesh_Vec3::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_model_2eproto_getter, &descriptor_table_model_2eproto_once,
+      file_level_metadata_model_2eproto[0]);
 }
-
-
 // ===================================================================
 
-void Model_Mesh_Vec2::InitAsDefaultInstance() {
-}
 class Model_Mesh_Vec2::_Internal {
  public:
-  using HasBits = decltype(std::declval<Model_Mesh_Vec2>()._has_bits_);
+  using HasBits = decltype(std::declval<Model_Mesh_Vec2>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+    8 * PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, _impl_._has_bits_);
   static void set_has_x(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
   }
@@ -529,226 +513,178 @@ class Model_Mesh_Vec2::_Internal {
   }
 };
 
-Model_Mesh_Vec2::Model_Mesh_Vec2(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+Model_Mesh_Vec2::Model_Mesh_Vec2(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:glp_util.Model.Mesh.Vec2)
 }
 Model_Mesh_Vec2::Model_Mesh_Vec2(const Model_Mesh_Vec2& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _has_bits_(from._has_bits_) {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&x_, &from.x_,
-    static_cast<size_t>(reinterpret_cast<char*>(&y_) -
-    reinterpret_cast<char*>(&x_)) + sizeof(y_));
+    : ::google::protobuf::Message(), _impl_(from._impl_) {
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:glp_util.Model.Mesh.Vec2)
 }
-
-void Model_Mesh_Vec2::SharedCtor() {
-  ::memset(&x_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&y_) -
-      reinterpret_cast<char*>(&x_)) + sizeof(y_));
+inline void Model_Mesh_Vec2::SharedCtor(::_pb::Arena* arena) {
+  (void)arena;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){},
+      /*decltype(_impl_._cached_size_)*/ {},
+      decltype(_impl_.x_){0},
+      decltype(_impl_.y_){0},
+  };
 }
-
 Model_Mesh_Vec2::~Model_Mesh_Vec2() {
   // @@protoc_insertion_point(destructor:glp_util.Model.Mesh.Vec2)
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
-
-void Model_Mesh_Vec2::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
-}
-
-void Model_Mesh_Vec2::ArenaDtor(void* object) {
-  Model_Mesh_Vec2* _this = reinterpret_cast< Model_Mesh_Vec2* >(object);
-  (void)_this;
-}
-void Model_Mesh_Vec2::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+inline void Model_Mesh_Vec2::SharedDtor() {
+  ABSL_DCHECK(GetArenaForAllocation() == nullptr);
 }
 void Model_Mesh_Vec2::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const Model_Mesh_Vec2& Model_Mesh_Vec2::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Model_Mesh_Vec2_model_2eproto.base);
-  return *internal_default_instance();
+  _impl_._cached_size_.Set(size);
 }
 
-
-void Model_Mesh_Vec2::Clear() {
+PROTOBUF_NOINLINE void Model_Mesh_Vec2::Clear() {
 // @@protoc_insertion_point(message_clear_start:glp_util.Model.Mesh.Vec2)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
+  cached_has_bits = _impl_._has_bits_[0];
   if (cached_has_bits & 0x00000003u) {
-    ::memset(&x_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&y_) -
-        reinterpret_cast<char*>(&x_)) + sizeof(y_));
+    ::memset(&_impl_.x_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.y_) -
+        reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.y_));
   }
-  _has_bits_.Clear();
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* Model_Mesh_Vec2::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  _Internal::HasBits has_bits{};
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
-      // required float x = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 13)) {
-          _Internal::set_has_x(&has_bits);
-          x_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
-          ptr += sizeof(float);
-        } else goto handle_unusual;
-        continue;
-      // required float y = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 21)) {
-          _Internal::set_has_y(&has_bits);
-          y_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
-          ptr += sizeof(float);
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
-  _has_bits_.Or(has_bits);
+const char* Model_Mesh_Vec2::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* Model_Mesh_Vec2::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:glp_util.Model.Mesh.Vec2)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 0, 2> Model_Mesh_Vec2::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    &_Model_Mesh_Vec2_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    // required float y = 2;
+    {::_pbi::TcParser::FastF32S1,
+     {21, 1, 0, PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, _impl_.y_)}},
+    // required float x = 1;
+    {::_pbi::TcParser::FastF32S1,
+     {13, 0, 0, PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, _impl_.x_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // required float x = 1;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, _impl_.x_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    // required float y = 2;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, _impl_.y_), _Internal::kHasBitsOffset + 1, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+
+::uint8_t* Model_Mesh_Vec2::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:glp_util.Model.Mesh.Vec2)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
   // required float x = 1;
   if (cached_has_bits & 0x00000001u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(1, this->_internal_x(), target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        1, this->_internal_x(), target);
   }
 
   // required float y = 2;
   if (cached_has_bits & 0x00000002u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(2, this->_internal_y(), target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        2, this->_internal_y(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:glp_util.Model.Mesh.Vec2)
   return target;
 }
 
-size_t Model_Mesh_Vec2::RequiredFieldsByteSizeFallback() const {
-// @@protoc_insertion_point(required_fields_byte_size_fallback_start:glp_util.Model.Mesh.Vec2)
-  size_t total_size = 0;
-
-  if (_internal_has_x()) {
-    // required float x = 1;
-    total_size += 1 + 4;
-  }
-
-  if (_internal_has_y()) {
-    // required float y = 2;
-    total_size += 1 + 4;
-  }
-
-  return total_size;
-}
-size_t Model_Mesh_Vec2::ByteSizeLong() const {
+::size_t Model_Mesh_Vec2::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:glp_util.Model.Mesh.Vec2)
-  size_t total_size = 0;
+  ::size_t total_size = 0;
 
-  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
-    // required float x = 1;
-    total_size += 1 + 4;
-
-    // required float y = 2;
-    total_size += 1 + 4;
-
-  } else {
-    total_size += RequiredFieldsByteSizeFallback();
-  }
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000003u) {
+    // required float x = 1;
+    if (cached_has_bits & 0x00000001u) {
+      total_size += 5;
+    }
+
+    // required float y = 2;
+    if (cached_has_bits & 0x00000002u) {
+      total_size += 5;
+    }
+
   }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void Model_Mesh_Vec2::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:glp_util.Model.Mesh.Vec2)
-  GOOGLE_DCHECK_NE(&from, this);
-  const Model_Mesh_Vec2* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Model_Mesh_Vec2>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:glp_util.Model.Mesh.Vec2)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:glp_util.Model.Mesh.Vec2)
-    MergeFrom(*source);
-  }
-}
+const ::google::protobuf::Message::ClassData Model_Mesh_Vec2::_class_data_ = {
+    ::google::protobuf::Message::CopyWithSourceCheck,
+    Model_Mesh_Vec2::MergeImpl
+};
+const ::google::protobuf::Message::ClassData*Model_Mesh_Vec2::GetClassData() const { return &_class_data_; }
 
-void Model_Mesh_Vec2::MergeFrom(const Model_Mesh_Vec2& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model.Mesh.Vec2)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void Model_Mesh_Vec2::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
+  auto* const _this = static_cast<Model_Mesh_Vec2*>(&to_msg);
+  auto& from = static_cast<const Model_Mesh_Vec2&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model.Mesh.Vec2)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = from._has_bits_[0];
+  cached_has_bits = from._impl_._has_bits_[0];
   if (cached_has_bits & 0x00000003u) {
     if (cached_has_bits & 0x00000001u) {
-      x_ = from.x_;
+      _this->_impl_.x_ = from._impl_.x_;
     }
     if (cached_has_bits & 0x00000002u) {
-      y_ = from.y_;
+      _this->_impl_.y_ = from._impl_.y_;
     }
-    _has_bits_[0] |= cached_has_bits;
+    _this->_impl_._has_bits_[0] |= cached_has_bits;
   }
-}
-
-void Model_Mesh_Vec2::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:glp_util.Model.Mesh.Vec2)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Model_Mesh_Vec2::CopyFrom(const Model_Mesh_Vec2& from) {
@@ -758,41 +694,37 @@ void Model_Mesh_Vec2::CopyFrom(const Model_Mesh_Vec2& from) {
   MergeFrom(from);
 }
 
-bool Model_Mesh_Vec2::IsInitialized() const {
-  if (_Internal::MissingRequiredFields(_has_bits_)) return false;
+PROTOBUF_NOINLINE bool Model_Mesh_Vec2::IsInitialized() const {
+  if (_Internal::MissingRequiredFields(_impl_._has_bits_)) {
+    return false;
+  }
   return true;
 }
 
 void Model_Mesh_Vec2::InternalSwap(Model_Mesh_Vec2* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, y_)
-      + sizeof(Model_Mesh_Vec2::y_)
-      - PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, x_)>(
-          reinterpret_cast<char*>(&x_),
-          reinterpret_cast<char*>(&other->x_));
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, _impl_.y_)
+      + sizeof(Model_Mesh_Vec2::_impl_.y_)
+      - PROTOBUF_FIELD_OFFSET(Model_Mesh_Vec2, _impl_.x_)>(
+          reinterpret_cast<char*>(&_impl_.x_),
+          reinterpret_cast<char*>(&other->_impl_.x_));
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Model_Mesh_Vec2::GetMetadata() const {
-  return GetMetadataStatic();
+::google::protobuf::Metadata Model_Mesh_Vec2::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_model_2eproto_getter, &descriptor_table_model_2eproto_once,
+      file_level_metadata_model_2eproto[1]);
 }
-
-
 // ===================================================================
 
-void Model_Mesh_Vertex::InitAsDefaultInstance() {
-  ::glp_util::_Model_Mesh_Vertex_default_instance_._instance.get_mutable()->position_ = const_cast< ::glp_util::Model_Mesh_Vec3*>(
-      ::glp_util::Model_Mesh_Vec3::internal_default_instance());
-  ::glp_util::_Model_Mesh_Vertex_default_instance_._instance.get_mutable()->normal_ = const_cast< ::glp_util::Model_Mesh_Vec3*>(
-      ::glp_util::Model_Mesh_Vec3::internal_default_instance());
-  ::glp_util::_Model_Mesh_Vertex_default_instance_._instance.get_mutable()->uv_ = const_cast< ::glp_util::Model_Mesh_Vec2*>(
-      ::glp_util::Model_Mesh_Vec2::internal_default_instance());
-}
 class Model_Mesh_Vertex::_Internal {
  public:
-  using HasBits = decltype(std::declval<Model_Mesh_Vertex>()._has_bits_);
+  using HasBits = decltype(std::declval<Model_Mesh_Vertex>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+    8 * PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_._has_bits_);
   static const ::glp_util::Model_Mesh_Vec3& position(const Model_Mesh_Vertex* msg);
   static void set_has_position(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
@@ -810,302 +742,250 @@ class Model_Mesh_Vertex::_Internal {
   }
 };
 
-const ::glp_util::Model_Mesh_Vec3&
-Model_Mesh_Vertex::_Internal::position(const Model_Mesh_Vertex* msg) {
-  return *msg->position_;
+const ::glp_util::Model_Mesh_Vec3& Model_Mesh_Vertex::_Internal::position(const Model_Mesh_Vertex* msg) {
+  return *msg->_impl_.position_;
 }
-const ::glp_util::Model_Mesh_Vec3&
-Model_Mesh_Vertex::_Internal::normal(const Model_Mesh_Vertex* msg) {
-  return *msg->normal_;
+const ::glp_util::Model_Mesh_Vec3& Model_Mesh_Vertex::_Internal::normal(const Model_Mesh_Vertex* msg) {
+  return *msg->_impl_.normal_;
 }
-const ::glp_util::Model_Mesh_Vec2&
-Model_Mesh_Vertex::_Internal::uv(const Model_Mesh_Vertex* msg) {
-  return *msg->uv_;
+const ::glp_util::Model_Mesh_Vec2& Model_Mesh_Vertex::_Internal::uv(const Model_Mesh_Vertex* msg) {
+  return *msg->_impl_.uv_;
 }
-Model_Mesh_Vertex::Model_Mesh_Vertex(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+Model_Mesh_Vertex::Model_Mesh_Vertex(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:glp_util.Model.Mesh.Vertex)
 }
-Model_Mesh_Vertex::Model_Mesh_Vertex(const Model_Mesh_Vertex& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _has_bits_(from._has_bits_) {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  if (from._internal_has_position()) {
-    position_ = new ::glp_util::Model_Mesh_Vec3(*from.position_);
-  } else {
-    position_ = nullptr;
+Model_Mesh_Vertex::Model_Mesh_Vertex(const Model_Mesh_Vertex& from) : ::google::protobuf::Message() {
+  Model_Mesh_Vertex* const _this = this;
+  (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){from._impl_._has_bits_},
+      /*decltype(_impl_._cached_size_)*/ {},
+      decltype(_impl_.position_){nullptr},
+      decltype(_impl_.normal_){nullptr},
+      decltype(_impl_.uv_){nullptr},
+  };
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
+    _this->_impl_.position_ = new ::glp_util::Model_Mesh_Vec3(*from._impl_.position_);
   }
-  if (from._internal_has_normal()) {
-    normal_ = new ::glp_util::Model_Mesh_Vec3(*from.normal_);
-  } else {
-    normal_ = nullptr;
+  if ((from._impl_._has_bits_[0] & 0x00000002u) != 0) {
+    _this->_impl_.normal_ = new ::glp_util::Model_Mesh_Vec3(*from._impl_.normal_);
   }
-  if (from._internal_has_uv()) {
-    uv_ = new ::glp_util::Model_Mesh_Vec2(*from.uv_);
-  } else {
-    uv_ = nullptr;
+  if ((from._impl_._has_bits_[0] & 0x00000004u) != 0) {
+    _this->_impl_.uv_ = new ::glp_util::Model_Mesh_Vec2(*from._impl_.uv_);
   }
+
   // @@protoc_insertion_point(copy_constructor:glp_util.Model.Mesh.Vertex)
 }
-
-void Model_Mesh_Vertex::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Model_Mesh_Vertex_model_2eproto.base);
-  ::memset(&position_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&uv_) -
-      reinterpret_cast<char*>(&position_)) + sizeof(uv_));
+inline void Model_Mesh_Vertex::SharedCtor(::_pb::Arena* arena) {
+  (void)arena;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){},
+      /*decltype(_impl_._cached_size_)*/ {},
+      decltype(_impl_.position_){nullptr},
+      decltype(_impl_.normal_){nullptr},
+      decltype(_impl_.uv_){nullptr},
+  };
 }
-
 Model_Mesh_Vertex::~Model_Mesh_Vertex() {
   // @@protoc_insertion_point(destructor:glp_util.Model.Mesh.Vertex)
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
-
-void Model_Mesh_Vertex::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
-  if (this != internal_default_instance()) delete position_;
-  if (this != internal_default_instance()) delete normal_;
-  if (this != internal_default_instance()) delete uv_;
-}
-
-void Model_Mesh_Vertex::ArenaDtor(void* object) {
-  Model_Mesh_Vertex* _this = reinterpret_cast< Model_Mesh_Vertex* >(object);
-  (void)_this;
-}
-void Model_Mesh_Vertex::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+inline void Model_Mesh_Vertex::SharedDtor() {
+  ABSL_DCHECK(GetArenaForAllocation() == nullptr);
+  if (this != internal_default_instance()) delete _impl_.position_;
+  if (this != internal_default_instance()) delete _impl_.normal_;
+  if (this != internal_default_instance()) delete _impl_.uv_;
 }
 void Model_Mesh_Vertex::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const Model_Mesh_Vertex& Model_Mesh_Vertex::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Model_Mesh_Vertex_model_2eproto.base);
-  return *internal_default_instance();
+  _impl_._cached_size_.Set(size);
 }
 
-
-void Model_Mesh_Vertex::Clear() {
+PROTOBUF_NOINLINE void Model_Mesh_Vertex::Clear() {
 // @@protoc_insertion_point(message_clear_start:glp_util.Model.Mesh.Vertex)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
+  cached_has_bits = _impl_._has_bits_[0];
   if (cached_has_bits & 0x00000007u) {
     if (cached_has_bits & 0x00000001u) {
-      GOOGLE_DCHECK(position_ != nullptr);
-      position_->Clear();
+      ABSL_DCHECK(_impl_.position_ != nullptr);
+      _impl_.position_->Clear();
     }
     if (cached_has_bits & 0x00000002u) {
-      GOOGLE_DCHECK(normal_ != nullptr);
-      normal_->Clear();
+      ABSL_DCHECK(_impl_.normal_ != nullptr);
+      _impl_.normal_->Clear();
     }
     if (cached_has_bits & 0x00000004u) {
-      GOOGLE_DCHECK(uv_ != nullptr);
-      uv_->Clear();
+      ABSL_DCHECK(_impl_.uv_ != nullptr);
+      _impl_.uv_->Clear();
     }
   }
-  _has_bits_.Clear();
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* Model_Mesh_Vertex::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  _Internal::HasBits has_bits{};
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
-      // required .glp_util.Model.Mesh.Vec3 position = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr = ctx->ParseMessage(_internal_mutable_position(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // required .glp_util.Model.Mesh.Vec3 normal = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          ptr = ctx->ParseMessage(_internal_mutable_normal(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // required .glp_util.Model.Mesh.Vec2 uv = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
-          ptr = ctx->ParseMessage(_internal_mutable_uv(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
-  _has_bits_.Or(has_bits);
+const char* Model_Mesh_Vertex::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* Model_Mesh_Vertex::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:glp_util.Model.Mesh.Vertex)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 3, 0, 2> Model_Mesh_Vertex::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_._has_bits_),
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    3,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    &_Model_Mesh_Vertex_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // required .glp_util.Model.Mesh.Vec3 position = 1;
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0, PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_.position_)}},
+    // required .glp_util.Model.Mesh.Vec3 normal = 2;
+    {::_pbi::TcParser::FastMtS1,
+     {18, 1, 1, PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_.normal_)}},
+    // required .glp_util.Model.Mesh.Vec2 uv = 3;
+    {::_pbi::TcParser::FastMtS1,
+     {26, 2, 2, PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_.uv_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // required .glp_util.Model.Mesh.Vec3 position = 1;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_.position_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // required .glp_util.Model.Mesh.Vec3 normal = 2;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_.normal_), _Internal::kHasBitsOffset + 1, 1,
+    (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // required .glp_util.Model.Mesh.Vec2 uv = 3;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_.uv_), _Internal::kHasBitsOffset + 2, 2,
+    (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::glp_util::Model_Mesh_Vec3>()},
+    {::_pbi::TcParser::GetTable<::glp_util::Model_Mesh_Vec3>()},
+    {::_pbi::TcParser::GetTable<::glp_util::Model_Mesh_Vec2>()},
+  }}, {{
+  }},
+};
+
+::uint8_t* Model_Mesh_Vertex::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:glp_util.Model.Mesh.Vertex)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
   // required .glp_util.Model.Mesh.Vec3 position = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        1, _Internal::position(this), target, stream);
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessage(1, _Internal::position(this),
+        _Internal::position(this).GetCachedSize(), target, stream);
   }
 
   // required .glp_util.Model.Mesh.Vec3 normal = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        2, _Internal::normal(this), target, stream);
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessage(2, _Internal::normal(this),
+        _Internal::normal(this).GetCachedSize(), target, stream);
   }
 
   // required .glp_util.Model.Mesh.Vec2 uv = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        3, _Internal::uv(this), target, stream);
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessage(3, _Internal::uv(this),
+        _Internal::uv(this).GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:glp_util.Model.Mesh.Vertex)
   return target;
 }
 
-size_t Model_Mesh_Vertex::RequiredFieldsByteSizeFallback() const {
-// @@protoc_insertion_point(required_fields_byte_size_fallback_start:glp_util.Model.Mesh.Vertex)
-  size_t total_size = 0;
-
-  if (_internal_has_position()) {
-    // required .glp_util.Model.Mesh.Vec3 position = 1;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *position_);
-  }
-
-  if (_internal_has_normal()) {
-    // required .glp_util.Model.Mesh.Vec3 normal = 2;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *normal_);
-  }
-
-  if (_internal_has_uv()) {
-    // required .glp_util.Model.Mesh.Vec2 uv = 3;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *uv_);
-  }
-
-  return total_size;
-}
-size_t Model_Mesh_Vertex::ByteSizeLong() const {
+::size_t Model_Mesh_Vertex::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:glp_util.Model.Mesh.Vertex)
-  size_t total_size = 0;
+  ::size_t total_size = 0;
 
-  if (((_has_bits_[0] & 0x00000007) ^ 0x00000007) == 0) {  // All required fields are present.
-    // required .glp_util.Model.Mesh.Vec3 position = 1;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *position_);
-
-    // required .glp_util.Model.Mesh.Vec3 normal = 2;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *normal_);
-
-    // required .glp_util.Model.Mesh.Vec2 uv = 3;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *uv_);
-
-  } else {
-    total_size += RequiredFieldsByteSizeFallback();
-  }
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000007u) {
+    // required .glp_util.Model.Mesh.Vec3 position = 1;
+    if (cached_has_bits & 0x00000001u) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *_impl_.position_);
+    }
+
+    // required .glp_util.Model.Mesh.Vec3 normal = 2;
+    if (cached_has_bits & 0x00000002u) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *_impl_.normal_);
+    }
+
+    // required .glp_util.Model.Mesh.Vec2 uv = 3;
+    if (cached_has_bits & 0x00000004u) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *_impl_.uv_);
+    }
+
   }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void Model_Mesh_Vertex::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:glp_util.Model.Mesh.Vertex)
-  GOOGLE_DCHECK_NE(&from, this);
-  const Model_Mesh_Vertex* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Model_Mesh_Vertex>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:glp_util.Model.Mesh.Vertex)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:glp_util.Model.Mesh.Vertex)
-    MergeFrom(*source);
-  }
-}
+const ::google::protobuf::Message::ClassData Model_Mesh_Vertex::_class_data_ = {
+    ::google::protobuf::Message::CopyWithSourceCheck,
+    Model_Mesh_Vertex::MergeImpl
+};
+const ::google::protobuf::Message::ClassData*Model_Mesh_Vertex::GetClassData() const { return &_class_data_; }
 
-void Model_Mesh_Vertex::MergeFrom(const Model_Mesh_Vertex& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model.Mesh.Vertex)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void Model_Mesh_Vertex::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
+  auto* const _this = static_cast<Model_Mesh_Vertex*>(&to_msg);
+  auto& from = static_cast<const Model_Mesh_Vertex&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model.Mesh.Vertex)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = from._has_bits_[0];
+  cached_has_bits = from._impl_._has_bits_[0];
   if (cached_has_bits & 0x00000007u) {
     if (cached_has_bits & 0x00000001u) {
-      _internal_mutable_position()->::glp_util::Model_Mesh_Vec3::MergeFrom(from._internal_position());
+      _this->_internal_mutable_position()->::glp_util::Model_Mesh_Vec3::MergeFrom(
+          from._internal_position());
     }
     if (cached_has_bits & 0x00000002u) {
-      _internal_mutable_normal()->::glp_util::Model_Mesh_Vec3::MergeFrom(from._internal_normal());
+      _this->_internal_mutable_normal()->::glp_util::Model_Mesh_Vec3::MergeFrom(
+          from._internal_normal());
     }
     if (cached_has_bits & 0x00000004u) {
-      _internal_mutable_uv()->::glp_util::Model_Mesh_Vec2::MergeFrom(from._internal_uv());
+      _this->_internal_mutable_uv()->::glp_util::Model_Mesh_Vec2::MergeFrom(
+          from._internal_uv());
     }
   }
-}
-
-void Model_Mesh_Vertex::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:glp_util.Model.Mesh.Vertex)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Model_Mesh_Vertex::CopyFrom(const Model_Mesh_Vertex& from) {
@@ -1115,288 +995,244 @@ void Model_Mesh_Vertex::CopyFrom(const Model_Mesh_Vertex& from) {
   MergeFrom(from);
 }
 
-bool Model_Mesh_Vertex::IsInitialized() const {
-  if (_Internal::MissingRequiredFields(_has_bits_)) return false;
-  if (_internal_has_position()) {
-    if (!position_->IsInitialized()) return false;
+PROTOBUF_NOINLINE bool Model_Mesh_Vertex::IsInitialized() const {
+  if (_Internal::MissingRequiredFields(_impl_._has_bits_)) {
+    return false;
   }
-  if (_internal_has_normal()) {
-    if (!normal_->IsInitialized()) return false;
+  if ((_impl_._has_bits_[0] & 0x00000001u) != 0) {
+    if (!_impl_.position_->IsInitialized()) return false;
   }
-  if (_internal_has_uv()) {
-    if (!uv_->IsInitialized()) return false;
+  if ((_impl_._has_bits_[0] & 0x00000002u) != 0) {
+    if (!_impl_.normal_->IsInitialized()) return false;
+  }
+  if ((_impl_._has_bits_[0] & 0x00000004u) != 0) {
+    if (!_impl_.uv_->IsInitialized()) return false;
   }
   return true;
 }
 
 void Model_Mesh_Vertex::InternalSwap(Model_Mesh_Vertex* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, uv_)
-      + sizeof(Model_Mesh_Vertex::uv_)
-      - PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, position_)>(
-          reinterpret_cast<char*>(&position_),
-          reinterpret_cast<char*>(&other->position_));
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_.uv_)
+      + sizeof(Model_Mesh_Vertex::_impl_.uv_)
+      - PROTOBUF_FIELD_OFFSET(Model_Mesh_Vertex, _impl_.position_)>(
+          reinterpret_cast<char*>(&_impl_.position_),
+          reinterpret_cast<char*>(&other->_impl_.position_));
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Model_Mesh_Vertex::GetMetadata() const {
-  return GetMetadataStatic();
+::google::protobuf::Metadata Model_Mesh_Vertex::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_model_2eproto_getter, &descriptor_table_model_2eproto_once,
+      file_level_metadata_model_2eproto[2]);
 }
-
-
 // ===================================================================
 
-void Model_Mesh::InitAsDefaultInstance() {
-}
 class Model_Mesh::_Internal {
  public:
 };
 
-Model_Mesh::Model_Mesh(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
-  vertices_(arena),
-  indices_(arena),
-  textures_(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+Model_Mesh::Model_Mesh(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:glp_util.Model.Mesh)
 }
-Model_Mesh::Model_Mesh(const Model_Mesh& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      vertices_(from.vertices_),
-      indices_(from.indices_),
-      textures_(from.textures_) {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+Model_Mesh::Model_Mesh(const Model_Mesh& from) : ::google::protobuf::Message() {
+  Model_Mesh* const _this = this;
+  (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.vertices_){from._impl_.vertices_},
+      decltype(_impl_.indices_){from._impl_.indices_},
+      decltype(_impl_.textures_){from._impl_.textures_},
+      /*decltype(_impl_._cached_size_)*/ {},
+  };
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+
   // @@protoc_insertion_point(copy_constructor:glp_util.Model.Mesh)
 }
-
-void Model_Mesh::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Model_Mesh_model_2eproto.base);
+inline void Model_Mesh::SharedCtor(::_pb::Arena* arena) {
+  (void)arena;
+  new (&_impl_) Impl_{
+      decltype(_impl_.vertices_){arena},
+      decltype(_impl_.indices_){arena},
+      decltype(_impl_.textures_){arena},
+      /*decltype(_impl_._cached_size_)*/ {},
+  };
 }
-
 Model_Mesh::~Model_Mesh() {
   // @@protoc_insertion_point(destructor:glp_util.Model.Mesh)
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
-
-void Model_Mesh::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
-}
-
-void Model_Mesh::ArenaDtor(void* object) {
-  Model_Mesh* _this = reinterpret_cast< Model_Mesh* >(object);
-  (void)_this;
-}
-void Model_Mesh::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+inline void Model_Mesh::SharedDtor() {
+  ABSL_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.vertices_.~RepeatedPtrField();
+  _impl_.indices_.~RepeatedField();
+  _internal_mutable_textures()->~RepeatedPtrField();
 }
 void Model_Mesh::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const Model_Mesh& Model_Mesh::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Model_Mesh_model_2eproto.base);
-  return *internal_default_instance();
+  _impl_._cached_size_.Set(size);
 }
 
-
-void Model_Mesh::Clear() {
+PROTOBUF_NOINLINE void Model_Mesh::Clear() {
 // @@protoc_insertion_point(message_clear_start:glp_util.Model.Mesh)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  vertices_.Clear();
-  indices_.Clear();
-  textures_.Clear();
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _internal_mutable_vertices()->Clear();
+  _internal_mutable_indices()->Clear();
+  _internal_mutable_textures()->Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* Model_Mesh::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
-      // repeated .glp_util.Model.Mesh.Vertex vertices = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_vertices(), ptr);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
-        } else goto handle_unusual;
-        continue;
-      // repeated uint32 indices = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            _internal_add_indices(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr));
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<16>(ptr));
-        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedUInt32Parser(_internal_mutable_indices(), ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // repeated string textures = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            auto str = _internal_add_textures();
-            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-            #ifndef NDEBUG
-            ::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "glp_util.Model.Mesh.textures");
-            #endif  // !NDEBUG
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
+const char* Model_Mesh::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* Model_Mesh::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 1, 36, 2> Model_Mesh::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    &_Model_Mesh_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // repeated .glp_util.Model.Mesh.Vertex vertices = 1;
+    {::_pbi::TcParser::FastMtR1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(Model_Mesh, _impl_.vertices_)}},
+    // repeated uint32 indices = 2;
+    {::_pbi::TcParser::FastV32R1,
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(Model_Mesh, _impl_.indices_)}},
+    // repeated string textures = 3;
+    {::_pbi::TcParser::FastSR1,
+     {26, 63, 0, PROTOBUF_FIELD_OFFSET(Model_Mesh, _impl_.textures_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // repeated .glp_util.Model.Mesh.Vertex vertices = 1;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh, _impl_.vertices_), 0, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // repeated uint32 indices = 2;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh, _impl_.indices_), 0, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kUInt32)},
+    // repeated string textures = 3;
+    {PROTOBUF_FIELD_OFFSET(Model_Mesh, _impl_.textures_), 0, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kRawString | ::_fl::kRepSString)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::glp_util::Model_Mesh_Vertex>()},
+  }}, {{
+    "\23\0\0\10\0\0\0\0"
+    "glp_util.Model.Mesh"
+    "textures"
+  }},
+};
+
+::uint8_t* Model_Mesh::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:glp_util.Model.Mesh)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
 
   // repeated .glp_util.Model.Mesh.Vertex vertices = 1;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->_internal_vertices_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(1, this->_internal_vertices(i), target, stream);
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_vertices_size()); i < n; i++) {
+    const auto& repfield = this->_internal_vertices().Get(i);
+    target = ::google::protobuf::internal::WireFormatLite::
+        InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
   }
 
   // repeated uint32 indices = 2;
-  for (int i = 0, n = this->_internal_indices_size(); i < n; i++) {
+  for (int i = 0, n = this->_internal_indices_size(); i < n; ++i) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(2, this->_internal_indices(i), target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+        2, this->_internal_indices().Get(i), target);
   }
 
   // repeated string textures = 3;
-  for (int i = 0, n = this->_internal_textures_size(); i < n; i++) {
-    const auto& s = this->_internal_textures(i);
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::VerifyUTF8StringNamedField(
-      s.data(), static_cast<int>(s.length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::SERIALIZE,
-      "glp_util.Model.Mesh.textures");
+  for (int i = 0, n = this->_internal_textures_size(); i < n; ++i) {
+    const auto& s = this->_internal_textures().Get(i);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(s.data(), static_cast<int>(s.length()), ::google::protobuf::internal::WireFormat::SERIALIZE,
+                                "glp_util.Model.Mesh.textures");
     target = stream->WriteString(3, s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:glp_util.Model.Mesh)
   return target;
 }
 
-size_t Model_Mesh::ByteSizeLong() const {
+::size_t Model_Mesh::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:glp_util.Model.Mesh)
-  size_t total_size = 0;
+  ::size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // repeated .glp_util.Model.Mesh.Vertex vertices = 1;
   total_size += 1UL * this->_internal_vertices_size();
-  for (const auto& msg : this->vertices_) {
+  for (const auto& msg : this->_internal_vertices()) {
     total_size +=
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+      ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
   }
-
   // repeated uint32 indices = 2;
   {
-    size_t data_size = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      UInt32Size(this->indices_);
-    total_size += 1 *
-                  ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_indices_size());
-    total_size += data_size;
+    std::size_t data_size = ::_pbi::WireFormatLite::UInt32Size(
+        this->_internal_indices())
+    ;
+    std::size_t tag_size = std::size_t{1} *
+        ::_pbi::FromIntSize(this->_internal_indices_size());
+    ;
+    total_size += tag_size + data_size;
   }
-
   // repeated string textures = 3;
-  total_size += 1 *
-      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(textures_.size());
-  for (int i = 0, n = textures_.size(); i < n; i++) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-      textures_.Get(i));
+  total_size += 1 * ::google::protobuf::internal::FromIntSize(_internal_textures().size());
+  for (int i = 0, n = _internal_textures().size(); i < n; ++i) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+        _internal_textures().Get(i));
   }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void Model_Mesh::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:glp_util.Model.Mesh)
-  GOOGLE_DCHECK_NE(&from, this);
-  const Model_Mesh* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Model_Mesh>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:glp_util.Model.Mesh)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:glp_util.Model.Mesh)
-    MergeFrom(*source);
-  }
-}
+const ::google::protobuf::Message::ClassData Model_Mesh::_class_data_ = {
+    ::google::protobuf::Message::CopyWithSourceCheck,
+    Model_Mesh::MergeImpl
+};
+const ::google::protobuf::Message::ClassData*Model_Mesh::GetClassData() const { return &_class_data_; }
 
-void Model_Mesh::MergeFrom(const Model_Mesh& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model.Mesh)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void Model_Mesh::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
+  auto* const _this = static_cast<Model_Mesh*>(&to_msg);
+  auto& from = static_cast<const Model_Mesh&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model.Mesh)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  vertices_.MergeFrom(from.vertices_);
-  indices_.MergeFrom(from.indices_);
-  textures_.MergeFrom(from.textures_);
-}
-
-void Model_Mesh::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:glp_util.Model.Mesh)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_internal_mutable_vertices()->MergeFrom(from._internal_vertices());
+  _this->_internal_mutable_indices()->MergeFrom(from._internal_indices());
+  _this->_internal_mutable_textures()->MergeFrom(from._internal_textures());
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Model_Mesh::CopyFrom(const Model_Mesh& from) {
@@ -1406,203 +1242,173 @@ void Model_Mesh::CopyFrom(const Model_Mesh& from) {
   MergeFrom(from);
 }
 
-bool Model_Mesh::IsInitialized() const {
-  if (!::PROTOBUF_NAMESPACE_ID::internal::AllAreInitialized(vertices_)) return false;
+PROTOBUF_NOINLINE bool Model_Mesh::IsInitialized() const {
+  if (!::google::protobuf::internal::AllAreInitialized(_internal_vertices()))
+    return false;
   return true;
 }
 
 void Model_Mesh::InternalSwap(Model_Mesh* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  vertices_.InternalSwap(&other->vertices_);
-  indices_.InternalSwap(&other->indices_);
-  textures_.InternalSwap(&other->textures_);
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.vertices_.InternalSwap(&other->_impl_.vertices_);
+  _impl_.indices_.InternalSwap(&other->_impl_.indices_);
+  _impl_.textures_.InternalSwap(&other->_impl_.textures_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Model_Mesh::GetMetadata() const {
-  return GetMetadataStatic();
+::google::protobuf::Metadata Model_Mesh::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_model_2eproto_getter, &descriptor_table_model_2eproto_once,
+      file_level_metadata_model_2eproto[3]);
 }
-
-
 // ===================================================================
 
-void Model::InitAsDefaultInstance() {
-}
 class Model::_Internal {
  public:
 };
 
-Model::Model(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
-  meshes_(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+Model::Model(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:glp_util.Model)
 }
-Model::Model(const Model& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      meshes_(from.meshes_) {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+Model::Model(const Model& from) : ::google::protobuf::Message() {
+  Model* const _this = this;
+  (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.meshes_){from._impl_.meshes_},
+      /*decltype(_impl_._cached_size_)*/ {},
+  };
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+
   // @@protoc_insertion_point(copy_constructor:glp_util.Model)
 }
-
-void Model::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Model_model_2eproto.base);
+inline void Model::SharedCtor(::_pb::Arena* arena) {
+  (void)arena;
+  new (&_impl_) Impl_{
+      decltype(_impl_.meshes_){arena},
+      /*decltype(_impl_._cached_size_)*/ {},
+  };
 }
-
 Model::~Model() {
   // @@protoc_insertion_point(destructor:glp_util.Model)
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
-
-void Model::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
-}
-
-void Model::ArenaDtor(void* object) {
-  Model* _this = reinterpret_cast< Model* >(object);
-  (void)_this;
-}
-void Model::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+inline void Model::SharedDtor() {
+  ABSL_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.meshes_.~RepeatedPtrField();
 }
 void Model::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const Model& Model::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Model_model_2eproto.base);
-  return *internal_default_instance();
+  _impl_._cached_size_.Set(size);
 }
 
-
-void Model::Clear() {
+PROTOBUF_NOINLINE void Model::Clear() {
 // @@protoc_insertion_point(message_clear_start:glp_util.Model)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  meshes_.Clear();
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _internal_mutable_meshes()->Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* Model::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
-      // repeated .glp_util.Model.Mesh meshes = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_meshes(), ptr);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
+const char* Model::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* Model::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2> Model::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    &_Model_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    // repeated .glp_util.Model.Mesh meshes = 1;
+    {::_pbi::TcParser::FastMtR1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(Model, _impl_.meshes_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // repeated .glp_util.Model.Mesh meshes = 1;
+    {PROTOBUF_FIELD_OFFSET(Model, _impl_.meshes_), 0, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::glp_util::Model_Mesh>()},
+  }}, {{
+  }},
+};
+
+::uint8_t* Model::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:glp_util.Model)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
 
   // repeated .glp_util.Model.Mesh meshes = 1;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->_internal_meshes_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(1, this->_internal_meshes(i), target, stream);
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_meshes_size()); i < n; i++) {
+    const auto& repfield = this->_internal_meshes().Get(i);
+    target = ::google::protobuf::internal::WireFormatLite::
+        InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:glp_util.Model)
   return target;
 }
 
-size_t Model::ByteSizeLong() const {
+::size_t Model::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:glp_util.Model)
-  size_t total_size = 0;
+  ::size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // repeated .glp_util.Model.Mesh meshes = 1;
   total_size += 1UL * this->_internal_meshes_size();
-  for (const auto& msg : this->meshes_) {
+  for (const auto& msg : this->_internal_meshes()) {
     total_size +=
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+      ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
   }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void Model::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:glp_util.Model)
-  GOOGLE_DCHECK_NE(&from, this);
-  const Model* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Model>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:glp_util.Model)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:glp_util.Model)
-    MergeFrom(*source);
-  }
-}
+const ::google::protobuf::Message::ClassData Model::_class_data_ = {
+    ::google::protobuf::Message::CopyWithSourceCheck,
+    Model::MergeImpl
+};
+const ::google::protobuf::Message::ClassData*Model::GetClassData() const { return &_class_data_; }
 
-void Model::MergeFrom(const Model& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void Model::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
+  auto* const _this = static_cast<Model*>(&to_msg);
+  auto& from = static_cast<const Model&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:glp_util.Model)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  meshes_.MergeFrom(from.meshes_);
-}
-
-void Model::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:glp_util.Model)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_internal_mutable_meshes()->MergeFrom(from._internal_meshes());
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Model::CopyFrom(const Model& from) {
@@ -1612,41 +1418,28 @@ void Model::CopyFrom(const Model& from) {
   MergeFrom(from);
 }
 
-bool Model::IsInitialized() const {
-  if (!::PROTOBUF_NAMESPACE_ID::internal::AllAreInitialized(meshes_)) return false;
+PROTOBUF_NOINLINE bool Model::IsInitialized() const {
+  if (!::google::protobuf::internal::AllAreInitialized(_internal_meshes()))
+    return false;
   return true;
 }
 
 void Model::InternalSwap(Model* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  meshes_.InternalSwap(&other->meshes_);
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.meshes_.InternalSwap(&other->_impl_.meshes_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Model::GetMetadata() const {
-  return GetMetadataStatic();
+::google::protobuf::Metadata Model::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_model_2eproto_getter, &descriptor_table_model_2eproto_once,
+      file_level_metadata_model_2eproto[4]);
 }
-
-
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace glp_util
-PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::glp_util::Model_Mesh_Vec3* Arena::CreateMaybeMessage< ::glp_util::Model_Mesh_Vec3 >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::glp_util::Model_Mesh_Vec3 >(arena);
-}
-template<> PROTOBUF_NOINLINE ::glp_util::Model_Mesh_Vec2* Arena::CreateMaybeMessage< ::glp_util::Model_Mesh_Vec2 >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::glp_util::Model_Mesh_Vec2 >(arena);
-}
-template<> PROTOBUF_NOINLINE ::glp_util::Model_Mesh_Vertex* Arena::CreateMaybeMessage< ::glp_util::Model_Mesh_Vertex >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::glp_util::Model_Mesh_Vertex >(arena);
-}
-template<> PROTOBUF_NOINLINE ::glp_util::Model_Mesh* Arena::CreateMaybeMessage< ::glp_util::Model_Mesh >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::glp_util::Model_Mesh >(arena);
-}
-template<> PROTOBUF_NOINLINE ::glp_util::Model* Arena::CreateMaybeMessage< ::glp_util::Model >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::glp_util::Model >(arena);
-}
-PROTOBUF_NAMESPACE_CLOSE
-
+namespace google {
+namespace protobuf {
+}  // namespace protobuf
+}  // namespace google
 // @@protoc_insertion_point(global_scope)
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"
