@@ -8,14 +8,8 @@
 #include "utils.hh"
 #include "../utils/model.pb.h"
 
-constexpr GLuint POSITION_ATTRIBUTE_INDEX       = 0;
-constexpr GLuint NORMAL_ATTRIBUTE_INDEX         = 1;
-constexpr GLuint TEXCOORD0_ATTRIBUTE_INDEX      = 2;
-constexpr GLuint JOINTS_ATTRIBUTE_INDEX         = 3;
-constexpr GLuint WEIGHTS_ATTRIBUTE_INDEX        = 4;
-
-Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex)
-    : vertices{vert}, indices{idx}, textures{tex} {
+Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx)
+    : vertices{vert}, indices{idx} {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -42,16 +36,18 @@ Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<
             2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
     glEnableVertexAttribArray(TEXCOORD0_ATTRIBUTE_INDEX);
 
+    glVertexAttribPointer(JOINTS_ATTRIBUTE_INDEX,
+            4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bone_index));
+    glEnableVertexAttribArray(JOINTS_ATTRIBUTE_INDEX);
+
+    glVertexAttribPointer(WEIGHTS_ATTRIBUTE_INDEX,
+            4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
+    glEnableVertexAttribArray(WEIGHTS_ATTRIBUTE_INDEX);
+
     glBindVertexArray(0);
 }
 
 void Mesh::render(Shader& shader) {
-    for(uint32_t i=0; i<textures.size(); i++) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        shader.set("tex" + std::to_string(i), (int)i);
-        glBindTexture(GL_TEXTURE_2D, textures[i]->id);
-    }
-    glActiveTexture(GL_TEXTURE0);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -62,7 +58,6 @@ Mesh::~Mesh() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
-    for(auto& tex: textures) delete tex;
 }
 
 Model::Model(const std::string& path, bool assimp) {
@@ -81,6 +76,71 @@ void Model::assimp_load(const std::string& path) {
     directory = path.substr(0, path.find_last_of('/'));
 
     assimp_node_process(scene->mRootNode, scene);
+
+    glp_logv("model bone count: %lu", bones.size());
+
+    if(scene->HasMaterials()) {
+        for(size_t i=0; i<scene->mNumMaterials; i++) {
+            auto tex = assimp_textures_load(scene->mMaterials[i], aiTextureType_DIFFUSE);
+            textures.insert(textures.end(), tex.begin(), tex.end());
+        }
+    }
+
+    glp_logv("model texture count: %lu", textures.size());
+
+    if(scene->HasAnimations()) {
+        for(size_t i=0; i<scene->mNumAnimations; i++) {
+            auto ai_anim = scene->mAnimations[i];
+            Animation anim;
+            anim.name = ai_anim->mName.C_Str();
+            anim.duration = ai_anim->mDuration;
+            anim.ticks_per_second = ai_anim->mTicksPerSecond;
+            glp_logv("found new animation in model: %s", anim.name.c_str());
+
+            animations.push_back(anim);
+        }
+    }
+}
+
+int Model::assimp_skeleton_import(aiNode* ai_node, SkeletonNode& node) {
+    SkeletonNode t_node;
+    t_node.bone_index = -1;
+    t_node.name = ai_node->mName.C_Str();
+
+    bool has_bone = false;
+    for(size_t i=0; i<bones.size(); i++) {
+        if(bones[i].name == t_node.name) {
+            t_node.bone_index = i;
+            has_bone = true;
+            break;
+        }
+    }
+
+    bool has_usable_child = false;
+    for(size_t i=0; i<ai_node->mNumChildren; i++) {
+        if(assimp_skeleton_import(ai_node->mChildren[i], t_node.children[0]) == 0) {
+            has_usable_child = true;
+        }
+    }
+
+    if(has_usable_child || has_bone) {
+        node = t_node;
+        return 0;
+    }
+
+    return 1;
+}
+
+std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType type) {
+    std::vector<Texture*> texs;
+    for(size_t i=0; i<mat->GetTextureCount(type); i++) {
+        aiString str;
+        mat->GetTexture(type, i, &str);
+        std::string full_path = directory + '/' + str.C_Str();
+        auto tex = new Texture{full_path};
+        texs.push_back(tex);
+    }
+    return texs;
 }
 
 void Model::assimp_node_process(aiNode* node, const aiScene* scene) {
@@ -96,7 +156,6 @@ void Model::assimp_node_process(aiNode* node, const aiScene* scene) {
 Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
     std::vector<Vertex> verts;
     std::vector<unsigned int> idxs;
-    std::vector<Texture*> texs;
 
     for(size_t i=0; i<mesh->mNumVertices; i++) {
         Vertex vertex {
@@ -122,107 +181,123 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
             idxs.push_back(face->mIndices[j]);
     }
 
-    if(mesh->mMaterialIndex >= 0) {
-        auto material = scene->mMaterials[mesh->mMaterialIndex];
+    if(mesh->HasBones()) {
+        for(size_t i=0; i<mesh->mNumBones; i++) {
+            auto ai_bone = mesh->mBones[i];
+            std::string name = ai_bone->mName.C_Str();
+            bool exists = false;
 
-        auto diffuse = assimp_textures_load(material, aiTextureType_DIFFUSE);
-        texs.insert(texs.end(), diffuse.begin(), diffuse.end());
+            for(const auto& bone: bones)
+                if(name == bone.name) exists = true;
+
+            if(!exists) {
+                bones.emplace_back(name, glm::mat4(
+                            ai_bone->mOffsetMatrix.a1, ai_bone->mOffsetMatrix.b1, ai_bone->mOffsetMatrix.c1, ai_bone->mOffsetMatrix.d1,
+                            ai_bone->mOffsetMatrix.a2, ai_bone->mOffsetMatrix.b2, ai_bone->mOffsetMatrix.c2, ai_bone->mOffsetMatrix.d2,
+                            ai_bone->mOffsetMatrix.a3, ai_bone->mOffsetMatrix.b3, ai_bone->mOffsetMatrix.c3, ai_bone->mOffsetMatrix.d3,
+                            ai_bone->mOffsetMatrix.a4, ai_bone->mOffsetMatrix.b4, ai_bone->mOffsetMatrix.c4, ai_bone->mOffsetMatrix.d4));
+            }
+
+            for(size_t j=0; j<ai_bone->mNumWeights; j++) {
+                auto weight = ai_bone->mWeights[j];
+                auto v = weight.mVertexId;
+                for(size_t k=0; k<MAX_BONE_INFLUENCE; k++) {
+                    if(verts[v].weights[k]==0.0f) {
+                        verts[v].bone_index[k] = i;
+                        verts[v].weights[k] = weight.mWeight;
+                    }
+                }
+            }
+        }
     }
     
-    return new Mesh(verts, idxs, texs);
-}
-
-std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType type) {
-    std::vector<Texture*> texs;
-
-    for(size_t i=0; i<mat->GetTextureCount(type); i++) {
-        aiString str;
-        mat->GetTexture(type, i, &str);
-        std::string full_path = directory + '/' + str.C_Str();
-        auto tex = new Texture{full_path};
-        texs.push_back(tex);
-    }
-
-    return texs;
+    return new Mesh(verts, idxs);
 }
 
 void Model::render(Shader& shader) {
+    for(uint32_t i=0; i<textures.size(); i++) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        shader.set("tex" + std::to_string(i), (int)i);
+        glBindTexture(GL_TEXTURE_2D, textures[i]->id);
+    }
+    glActiveTexture(GL_TEXTURE0);
     for(auto& mesh: meshes) mesh->render(shader);
 }
 
 Model::~Model() {
     for(auto& mesh: meshes) delete mesh;
+    for(auto& tex: textures) delete tex;
 }
 
 
-void Model::fill_protobuf(glp_util::Model* pb) {
-    for(const auto& mesh: meshes) {
-        auto pb_mesh = pb->add_meshes();
-
-        for(const auto& vert: mesh->vertices) {
-            auto pb_vert = pb_mesh->add_vertices();
-            auto pb_pos = pb_vert->mutable_position();
-            pb_pos->set_x(vert.position.x);
-            pb_pos->set_y(vert.position.y);
-            pb_pos->set_z(vert.position.z);
-            auto pb_norm = pb_vert->mutable_normal();
-            pb_norm->set_x(vert.normal.x);
-            pb_norm->set_y(vert.normal.y);
-            pb_norm->set_z(vert.normal.z);
-            auto pb_uv = pb_vert->mutable_uv();
-            pb_uv->set_x(vert.uv.x);
-            pb_uv->set_y(vert.uv.y);
-        }
-
-        for(const auto& idx: mesh->indices)
-            pb_mesh->add_indices(idx);
-
-        for(const auto& tex: mesh->textures)
-            pb_mesh->add_textures(tex->path);
-    }
-}
-
-void Model::protobuf_load(const std::string& path) {
-    GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-    glp_util::Model model;
-
-    std::fstream input(path, std::ios::in | std::ios::binary);
-    if(!model.ParseFromIstream(&input)) {
-        glp_logv("failed to load model from protobuf %s", path.c_str());
-        return;
-    }
-
-    for(size_t i=0; i<model.meshes_size(); i++) {
-        auto pb_mesh = model.meshes(i);
-        std::vector<Vertex> vertices;
-        std::vector<unsigned int> idxs;
-        std::vector<Texture*> texs;
-
-        for(size_t j=0; j<pb_mesh.vertices_size(); j++) {
-            auto pb_vert = pb_mesh.vertices(j);
-            auto pb_pos = pb_vert.position();
-            auto pb_norm = pb_vert.normal();
-            auto pb_uv = pb_vert.uv();
-            vertices.emplace_back(
-                    glm::vec3(pb_pos.x(), pb_pos.y(), pb_pos.z()),
-                    glm::vec3(pb_norm.x(), pb_norm.y(), pb_norm.z()),
-                    glm::vec2(pb_uv.x(), pb_uv.y()));
-        }
-
-        for(size_t j=0; j<pb_mesh.indices_size(); j++) {
-            auto pb_idx = pb_mesh.indices(j);
-            idxs.push_back(pb_idx);
-        }
-
-        for(size_t j=0; j<pb_mesh.textures_size(); j++) {
-            auto tex = new Texture{pb_mesh.textures(j)};
-            texs.push_back(tex);
-        }
-
-        auto mesh = new Mesh(vertices, idxs, texs);
-        meshes.push_back(mesh);
-    }
-
-    google::protobuf::ShutdownProtobufLibrary();
-}
+//void Model::fill_protobuf(glp_util::Model* pb) {
+//    for(const auto& mesh: meshes) {
+//        auto pb_mesh = pb->add_meshes();
+//
+//        for(const auto& vert: mesh->vertices) {
+//            auto pb_vert = pb_mesh->add_vertices();
+//            auto pb_pos = pb_vert->mutable_position();
+//            pb_pos->set_x(vert.position.x);
+//            pb_pos->set_y(vert.position.y);
+//            pb_pos->set_z(vert.position.z);
+//            auto pb_norm = pb_vert->mutable_normal();
+//            pb_norm->set_x(vert.normal.x);
+//            pb_norm->set_y(vert.normal.y);
+//            pb_norm->set_z(vert.normal.z);
+//            auto pb_uv = pb_vert->mutable_uv();
+//            pb_uv->set_x(vert.uv.x);
+//            pb_uv->set_y(vert.uv.y);
+//        }
+//
+//        for(const auto& idx: mesh->indices)
+//            pb_mesh->add_indices(idx);
+//
+//        for(const auto& tex: mesh->textures)
+//            pb_mesh->add_textures(tex->path);
+//    }
+//}
+//
+//void Model::protobuf_load(const std::string& path) {
+//    GOOGLE_PROTOBUF_VERIFY_VERSION;
+//
+//    glp_util::Model model;
+//
+//    std::fstream input(path, std::ios::in | std::ios::binary);
+//    if(!model.ParseFromIstream(&input)) {
+//        glp_logv("failed to load model from protobuf %s", path.c_str());
+//        return;
+//    }
+//
+//    for(size_t i=0; i<model.meshes_size(); i++) {
+//        auto pb_mesh = model.meshes(i);
+//        std::vector<Vertex> vertices;
+//        std::vector<unsigned int> idxs;
+//        std::vector<Texture*> texs;
+//
+//        for(size_t j=0; j<pb_mesh.vertices_size(); j++) {
+//            auto pb_vert = pb_mesh.vertices(j);
+//            auto pb_pos = pb_vert.position();
+//            auto pb_norm = pb_vert.normal();
+//            auto pb_uv = pb_vert.uv();
+//            vertices.emplace_back(
+//                    glm::vec3(pb_pos.x(), pb_pos.y(), pb_pos.z()),
+//                    glm::vec3(pb_norm.x(), pb_norm.y(), pb_norm.z()),
+//                    glm::vec2(pb_uv.x(), pb_uv.y()));
+//        }
+//
+//        for(size_t j=0; j<pb_mesh.indices_size(); j++) {
+//            auto pb_idx = pb_mesh.indices(j);
+//            idxs.push_back(pb_idx);
+//        }
+//
+//        for(size_t j=0; j<pb_mesh.textures_size(); j++) {
+//            auto tex = new Texture{pb_mesh.textures(j)};
+//            texs.push_back(tex);
+//        }
+//
+//        auto mesh = new Mesh(vertices, idxs, texs);
+//        meshes.push_back(mesh);
+//    }
+//
+//    google::protobuf::ShutdownProtobufLibrary();
+//}
