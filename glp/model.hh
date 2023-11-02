@@ -43,38 +43,10 @@ struct Vertex {
     float weights[MAX_BONE_INFLUENCE];
 };
 
-struct Bone {
+struct BoneInfo {
+    int id;
     std::string name;
-    glm::mat4 matrix;
-};
-
-template <typename T>
-struct AnimationKey {
-    T value;
-    float time;
-};
-
-struct AnimationChannel {
-    std::string node_name;
-    std::vector<AnimationKey<glm::vec3>> position_keys;
-    std::vector<AnimationKey<glm::quat>> rotation_keys;
-    std::vector<AnimationKey<glm::vec3>> scale_keys;
-};
-
-struct Animation {
-    std::string name;
-    float duration;
-    float ticks_per_second;
-    std::vector<AnimationChannel> channels;
-};
-
-struct SkeletonNode {
-    std::string name {""};
-    int bone_index {-1};
-    std::vector<SkeletonNode> children{};
-    AnimationChannel keys;
-
-    SkeletonNode* find(std::string name);
+    glm::mat4 offset;
 };
 
 class Mesh {
@@ -85,7 +57,7 @@ class Mesh {
         std::vector<Vertex>             vertices;
         std::vector<unsigned int>       indices;
 
-        void render(Shader& shader);
+        void render();
 
         Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx);
         ~Mesh();
@@ -98,36 +70,27 @@ class Model {
     private:
         std::vector<Mesh*> meshes {};
         std::vector<Texture*> textures {};
-        std::vector<Animation> animations {};
-        std::vector<Bone> bones {};
-        std::vector<Bone> animation_bones {};
+        std::vector<BoneInfo> bones {};
 
-        SkeletonNode root_node;
+        Shader* shader;
         std::string directory;
 
-        glm::mat4 animation_translate(const SkeletonNode& node, const Animation& animation);
-        glm::mat4 animation_rotate(const SkeletonNode& node, const Animation& animation);
-        glm::mat4 animation_scale(const SkeletonNode& node, const Animation& animation);
-        void animation(const SkeletonNode& node, const Animation& anim);
-        void animation_load(const Animation& animation);
 
         void assimp_load(const std::string& path);
         void assimp_node_process(aiNode* node, const aiScene* scene);
-        int assimp_skeleton_import(aiNode* ai_node, SkeletonNode& node);
-        void assimp_animation_load(aiAnimation* ai_anim);
         Mesh* assimp_mesh_process(aiMesh* mesh, const aiScene* scene);
         std::vector<Texture*> assimp_textures_load(aiMaterial* mat, aiTextureType type);
 
         void protobuf_load(const std::string& path);
 
     public:
-        void animate(uint32_t index);
-        void animate(const std::string& name);
-        void render(Shader& shader);
+        void render();
+
+        inline const std::vector<BoneInfo>& get_bone_info() const { return bones; }
 
         void fill_protobuf(glp_util::Model* pb);
 
-        Model(const std::string& path, bool assimp);
+        Model(const std::string& path, bool assimp, Shader* shader);
         ~Model();
 
 };

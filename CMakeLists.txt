@@ -15,6 +15,7 @@ add_executable(${EXEC_NAME}
     glp/sdl.cc
     glp/shader.cc
     glp/model.cc
+    glp/anim.cc
     #utils/model.pb.cc
     main.cc
 )
