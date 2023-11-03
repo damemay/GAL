@@ -95,6 +95,7 @@ std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType
         mat->GetTexture(type, i, &str);
         std::string full_path = directory + '/' + str.C_Str();
         auto tex = new Texture{full_path};
+        glp_logv("new texture: %s", tex->path.c_str());
         texs.push_back(tex);
     }
     return texs;
@@ -150,7 +151,6 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
                 if(name == bone.name) exists = true;
 
             if(!exists) {
-                glm::mat4 to;
                 bones.emplace_back(name, glm::mat4(
                             ai_bone->mOffsetMatrix.a1, ai_bone->mOffsetMatrix.b1,
                             ai_bone->mOffsetMatrix.c1, ai_bone->mOffsetMatrix.d1,
@@ -179,11 +179,11 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
 }
 
 void Model::render() {
-    for(uint32_t i=0; i<textures.size(); i++) {
+    for(int i=0; i<textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
-        shader->bind();
-        shader->set("tex" + std::to_string(i), (int)i);
-        shader->unbind();
+        //shader->bind();
+        //shader->set("tex" + std::to_string(i), i);
+        //shader->unbind();
         glBindTexture(GL_TEXTURE_2D, textures[i]->id);
     }
     glActiveTexture(GL_TEXTURE0);

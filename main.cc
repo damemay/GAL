@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
     if(argc!=3) glp_log("[model path] [assimp (1) or protobuf (0)]"), exit(1);
     Window sdl {"glp", 1280, 720};
 
-    Shader shader{"../res/shaders/skinned.vert", "../res/shaders/skinned.frag"};
+    Shader shader{"../res/shaders/cube.vert", "../res/shaders/cube.frag"};
     Model model (argv[1], atoi(argv[2]), &shader);
     Animation::Animation animation (argv[1], model, atoi(argv[2]));
     Animation::Animator animator {&animation, &model};
