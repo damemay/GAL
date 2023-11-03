@@ -36,6 +36,8 @@ int main(int argc, char* argv[]) {
                 if(sdl.event.key.keysym.sym == SDLK_d) cam_pos += glm::normalize(glm::cross(cam_front, cam_up)) * spd;
                 if(sdl.event.key.keysym.sym == SDLK_q) cam_yaw -= spd; cam_front = glm::normalize(glm::vec3(cos(glm::radians(cam_yaw)), 0.0f, sin(glm::radians(cam_yaw))));
                 if(sdl.event.key.keysym.sym == SDLK_e) cam_yaw += spd; cam_front = glm::normalize(glm::vec3(cos(glm::radians(cam_yaw)), 0.0f, sin(glm::radians(cam_yaw))));
+                if(sdl.event.key.keysym.sym == SDLK_z) cam_pos.y -= spd;
+                if(sdl.event.key.keysym.sym == SDLK_x) cam_pos.y += spd;
             }
         }
         sdl.loop_start();

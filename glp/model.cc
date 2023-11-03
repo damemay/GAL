@@ -86,16 +86,6 @@ void Model::assimp_load(const std::string& path) {
     }
 
     glp_logv("model texture count: %lu", textures.size());
-
-//    if(!assimp_skeleton_import(scene->mRootNode, root_node))
-//        glp_log("model without skeleton");
-
-//    if(scene->HasAnimations())
-//        for(size_t i=0; i<scene->mNumAnimations; i++)
-//            assimp_animation_load(scene->mAnimations[i]);
-
-//    glp_logv("model animation count: %lu", animations.size());
-
 }
 
 std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType type) {
@@ -138,6 +128,8 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
                 glm::vec2(mesh->mTextureCoords[0][i].x,
                         mesh->mTextureCoords[0][i].y) :
                 glm::vec2(0.0f, 0.0f),
+                {0.0f, 0.0f, 0.0f, 0.0f},
+                {0.0f, 0.0f, 0.0f, 0.0f},
         };
         verts.push_back(vertex);
     }
@@ -158,11 +150,16 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
                 if(name == bone.name) exists = true;
 
             if(!exists) {
-                bones.emplace_back(i, name, glm::mat4(
-                            ai_bone->mOffsetMatrix.a1, ai_bone->mOffsetMatrix.b1, ai_bone->mOffsetMatrix.c1, ai_bone->mOffsetMatrix.d1,
-                            ai_bone->mOffsetMatrix.a2, ai_bone->mOffsetMatrix.b2, ai_bone->mOffsetMatrix.c2, ai_bone->mOffsetMatrix.d2,
-                            ai_bone->mOffsetMatrix.a3, ai_bone->mOffsetMatrix.b3, ai_bone->mOffsetMatrix.c3, ai_bone->mOffsetMatrix.d3,
-                            ai_bone->mOffsetMatrix.a4, ai_bone->mOffsetMatrix.b4, ai_bone->mOffsetMatrix.c4, ai_bone->mOffsetMatrix.d4));
+                glm::mat4 to;
+                bones.emplace_back(name, glm::mat4(
+                            ai_bone->mOffsetMatrix.a1, ai_bone->mOffsetMatrix.b1,
+                            ai_bone->mOffsetMatrix.c1, ai_bone->mOffsetMatrix.d1,
+                            ai_bone->mOffsetMatrix.a2, ai_bone->mOffsetMatrix.b2,
+                            ai_bone->mOffsetMatrix.c2, ai_bone->mOffsetMatrix.d2,
+                            ai_bone->mOffsetMatrix.a3, ai_bone->mOffsetMatrix.b3,
+                            ai_bone->mOffsetMatrix.c3, ai_bone->mOffsetMatrix.d3,
+                            ai_bone->mOffsetMatrix.a4, ai_bone->mOffsetMatrix.b4,
+                            ai_bone->mOffsetMatrix.c4, ai_bone->mOffsetMatrix.d4));
             }
 
             for(size_t j=0; j<ai_bone->mNumWeights; j++) {

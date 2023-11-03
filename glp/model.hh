@@ -44,7 +44,6 @@ struct Vertex {
 };
 
 struct BoneInfo {
-    int id;
     std::string name;
     glm::mat4 offset;
 };

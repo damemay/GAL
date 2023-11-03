@@ -18,6 +18,6 @@ void main() {
                 weights.y * pose[int(joints.y)] +
                 weights.z * pose[int(joints.z)] +
                 weights.w * pose[int(joints.w)];
-    norm = vec3(mvp*vec4(normal, 0.0f));
+    norm = vec3(mvp*skin*vec4(normal, 0.0f));
     gl_Position = mvp * skin * vec4(position, 1.0);
 }

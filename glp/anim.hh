@@ -10,17 +10,18 @@ struct Key {
     float time;
 };
 
-struct Bone {
+struct Node {
+    std::string name;
+    int bone_index {-1};
+    glm::mat4 local_transform {glm::mat4(1.0f)};
+    std::vector<Node*> children;
+
     std::vector<Key<glm::vec3>> positions;
     std::vector<Key<glm::quat>> rotations;
     std::vector<Key<glm::vec3>> scales;
 
-    glm::mat4 local_transform;
-    std::string name;
-    int id;
-
-    static Bone assimp_load(const std::string& name, int id, const aiNodeAnim* channel);
     void update(float time);
+    void assimp_set_keys(const aiNodeAnim* channel);
 
     int get_position_index(float time);
     int get_rotation_index(float time);
@@ -33,29 +34,22 @@ struct Bone {
     glm::mat4 interpolate_scale(float time);
 };
 
-struct Node {
-    glm::mat4 transformation;
-    std::string name;
-    std::vector<Node> children;
-};
-
 class Animation {
     private:
         std::string name;
         float duration;
         float ticks_per_second;
 
-        Node root_node;
-        std::vector<Bone> bones;
+        Node* root_node;
 
-        void read_assimp_hierarchy(Node& dest, const aiNode* src);
+        void read_assimp_hierarchy(Node* dest, const aiNode* src, const Model& m);
 
     public:
         inline const std::string& get_name() const { return name; }
         inline const float& get_duration() const { return duration; }
         inline const float& get_tps() const { return ticks_per_second; }
-        inline const Node& get_root_node() const { return root_node; }
-        Bone* find_bone(const std::string& name);
+        inline Node* get_root_node() const { return root_node; }
+        Node* find_node(Node* root, const std::string& name);
 
         Animation(const std::string& path, const Model& model, bool assimp);
         ~Animation() = default;
@@ -70,7 +64,7 @@ class Animator {
         float current_time {0};
         float delta_time;
 
-        void calc_bone_transform(const Node* node, glm::mat4 parent);
+        void calc_bone_transform(Node* node, glm::mat4 parent);
 
     public:
         inline const std::vector<glm::mat4> get_bone_matrices() const { return bone_mat; }
