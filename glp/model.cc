@@ -1,14 +1,14 @@
 #include <cassert>
 #include <cstddef>
 #include <fstream>
+#include <sstream>
 #include <string>
 
 #include "model.hh"
 #include "utils.hh"
-#include "../utils/model.pb.h"
 
-Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx)
-    : vertices{vert}, indices{idx} {
+Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex)
+    : vertices{vert}, indices{idx}, textures{tex} {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -46,7 +46,13 @@ Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx)
     glBindVertexArray(0);
 }
 
-void Mesh::render() {
+void Mesh::render(Shader* shader) {
+    for(int i=0; i<textures.size(); i++) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        shader->set("tex" + std::to_string(i), i);
+        glBindTexture(GL_TEXTURE_2D, textures[i]->id);
+    }
+    glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
@@ -61,6 +67,13 @@ Mesh::~Mesh() {
 Model::Model(const std::string& path, bool assimp, Shader* shader_) 
     : shader{shader_} {
     if(assimp) assimp_load(path);
+    else {
+        std::fstream out(path, std::ios::in);
+        if(!out) glp_logv("error opening file %s", path.c_str());
+        std::stringstream s;
+        s << out.rdbuf();
+        deserialize_data(s);
+    }
     // else protobuf_load(path);
 }
 
@@ -77,15 +90,6 @@ void Model::assimp_load(const std::string& path) {
     assimp_node_process(scene->mRootNode, scene);
 
     glp_logv("model bone count: %lu", bones.size());
-
-    if(scene->HasMaterials()) {
-        for(size_t i=0; i<scene->mNumMaterials; i++) {
-            auto tex = assimp_textures_load(scene->mMaterials[i], aiTextureType_DIFFUSE);
-            textures.insert(textures.end(), tex.begin(), tex.end());
-        }
-    }
-
-    glp_logv("model texture count: %lu", textures.size());
 }
 
 std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType type) {
@@ -94,11 +98,41 @@ std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType
         aiString str;
         mat->GetTexture(type, i, &str);
         std::string full_path = directory + '/' + str.C_Str();
-        auto tex = new Texture{full_path};
-        glp_logv("new texture: %s", tex->path.c_str());
+        Texture* tex = texture_load(full_path);
+        //bool skip = false;
+        //for(Texture* loaded: textures) {
+        //    if(loaded->path == full_path) {
+        //        tex = loaded;
+        //        skip = true;
+        //        break;
+        //    }
+        //}
+        //if(!skip) {
+        //    tex = new Texture{full_path};
+        //    glp_logv("new texture: %s", tex->path.c_str());
+        //    textures.push_back(tex);
+        //}
         texs.push_back(tex);
     }
     return texs;
+}
+
+Texture* Model::texture_load(const std::string& path) {
+    Texture* tex;
+    bool skip = false;
+    for(Texture* loaded: textures) {
+        if(loaded->path == path) {
+            tex = loaded;
+            skip = true;
+            break;
+        }
+    }
+    if(!skip) {
+        tex = new Texture{path};
+        glp_logv("new texture: %s", tex->path.c_str());
+        textures.push_back(tex);
+    }
+    return tex;
 }
 
 void Model::assimp_node_process(aiNode* node, const aiScene* scene) {
@@ -114,6 +148,7 @@ void Model::assimp_node_process(aiNode* node, const aiScene* scene) {
 Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
     std::vector<Vertex> verts;
     std::vector<unsigned int> idxs;
+    std::vector<Texture*> textures;
 
     for(size_t i=0; i<mesh->mNumVertices; i++) {
         Vertex vertex {
@@ -140,6 +175,12 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
         for(size_t j=0; j<face->mNumIndices; j++)
             idxs.push_back(face->mIndices[j]);
     }
+
+    if(mesh->mMaterialIndex >= 0) {
+        auto tex = assimp_textures_load(scene->mMaterials[mesh->mMaterialIndex], aiTextureType_DIFFUSE);
+        textures.insert(textures.end(), tex.begin(), tex.end());
+    }
+
 
     if(mesh->HasBones()) {
         for(size_t i=0; i<mesh->mNumBones; i++) {
@@ -175,19 +216,11 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
         }
     }
     
-    return new Mesh(verts, idxs);
+    return new Mesh(verts, idxs, textures);
 }
 
 void Model::render() {
-    for(int i=0; i<textures.size(); i++) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        //shader->bind();
-        //shader->set("tex" + std::to_string(i), i);
-        //shader->unbind();
-        glBindTexture(GL_TEXTURE_2D, textures[i]->id);
-    }
-    glActiveTexture(GL_TEXTURE0);
-    for(auto& mesh: meshes) mesh->render();
+    for(auto& mesh: meshes) mesh->render(shader);
 }
 
 Model::~Model() {
@@ -195,75 +228,127 @@ Model::~Model() {
     for(auto& tex: textures) delete tex;
 }
 
+std::stringstream Model::serialize_data() {
+    std::stringstream s;
+    s << "meshes " << meshes.size() << ' ';
+    for(const auto& mesh: meshes) {
+        s << "mesh " << "verts " << mesh->vertices.size() << ' ';
+        for(const auto& vert: mesh->vertices) {
+            s << "vert ";
+            s << "p " << vert.position.x << ' '
+                << vert.position.y << ' '
+                << vert.position.z << ' ';
+            s << "n " << vert.normal.x << ' '
+                << vert.normal.y << ' '
+                << vert.normal.z << ' ';
+            s << "u " << vert.uv.x << ' '
+                << vert.uv.y << ' ' << ' ';
+            s << "b " << vert.bone_index[0] << ' '
+                << vert.bone_index[1] << ' '
+                << vert.bone_index[2] << ' '
+                << vert.bone_index[3] << ' ';
+            s << "w " << vert.weights[0] << ' '
+                << vert.weights[1] << ' '
+                << vert.weights[2] << ' '
+                << vert.weights[3] << ' ';
+        }
+        s << "idxs " << mesh->indices.size() << ' ';
+        for(const auto& id: mesh->indices)
+            s << id << ' ';
+        s << "texs " << mesh->textures.size() << ' ';
+        for(const auto& tex: mesh->textures)
+            s << tex->path << ' ';
+    }
 
-//void Model::fill_protobuf(glp_util::Model* pb) {
-//    for(const auto& mesh: meshes) {
-//        auto pb_mesh = pb->add_meshes();
-//
-//        for(const auto& vert: mesh->vertices) {
-//            auto pb_vert = pb_mesh->add_vertices();
-//            auto pb_pos = pb_vert->mutable_position();
-//            pb_pos->set_x(vert.position.x);
-//            pb_pos->set_y(vert.position.y);
-//            pb_pos->set_z(vert.position.z);
-//            auto pb_norm = pb_vert->mutable_normal();
-//            pb_norm->set_x(vert.normal.x);
-//            pb_norm->set_y(vert.normal.y);
-//            pb_norm->set_z(vert.normal.z);
-//            auto pb_uv = pb_vert->mutable_uv();
-//            pb_uv->set_x(vert.uv.x);
-//            pb_uv->set_y(vert.uv.y);
-//        }
-//
-//        for(const auto& idx: mesh->indices)
-//            pb_mesh->add_indices(idx);
-//
-//        for(const auto& tex: mesh->textures)
-//            pb_mesh->add_textures(tex->path);
-//    }
-//}
-//
-//void Model::protobuf_load(const std::string& path) {
-//    GOOGLE_PROTOBUF_VERIFY_VERSION;
-//
-//    glp_util::Model model;
-//
-//    std::fstream input(path, std::ios::in | std::ios::binary);
-//    if(!model.ParseFromIstream(&input)) {
-//        glp_logv("failed to load model from protobuf %s", path.c_str());
-//        return;
-//    }
-//
-//    for(size_t i=0; i<model.meshes_size(); i++) {
-//        auto pb_mesh = model.meshes(i);
-//        std::vector<Vertex> vertices;
-//        std::vector<unsigned int> idxs;
-//        std::vector<Texture*> texs;
-//
-//        for(size_t j=0; j<pb_mesh.vertices_size(); j++) {
-//            auto pb_vert = pb_mesh.vertices(j);
-//            auto pb_pos = pb_vert.position();
-//            auto pb_norm = pb_vert.normal();
-//            auto pb_uv = pb_vert.uv();
-//            vertices.emplace_back(
-//                    glm::vec3(pb_pos.x(), pb_pos.y(), pb_pos.z()),
-//                    glm::vec3(pb_norm.x(), pb_norm.y(), pb_norm.z()),
-//                    glm::vec2(pb_uv.x(), pb_uv.y()));
-//        }
-//
-//        for(size_t j=0; j<pb_mesh.indices_size(); j++) {
-//            auto pb_idx = pb_mesh.indices(j);
-//            idxs.push_back(pb_idx);
-//        }
-//
-//        for(size_t j=0; j<pb_mesh.textures_size(); j++) {
-//            auto tex = new Texture{pb_mesh.textures(j)};
-//            texs.push_back(tex);
-//        }
-//
-//        auto mesh = new Mesh(vertices, idxs, texs);
-//        meshes.push_back(mesh);
-//    }
-//
-//    google::protobuf::ShutdownProtobufLibrary();
-//}
+    s << "bones " << bones.size() << ' ';
+    for(const auto& bone: bones) {
+        s << "b " << bone.name << ' ';
+        s << bone.offset[0].x << ' '
+            << bone.offset[0].y << ' '
+            << bone.offset[0].z << ' '
+            << bone.offset[0].w << ' '
+            << bone.offset[1].x << ' '
+            << bone.offset[1].y << ' '
+            << bone.offset[1].z << ' '
+            << bone.offset[1].w << ' '
+            << bone.offset[2].x << ' '
+            << bone.offset[2].y << ' '
+            << bone.offset[2].z << ' '
+            << bone.offset[2].w << ' '
+            << bone.offset[3].x << ' '
+            << bone.offset[3].y << ' '
+            << bone.offset[3].z << ' '
+            << bone.offset[3].w << ' ';
+    }
+
+    return s;
+}
+
+void Model::deserialize_data(std::stringstream& s) {
+    std::string name;
+    size_t count;
+    
+    s >> name >> count; assert("meshes");
+    if(count > 0) meshes.resize(count);
+    
+    for(size_t i=0; i<meshes.size(); i++) {
+        s >> name; assert(name == "mesh");
+        s >> name; assert(name == "verts");
+        s >> count;
+        std::vector<Vertex> verts;
+        if(count > 0) verts.resize(count);
+        for(size_t i=0; i<verts.size(); i++) {
+            s >> name; assert(name == "vert");
+            s >> name; assert(name == "p");
+            s >> verts[i].position.x
+                >> verts[i].position.y
+                >> verts[i].position.z;
+            s >> name; assert(name == "n");
+            s >> verts[i].normal.x
+                >> verts[i].normal.y
+                >> verts[i].normal.z;
+            s >> name; assert(name == "u");
+            s >> verts[i].uv.x
+                >> verts[i].uv.y;
+            s >> name; assert(name == "b");
+            s >> verts[i].bone_index[0]
+                >> verts[i].bone_index[1]
+                >> verts[i].bone_index[2]
+                >> verts[i].bone_index[3];
+            s >> name; assert(name == "w");
+            s >> verts[i].weights[0]
+                >> verts[i].weights[1]
+                >> verts[i].weights[2]
+                >> verts[i].weights[3];
+        }
+        s >> name; assert(name == "idxs");
+        s >> count;
+        std::vector<unsigned int> idxs;
+        if(count > 0) idxs.resize(count);
+        for(size_t i=0; i<idxs.size(); i++)
+            s >> idxs[i];
+        s >> name; assert(name == "texs");
+        s >> count;
+        std::vector<Texture*> texs;
+        texs.resize(count);
+        for(size_t i=0; i<texs.size(); i++) {
+            s >> name;
+            texs[i] = texture_load(name);
+        }
+        meshes[i] = new Mesh(verts, idxs, texs);
+    }
+
+    s >> name; assert("bones");
+    s >> count;
+    if(count > 0) bones.resize(count);
+    for(size_t i=0; i<bones.size(); i++) {
+        s >> name; assert("b");
+        s >> bones[i].name;
+        glm::mat4 to;
+        s >> to[0].x >> to[0].y >> to[0].z >> to[0].w
+            >> to[1].x >> to[1].y >> to[1].z >> to[1].w
+            >> to[2].x >> to[2].y >> to[2].z >> to[2].w
+            >> to[3].x >> to[3].y >> to[3].z >> to[3].w;
+        bones[i].offset = to;
+    }
+}

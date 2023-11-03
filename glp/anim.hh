@@ -43,6 +43,7 @@ class Animation {
         Node* root_node;
 
         void read_assimp_hierarchy(Node* dest, const aiNode* src, const Model& m);
+        void clear_nodes(Node* parent);
 
     public:
         inline const std::string& get_name() const { return name; }
@@ -52,7 +53,8 @@ class Animation {
         Node* find_node(Node* root, const std::string& name);
 
         Animation(const std::string& path, const Model& model, bool assimp);
-        ~Animation() = default;
+        Animation() {};
+        ~Animation();
 
 };
 
@@ -73,6 +75,7 @@ class Animator {
         void play_animation(Animation* animation);
         
         Animator(Animation* animation, Model* model);
+        Animator() {};
         ~Animator() = default;
 };
 

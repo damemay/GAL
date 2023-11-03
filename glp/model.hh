@@ -6,7 +6,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "../utils/model.pb.h"
 
 #ifndef __vita__
     #include "external/glad/glad.h"
@@ -55,10 +54,11 @@ class Mesh {
     public:
         std::vector<Vertex>             vertices;
         std::vector<unsigned int>       indices;
+        std::vector<Texture*>           textures;
 
-        void render();
+        void render(Shader* shader);
 
-        Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx);
+        Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex);
         ~Mesh();
 
         Mesh(const Mesh&) = delete;
@@ -68,26 +68,26 @@ class Mesh {
 class Model {
     private:
         std::vector<Mesh*> meshes {};
-        std::vector<Texture*> textures {};
         std::vector<BoneInfo> bones {};
+        std::vector<Texture*> textures {};
 
         Shader* shader;
         std::string directory;
-
 
         void assimp_load(const std::string& path);
         void assimp_node_process(aiNode* node, const aiScene* scene);
         Mesh* assimp_mesh_process(aiMesh* mesh, const aiScene* scene);
         std::vector<Texture*> assimp_textures_load(aiMaterial* mat, aiTextureType type);
-
-        void protobuf_load(const std::string& path);
+        Texture* texture_load(const std::string& path);
+        void deserialize_data(std::stringstream& s);
 
     public:
         void render();
 
         inline const std::vector<BoneInfo>& get_bone_info() const { return bones; }
+        inline const Shader* get_shader() const { return shader; }
 
-        void fill_protobuf(glp_util::Model* pb);
+        std::stringstream serialize_data();
 
         Model(const std::string& path, bool assimp, Shader* shader);
         ~Model();

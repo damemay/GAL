@@ -13,13 +13,12 @@ add_executable(${EXEC_NAME}
     ../glp/utils.cc
     ../glp/sdl.cc
     ../glp/shader.cc
-    model.cc
-    model.pb.cc
+    ../glp/model.cc
+    ../glp/anim.cc
     main.cc
 )
 
 target_link_libraries(${EXEC_NAME}
-    protobuf
     SDL2
     GL
     assimp

@@ -121,6 +121,17 @@ Animation::Animation(const std::string& path, const Model& model, bool assimp) {
     }
 }
 
+void Animation::clear_nodes(Node* parent) {
+    for(auto& child: parent->children) {
+        clear_nodes(child);
+    }
+    delete parent;
+}
+
+Animation::~Animation() {
+    clear_nodes(root_node);
+}
+
 Node* Animation::find_node(Node* root, const std::string& name) {
     if(root->name == name) return root;
     for(size_t i=0; i<root->children.size(); i++) {
@@ -132,7 +143,7 @@ Node* Animation::find_node(Node* root, const std::string& name) {
 
 void Animation::read_assimp_hierarchy(Node* dest, const aiNode* src, const Model& m) {
     dest->name = src->mName.C_Str();
-    for(size_t i=0; i<m.get_bone_info().size(); i++) {
+    for(int i=0; i<m.get_bone_info().size(); i++) {
         auto bone = m.get_bone_info().at(i);
         if(bone.name == dest->name)
             dest->bone_index = i;
@@ -145,13 +156,16 @@ void Animation::read_assimp_hierarchy(Node* dest, const aiNode* src, const Model
     }
 }
 
-Animator::Animator(Animation* animation, Model* m) : model{m}, current_animation{animation} {
+Animator::Animator(Animation* animation, Model* m) 
+    : model{m}, current_animation{animation} {
     bone_mat.reserve(MAX_BONES);
     for(size_t i=0; i<MAX_BONES; i++)
         bone_mat.push_back(glm::mat4(1.0f));
 }
 
 void Animator::update(float dt) {
+    for(size_t i=0; i<bone_mat.size(); i++)
+        model->get_shader()->set("pose["+std::to_string(i)+"]", bone_mat[i]);
     delta_time = dt;
     if(current_animation) {
         current_time += current_animation->get_tps()*dt;
@@ -170,12 +184,12 @@ void Animator::calc_bone_transform(Node* node, glm::mat4 parent) {
 
     node->update(current_time);
 
-    if(node->bone_index > -1) {
+    if(node->bone_index > -1 && node->bone_index < model->get_bone_info().size()) {
         global_transform *= node->local_transform;
         bone_mat[node->bone_index] = global_transform * model->get_bone_info().at(node->bone_index).offset;
     }
 
-    for(const auto& child: node->children)
+    for(auto& child: node->children)
         calc_bone_transform(child, global_transform);
 }
 
