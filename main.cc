@@ -8,8 +8,8 @@
 #include "glp/external/glm/gtc/type_ptr.hpp"
 #include <sstream>
 
-constexpr size_t WIDTH = 960;
-constexpr size_t HEIGHT = 544;
+constexpr size_t WIDTH = 1280;
+constexpr size_t HEIGHT = 720;
 
 auto cam_pos = glm::vec3(0.0f, 1.0f, 3.0f);
 auto cam_front = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
     Shader static_shader{"../res/shaders/vita_static.vert", "../res/shaders/vita_textured.frag"};
 #endif
 
-    Model model ("../res/models/sponza.model", &static_shader);
+    Model model ("../res/models/sponza/sponza.model", &static_shader);
     //auto animation = Animation::Animation(argv[2], model);
     //auto animator = Animation::Animator{&animation, &model};
 

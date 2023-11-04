@@ -22,6 +22,7 @@ add_executable(${EXEC_NAME}
 target_link_libraries(${EXEC_NAME}
     SDL2
     GL
+    zstd
     assimp
     m
 )

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <zstd.h>
 
 #ifndef __vita__
     #include "external/glad/glad.h"
@@ -21,6 +22,9 @@
 namespace util {
 
 std::string read_file(const std::string& path);
+std::string compress(const std::string& data, int compress_level);
+std::string decompress(const std::string& data);
+
 inline bool glerr() {
     GLenum err;
     while((err=glGetError())!=GL_NO_ERROR) {

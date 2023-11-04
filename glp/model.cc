@@ -115,6 +115,9 @@ Model::Model(const std::string& path, Shader* shader_)
     if(!out) glp_logv("error opening file %s", path.c_str());
     std::stringstream s;
     s << out.rdbuf();
+    auto decompressed = util::decompress(s.str());
+    s.str("");
+    s << decompressed;
     deserialize_data(s);
 }
 
@@ -247,7 +250,7 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
         }
     }
     
-    return new Mesh(verts, idxs, textures);
+    return new Mesh(verts, idxs, textures, shader);
 }
 #endif
 

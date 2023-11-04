@@ -19,12 +19,16 @@ int main(int argc, char* argv[]) {
     if(atoi(argv[1])) {
         Model model = Model(argv[2], true, nullptr);
         std::fstream output(argv[3], std::ios::out | std::ios::trunc);
-        output << model.serialize_data().rdbuf();
+        std::stringstream data = model.serialize_data();
+        auto compressed = util::compress(data.str(), 90);
+        output << compressed;
     } else {
         Model model = Model(argv[2], true, nullptr);
         auto anim = Animation::Animation(argv[2], model, true);
         std::fstream output(argv[3], std::ios::out | std::ios::trunc);
-        output << anim.serialize_data().rdbuf();
+        std::stringstream data = anim.serialize_data();
+        auto compressed = util::compress(data.str(), 90);
+        output << compressed;
     }
 
     return 0;

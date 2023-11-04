@@ -111,12 +111,14 @@ else()
         SDL2
         assimp
         GL
+        zstd
         m
     )
     else()
     target_link_libraries(${EXEC_NAME}
         SDL2
         GL
+        zstd
         m
     )
     endif()
