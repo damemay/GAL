@@ -28,6 +28,8 @@ if(VITA)
         glp/shader.cc
         glp/model.cc
         glp/anim.cc
+        glp/obj/player.cc
+        glp/obj/placables.cc
         main.cc
     )
     
@@ -46,6 +48,7 @@ if(VITA)
       FLAC
       webp
       jpeg
+      zstd
       png
       pthread
       vitashark
@@ -103,6 +106,8 @@ else()
         glp/shader.cc
         glp/model.cc
         glp/anim.cc
+        glp/obj/player.cc
+        glp/obj/placables.cc
         main.cc
     )
     

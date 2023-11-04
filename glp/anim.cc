@@ -138,6 +138,9 @@ Animation::Animation(const std::string& path, const Model& model) {
     if(!out) glp_logv("error opening file %s", path.c_str());
     std::stringstream s;
     s << out.rdbuf();
+    auto decompressed = util::decompress(s.str());
+    s.str("");
+    s << decompressed;
     deserialize_data(model, s);
 }
 
@@ -245,6 +248,7 @@ void Animation::serialize_nodes(Node* parent, std::stringstream& s) {
 
 std::stringstream Animation::serialize_data() {
     std::stringstream s;
+    if(name.empty()) name = "anim";
     s << name << ' ' << duration << ' ' << ticks_per_second << ' ';
     serialize_nodes(root_node, s);
     return s;

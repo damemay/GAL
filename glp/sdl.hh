@@ -38,9 +38,9 @@ class Window {
         void gl_init();
         void create_glcontext(SDL_Window*& window, SDL_GLContext& context, const size_t width, const size_t height);
 
+        inline void check_stop() { for(auto& e: events) if(e.type == SDL_QUIT) stop(); }
     public:
-        SDL_Event event;
-
+        std::vector<SDL_Event> events;
         Window(std::string title, const size_t width, const size_t height);
         ~Window();
 
@@ -51,6 +51,10 @@ class Window {
         inline size_t get_height() { return height; }
 
         inline void loop_start() {
+            SDL_Event event;
+            while(SDL_PollEvent(&event) != 0)
+                events.push_back(event);
+            check_stop();
             glClearColor(0.0f, 0.5f, 0.9f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             start_tick = SDL_GetTicks64();
@@ -59,6 +63,7 @@ class Window {
 
         inline void loop_end() {
             last_tick = start_tick;
+            events.clear();
             SDL_GL_SwapWindow(window);
         }
 };
