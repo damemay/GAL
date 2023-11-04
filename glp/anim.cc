@@ -5,9 +5,11 @@
 #include "external/glm/gtx/quaternion.hpp"
 #include "model.hh"
 #include <sstream>
+#include <fstream>
 
 namespace Animation {
 
+#ifdef USE_ASSIMP
 void Node::assimp_set_keys(const aiNodeAnim* channel) {
     for(size_t i=0; i<channel->mNumPositionKeys; i++)
         positions.emplace_back(
@@ -31,6 +33,7 @@ void Node::assimp_set_keys(const aiNodeAnim* channel) {
                     channel->mScalingKeys[i].mValue.z),
                 channel->mScalingKeys[i].mTime);
 }
+#endif
 
 void Node::update(float time) {
     auto t = interpolate_position(time);
@@ -90,6 +93,7 @@ glm::mat4 Node::interpolate_scale(float time) {
     return glm::scale(glm::mat4(1.0f), scale);
 }
 
+#ifdef USE_ASSIMP
 Animation::Animation(const std::string& path, const Model& model, bool assimp) {
     if(assimp) {
         Assimp::Importer import;
@@ -119,7 +123,22 @@ Animation::Animation(const std::string& path, const Model& model, bool assimp) {
             Node* node = find_node(root_node, name);
             node->assimp_set_keys(chan);
         }
+    } else {
+        std::fstream out(path, std::ios::in);
+        if(!out) glp_logv("error opening file %s", path.c_str());
+        std::stringstream s;
+        s << out.rdbuf();
+        deserialize_data(model, s);
     }
+}
+#endif
+
+Animation::Animation(const std::string& path, const Model& model) {
+    std::fstream out(path, std::ios::in);
+    if(!out) glp_logv("error opening file %s", path.c_str());
+    std::stringstream s;
+    s << out.rdbuf();
+    deserialize_data(model, s);
 }
 
 void Animation::clear_nodes(Node* parent) {
@@ -142,6 +161,7 @@ Node* Animation::find_node(Node* root, const std::string& name) {
     return nullptr;
 }
 
+#ifdef USE_ASSIMP
 void Animation::read_assimp_hierarchy(Node* dest, const aiNode* src, const Model& m) {
     dest->name = src->mName.C_Str();
     for(int i=0; i<m.get_bone_info().size(); i++) {
@@ -156,6 +176,7 @@ void Animation::read_assimp_hierarchy(Node* dest, const aiNode* src, const Model
         dest->children.push_back(new_node);
     }
 }
+#endif
 
 Animator::Animator(Animation* animation, Model* m) 
     : model{m}, current_animation{animation} {
@@ -219,12 +240,75 @@ void Animation::serialize_nodes(Node* parent, std::stringstream& s) {
     s << "cdn " << parent->children.size() << ' ';
     for(size_t i=0; i<parent->children.size(); i++)
         serialize_nodes(parent->children[i], s);
+    s << "cdnend ";
 }
 
 std::stringstream Animation::serialize_data() {
     std::stringstream s;
-
+    s << name << ' ' << duration << ' ' << ticks_per_second << ' ';
+    serialize_nodes(root_node, s);
     return s;
+}
+
+void Animation::deserialize_nodes(Node*& parent, const Model& m, std::stringstream& s) {
+    std::string name;
+    size_t count;
+    s >> name; 
+    assert(name == "node");
+    s >> name;
+    parent->name = name;
+    glp_logv("%s", parent->name.c_str());
+    for(int i=0; i<m.get_bone_info().size(); i++) {
+        auto bone = m.get_bone_info().at(i);
+        if(bone.name == parent->name)
+            parent->bone_index = i;
+    }
+    s >> name; assert(name == "pk");
+    s >> count;
+    parent->positions.resize(count);
+    for(size_t i=0; i<parent->positions.size(); i++) {
+        s >> name; assert(name == "p");
+        s >> parent->positions[i].value.x
+            >> parent->positions[i].value.y 
+            >> parent->positions[i].value.z
+            >> parent->positions[i].time;
+    }
+    s >> name; assert(name == "rk");
+    s >> count;
+    parent->rotations.resize(count);
+    for(size_t i=0; i<parent->rotations.size(); i++) {
+        s >> name; assert(name == "r");
+        s >> parent->rotations[i].value.w
+            >> parent->rotations[i].value.x 
+            >> parent->rotations[i].value.y 
+            >> parent->rotations[i].value.z
+            >> parent->rotations[i].time;
+    }
+    s >> name; assert(name == "sk");
+    s >> count;
+    parent->scales.resize(count);
+    for(size_t i=0; i<parent->scales.size(); i++) {
+        s >> name; assert(name == "s");
+        s >> parent->scales[i].value.x
+            >> parent->scales[i].value.y 
+            >> parent->scales[i].value.z
+            >> parent->scales[i].time;
+    }
+    s >> name; assert(name == "cdn");
+    s >> count;
+    //parent->children.resize(count);
+    for(size_t i=0; i<count; i++) {
+        auto node = new Node;
+        deserialize_nodes(node, m, s);
+        parent->children.push_back(node);
+    }
+    s >> name; assert(name == "cdnend");
+}
+
+void Animation::deserialize_data(const Model& m, std::stringstream& s) {
+    s >> name >> duration >> ticks_per_second;
+    root_node = new Node;
+    deserialize_nodes(root_node, m, s);
 }
 
 }

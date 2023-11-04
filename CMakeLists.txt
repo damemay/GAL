@@ -8,6 +8,11 @@ add_compile_options(-g)
 
 set(EXEC_NAME game)
 
+option(USE_ASSIMP "Link with assimp" OFF)
+if(USE_ASSIMP)
+    add_compile_definitions(USE_ASSIMP)
+endif()
+
 add_executable(${EXEC_NAME}
     glp/external/glad.c
     glp/external/stbi.c
@@ -16,14 +21,20 @@ add_executable(${EXEC_NAME}
     glp/shader.cc
     glp/model.cc
     glp/anim.cc
-    #utils/model.pb.cc
     main.cc
 )
 
+if(USE_ASSIMP)
 target_link_libraries(${EXEC_NAME}
-    #protobuf
     SDL2
-    GL
     assimp
+    GL
     m
 )
+else()
+target_link_libraries(${EXEC_NAME}
+    SDL2
+    GL
+    m
+)
+endif()

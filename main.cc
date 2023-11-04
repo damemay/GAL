@@ -9,14 +9,14 @@
 #include <sstream>
 
 int main(int argc, char* argv[]) {
-    if(argc!=3) glp_log("[model path] [assimp (1) or protobuf (0)]"), exit(1);
+    if(argc!=3) glp_log("[model path] [anim path]"), exit(1);
     Window sdl {"glp", 1280, 720};
 
-    //Shader skin_shader{"../res/shaders/skinned.vert", "../res/shaders/textured.frag"};
-    Shader static_shader{"../res/shaders/static.vert", "../res/shaders/textured.frag"};
-    Model model (argv[1], atoi(argv[2]), &static_shader);
-    //auto animation = Animation::Animation(argv[1], model, atoi(argv[2]));
-    //auto animator = Animation::Animator{&animation, &model};
+    Shader skin_shader{"../res/shaders/skinned.vert", "../res/shaders/textured.frag"};
+    //Shader static_shader{"../res/shaders/static.vert", "../res/shaders/textured.frag"};
+    Model model (argv[1], &skin_shader);
+    auto animation = Animation::Animation(argv[2], model);
+    auto animator = Animation::Animator{&animation, &model};
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -52,11 +52,11 @@ int main(int argc, char* argv[]) {
         auto m = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         auto mvp = projection * view * m;
 
-        //skin_shader.bind();
-        //skin_shader.set("mvp", mvp);
-        //animator.update(sdl.get_dt());
-        static_shader.bind();
-        static_shader.set("mvp", mvp);
+        skin_shader.bind();
+        skin_shader.set("mvp", mvp);
+        animator.update(sdl.get_dt());
+        //static_shader.bind();
+        //static_shader.set("mvp", mvp);
         model.render();
         util::glerr();
 

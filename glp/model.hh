@@ -3,9 +3,11 @@
 #include <limits>
 #include <vector>
 
+#ifdef USE_ASSIMP
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#endif
 
 #ifndef __vita__
     #include "external/glad/glad.h"
@@ -74,10 +76,12 @@ class Model {
         Shader* shader;
         std::string directory;
 
+#ifdef USE_ASSIMP
         void assimp_load(const std::string& path);
         void assimp_node_process(aiNode* node, const aiScene* scene);
         Mesh* assimp_mesh_process(aiMesh* mesh, const aiScene* scene);
         std::vector<Texture*> assimp_textures_load(aiMaterial* mat, aiTextureType type);
+#endif
         Texture* texture_load(const std::string& path);
         void deserialize_data(std::stringstream& s);
 
@@ -89,7 +93,10 @@ class Model {
 
         std::stringstream serialize_data();
 
+#ifdef USE_ASSIMP
         Model(const std::string& path, bool assimp, Shader* shader);
+#endif
+        Model(const std::string& path, Shader* shader);
         ~Model();
 
 };

@@ -64,6 +64,7 @@ Mesh::~Mesh() {
     glDeleteBuffers(1, &EBO);
 }
 
+#ifdef USE_ASSIMP
 Model::Model(const std::string& path, bool assimp, Shader* shader_) 
     : shader{shader_} {
     if(assimp) assimp_load(path);
@@ -74,9 +75,19 @@ Model::Model(const std::string& path, bool assimp, Shader* shader_)
         s << out.rdbuf();
         deserialize_data(s);
     }
-    // else protobuf_load(path);
+}
+#endif
+
+Model::Model(const std::string& path, Shader* shader_) 
+    : shader{shader_} {
+    std::fstream out(path, std::ios::in);
+    if(!out) glp_logv("error opening file %s", path.c_str());
+    std::stringstream s;
+    s << out.rdbuf();
+    deserialize_data(s);
 }
 
+#ifdef USE_ASSIMP
 void Model::assimp_load(const std::string& path) {
     Assimp::Importer import;
     const aiScene* scene = import.ReadFile(path, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -116,6 +127,7 @@ std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType
     }
     return texs;
 }
+#endif
 
 Texture* Model::texture_load(const std::string& path) {
     Texture* tex;
@@ -135,6 +147,7 @@ Texture* Model::texture_load(const std::string& path) {
     return tex;
 }
 
+#ifdef USE_ASSIMP
 void Model::assimp_node_process(aiNode* node, const aiScene* scene) {
     for(size_t i=0; i<node->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
@@ -218,6 +231,7 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
     
     return new Mesh(verts, idxs, textures);
 }
+#endif
 
 void Model::render() {
     for(auto& mesh: meshes) mesh->render(shader);
