@@ -44,6 +44,7 @@ class Animation {
 
         void read_assimp_hierarchy(Node* dest, const aiNode* src, const Model& m);
         void clear_nodes(Node* parent);
+        void serialize_nodes(Node* parent, std::stringstream& s);
 
     public:
         inline const std::string& get_name() const { return name; }
@@ -51,6 +52,8 @@ class Animation {
         inline const float& get_tps() const { return ticks_per_second; }
         inline Node* get_root_node() const { return root_node; }
         Node* find_node(Node* root, const std::string& name);
+
+        std::stringstream serialize_data();
 
         Animation(const std::string& path, const Model& model, bool assimp);
         Animation() {};

@@ -4,6 +4,7 @@
 #include "external/glm/gtc/type_ptr.hpp"
 #include "external/glm/gtx/quaternion.hpp"
 #include "model.hh"
+#include <sstream>
 
 namespace Animation {
 
@@ -193,4 +194,38 @@ void Animator::calc_bone_transform(Node* node, glm::mat4 parent) {
         calc_bone_transform(child, global_transform);
 }
 
+void Animation::serialize_nodes(Node* parent, std::stringstream& s) {
+    s << "node " << parent->name << ' ';
+    s << "pk " << parent->positions.size() << ' ';
+    for(size_t i=0; i<parent->positions.size(); i++)
+        s << "p " << parent->positions[i].value.x << ' '
+            << parent->positions[i].value.y << ' '
+            << parent->positions[i].value.z << ' '
+            << parent->positions[i].time << ' ';
+    s << "rk " << parent->rotations.size() << ' ';
+    for(size_t i=0; i<parent->rotations.size(); i++)
+        s << "r " << parent->rotations[i].value.w << ' '
+            << parent->rotations[i].value.x << ' '
+            << parent->rotations[i].value.y << ' '
+            << parent->rotations[i].value.z << ' '
+            << parent->rotations[i].time << ' ';
+    s << "sk " << parent->scales.size() << ' ';
+    for(size_t i=0; i<parent->scales.size(); i++)
+        s << "s " << parent->scales[i].value.x << ' '
+            << parent->scales[i].value.y << ' '
+            << parent->scales[i].value.z << ' '
+            << parent->scales[i].time << ' ';
+
+    s << "cdn " << parent->children.size() << ' ';
+    for(size_t i=0; i<parent->children.size(); i++)
+        serialize_nodes(parent->children[i], s);
 }
+
+std::stringstream Animation::serialize_data() {
+    std::stringstream s;
+
+    return s;
+}
+
+}
+
