@@ -1,40 +1,123 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(glp)
-find_package(SDL2 REQUIRED)
-set(CMAKE_CXX_COMPILER g++)
-set(CMAKE_CXX_STANDARD 20)
-add_compile_options(-g)
+option(VITA "Build for PS Vita" OFF)
 
-set(EXEC_NAME game)
-
-option(USE_ASSIMP "Link with assimp" OFF)
-if(USE_ASSIMP)
-    add_compile_definitions(USE_ASSIMP)
-endif()
-
-add_executable(${EXEC_NAME}
-    glp/external/glad.c
-    glp/external/stbi.c
-    glp/utils.cc
-    glp/sdl.cc
-    glp/shader.cc
-    glp/model.cc
-    glp/anim.cc
-    main.cc
-)
-
-if(USE_ASSIMP)
-target_link_libraries(${EXEC_NAME}
-    SDL2
-    assimp
-    GL
-    m
-)
+if(VITA)
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+    
+    project(glp)
+      include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
+    
+    set(VITA_APP_NAME "GLP")
+    set(VITA_TITLEID  "GLPP07777")
+    set(VITA_VERSION  "01.00")
+    
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c17")
+    set(CMAKE_CXX_STANDARD 20)
+    
+    set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
+    
+    include_directories(
+      ../common
+    )
+    
+    add_executable(${PROJECT_NAME}
+        glp/external/stbi.c
+        glp/utils.cc
+        glp/sdl.cc
+        glp/shader.cc
+        glp/model.cc
+        glp/anim.cc
+        main.cc
+    )
+    
+    target_link_libraries(${PROJECT_NAME}
+      SDL2
+      SDL2main
+      vitaGL
+      mathneon
+      freetype
+      vorbisfile
+      vorbis
+      mikmod
+      modplug
+      ogg
+      mpg123
+      FLAC
+      webp
+      jpeg
+      png
+      pthread
+      vitashark
+      SceShaccCgExt
+      SceDisplay_stub
+      SceCtrl_stub
+      SceAudio_stub
+      SceAudioIn_stub
+      SceSysmodule_stub
+      SceMotion_stub
+      SceGxm_stub
+      SceCommonDialog_stub
+      SceTouch_stub
+      SceHid_stub
+      SceLibKernel_stub
+      SceShaccCg_stub
+      SceIme_stub
+      SceAppMgr_stub
+      SceKernelDmacMgr_stub
+      taihen_stub
+      m
+      z
+      c
+    )
+    
+    vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
+    vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
+      VERSION ${VITA_VERSION}
+      NAME ${VITA_APP_NAME}
+      FILE sce_sys/icon0.png sce_sys/icon0.png
+      FILE sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
+      FILE sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
+      FILE sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
+      FILE res res
+    )
 else()
-target_link_libraries(${EXEC_NAME}
-    SDL2
-    GL
-    m
-)
+    project(glp)
+    find_package(SDL2 REQUIRED)
+    set(CMAKE_CXX_COMPILER g++)
+    set(CMAKE_CXX_STANDARD 20)
+    add_compile_options(-g)
+    
+    set(EXEC_NAME game)
+    
+    option(USE_ASSIMP "Link with assimp" OFF)
+    if(USE_ASSIMP)
+        add_compile_definitions(USE_ASSIMP)
+    endif()
+    
+    add_executable(${EXEC_NAME}
+        glp/external/glad.c
+        glp/external/stbi.c
+        glp/utils.cc
+        glp/sdl.cc
+        glp/shader.cc
+        glp/model.cc
+        glp/anim.cc
+        main.cc
+    )
+    
+    if(USE_ASSIMP)
+    target_link_libraries(${EXEC_NAME}
+        SDL2
+        assimp
+        GL
+        m
+    )
+    else()
+    target_link_libraries(${EXEC_NAME}
+        SDL2
+        GL
+        m
+    )
+    endif()
 endif()

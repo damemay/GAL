@@ -1,3 +1,6 @@
 build
 .cache
 res/glTF-Sample-Models/
+res/models/
+vita-build
+sce_sys/

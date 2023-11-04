@@ -7,7 +7,7 @@
 #include "model.hh"
 #include "utils.hh"
 
-Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex)
+Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex, Shader* shader)
     : vertices{vert}, indices{idx}, textures{tex} {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -23,6 +23,7 @@ Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(unsigned int),
             indices.data(), GL_STATIC_DRAW);
 
+#ifndef __vita__
     glVertexAttribPointer(POSITION_ATTRIBUTE_INDEX,
             3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(POSITION_ATTRIBUTE_INDEX);
@@ -42,6 +43,36 @@ Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<
     glVertexAttribPointer(WEIGHTS_ATTRIBUTE_INDEX,
             4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
     glEnableVertexAttribArray(WEIGHTS_ATTRIBUTE_INDEX);
+#else
+    shader->bind();
+    {
+    GLuint id = glGetAttribLocation(shader->get(), "position");
+    glp_logv("position %d", id);
+    glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(id);
+    }{
+    GLuint id = glGetAttribLocation(shader->get(), "normal");
+    glp_logv("normal %d", id);
+    glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(id);
+    }{
+    GLuint id = glGetAttribLocation(shader->get(), "texcoord0");
+    glp_logv("texcoord0 %d", id);
+    glVertexAttribPointer(id, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+    glEnableVertexAttribArray(id);
+    }{
+    GLuint id = glGetAttribLocation(shader->get(), "joints");
+    glp_logv("joints %d", id);
+    glVertexAttribPointer(id, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bone_index));
+    glEnableVertexAttribArray(id);
+    }{
+    GLuint id = glGetAttribLocation(shader->get(), "weights");
+    glp_logv("weights %d", id);
+    glVertexAttribPointer(id, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
+    glEnableVertexAttribArray(id);
+    }
+    shader->unbind();
+#endif
 
     glBindVertexArray(0);
 }
@@ -110,19 +141,6 @@ std::vector<Texture*> Model::assimp_textures_load(aiMaterial* mat, aiTextureType
         mat->GetTexture(type, i, &str);
         std::string full_path = directory + '/' + str.C_Str();
         Texture* tex = texture_load(full_path);
-        //bool skip = false;
-        //for(Texture* loaded: textures) {
-        //    if(loaded->path == full_path) {
-        //        tex = loaded;
-        //        skip = true;
-        //        break;
-        //    }
-        //}
-        //if(!skip) {
-        //    tex = new Texture{full_path};
-        //    glp_logv("new texture: %s", tex->path.c_str());
-        //    textures.push_back(tex);
-        //}
         texs.push_back(tex);
     }
     return texs;
@@ -349,7 +367,7 @@ void Model::deserialize_data(std::stringstream& s) {
             s >> name;
             texs[i] = texture_load(name);
         }
-        meshes[i] = new Mesh(verts, idxs, texs);
+        meshes[i] = new Mesh(verts, idxs, texs, shader);
     }
 
     s >> name; assert("bones");

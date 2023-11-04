@@ -60,7 +60,7 @@ class Mesh {
 
         void render(Shader* shader);
 
-        Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex);
+        Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex, Shader* shader);
         ~Mesh();
 
         Mesh(const Mesh&) = delete;
