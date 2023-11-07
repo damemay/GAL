@@ -20,11 +20,11 @@ int main(int argc, char* argv[]) {
     Object::Camera camera {glm::vec2(1280.0f, 720.0f), 90.0f};
     Object::Player player {&camera, &sdl.events};
     Object::Static model {"../res/models/sponza/sponza.model"};
-    Object::Animated man {"../res/models/simplerig/simplerig.model", "../res/models/simplerig/simplerig.anim"};
+    // Object::Animated man {"../res/models/simplerig/simplerig.model", "../res/models/simplerig/simplerig.anim"};
 
-    man.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-    man.rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    man.scale(glm::vec3(50.0f, 50.0f, 50.0f));
+    // man.translate(glm::vec3(0.0f, 0.0f, 0.0f));
+    // man.rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    // man.scale(glm::vec3(50.0f, 50.0f, 50.0f));
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 
         model.translate(glm::vec3(0.0f, 0.0f, 0.0f));
         model.render(camera);
-        man.render(camera, sdl.get_dt());
+        // man.render(camera, sdl.get_dt());
 
         util::glerr();
 

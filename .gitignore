@@ -1,5 +1,5 @@
 build
-.cache
+.cache/
 res/glTF-Sample-Models/
 res/models/
 vita-build
