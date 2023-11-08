@@ -10,6 +10,7 @@ class Player {
     private:
         float move_speed {100.0f};
         glm::vec2 move_dir {0.0f, 0.0f};
+        glm::vec2 rot_off {0.0f, 0.0f};
 
         bool firstmouse {true};
 
@@ -17,6 +18,7 @@ class Player {
         std::vector<SDL_Event>* events{nullptr};
 
         void mouse_update(int x, int y);
+        void analog_rotate(int val);
 
     public:
         void fpp_movement_keys();

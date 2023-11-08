@@ -8,21 +8,24 @@ void Player::mouse_update(int x, int y) {
           y = camera->get_dimensions().y/2;
         firstmouse = false;
     }
-    float xoff = x;
-    float yoff = y;
+    rot_off.x = x;
+    rot_off.y = y;
 
     float sens = 0.1f;
-    xoff*=sens;
-    yoff*=sens;
-
-    camera->yaw_change(xoff);
-    camera->pitch_change(-yoff);
-    camera->calculate();
+    rot_off.x*=sens;
+    rot_off.y*=sens;
 }
 
 void Player::fpp_movement(float dt) {
     camera->position_change((move_speed*dt*camera->get_front())*move_dir.y);
     camera->position_change((glm::normalize(glm::cross(camera->get_front(), camera->get_up()))*move_speed*dt)*move_dir.x);
+    camera->yaw_change(rot_off.x);
+    camera->pitch_change(-rot_off.y);
+    camera->calculate();
+}
+
+void Player::analog_rotate(int val) {
+    
 }
 
 void Player::fpp_movement_keys() {
@@ -51,16 +54,14 @@ void Player::fpp_movement_keys() {
                 else if(event.caxis.value > -8000 && event.caxis.value < 8000) move_dir.y = 0.0f;
             }
             if(event.caxis.axis == SDL_CONTROLLER_AXIS_RIGHTX) {
-                if(event.caxis.value < -8000 || event.caxis.value > 8000) {
-                    camera->yaw_change(event.caxis.value*0.01f);
-                    camera->calculate();
-                }
+                if(event.caxis.value < -8000) rot_off.x = -1.0f;
+                else if(event.caxis.value > 8000) rot_off.x = 1.0f;
+                else if(event.caxis.value > -8000 && event.caxis.value < 8000) rot_off.x = 0.0f;
             }
             if(event.caxis.axis == SDL_CONTROLLER_AXIS_RIGHTY) {
-                if(event.caxis.value < -8000 || event.caxis.value > 8000) {
-                    camera->pitch_change(event.caxis.value*-0.01f);
-                    camera->calculate();
-                }
+                if(event.caxis.value < -8000) rot_off.y = -1.0f;
+                else if(event.caxis.value > 8000) rot_off.y = 1.0f;
+                else if(event.caxis.value > -8000 && event.caxis.value < 8000) rot_off.y = 0.0f;
             }
         }
     }

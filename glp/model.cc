@@ -45,32 +45,26 @@ Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<
     glEnableVertexAttribArray(WEIGHTS_ATTRIBUTE_INDEX);
 #else
     shader->bind();
-    {
     GLuint id = glGetAttribLocation(shader->get(), "position");
     glp_logv("position %d", id);
     glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(id);
-    }{
-    GLuint id = glGetAttribLocation(shader->get(), "normal");
+    id = glGetAttribLocation(shader->get(), "normal");
     glp_logv("normal %d", id);
     glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
     glEnableVertexAttribArray(id);
-    }{
-    GLuint id = glGetAttribLocation(shader->get(), "texcoord0");
+    id = glGetAttribLocation(shader->get(), "texcoord0");
     glp_logv("texcoord0 %d", id);
     glVertexAttribPointer(id, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
     glEnableVertexAttribArray(id);
-    }{
-    GLuint id = glGetAttribLocation(shader->get(), "joints");
+    id = glGetAttribLocation(shader->get(), "joints");
     glp_logv("joints %d", id);
     glVertexAttribPointer(id, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bone_index));
     glEnableVertexAttribArray(id);
-    }{
-    GLuint id = glGetAttribLocation(shader->get(), "weights");
+    id = glGetAttribLocation(shader->get(), "weights");
     glp_logv("weights %d", id);
     glVertexAttribPointer(id, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
     glEnableVertexAttribArray(id);
-    }
     shader->unbind();
 #endif
 

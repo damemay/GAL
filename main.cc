@@ -19,12 +19,15 @@ int main(int argc, char* argv[]) {
     Window sdl {"glp", WIDTH, HEIGHT};
     Object::Camera camera {glm::vec2(1280.0f, 720.0f), 90.0f};
     Object::Player player {&camera, &sdl.events};
-    Object::Static model {"../res/models/sponza/sponza.model"};
-    // Object::Animated man {"../res/models/simplerig/simplerig.model", "../res/models/simplerig/simplerig.anim"};
+    Object::Static model {"../res/models/plane/plane.model"};
+    Object::Animated man {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim"};
 
-    // man.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-    // man.rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    // man.scale(glm::vec3(50.0f, 50.0f, 50.0f));
+    model.translate(glm::vec3(0.0f, 0.0f, 0.0f));
+    model.scale(glm::vec3(50.0f, 50.0f, 50.0f));
+
+    man.translate(glm::vec3(0.0f, 25.0f, 0.0f));
+    //man.rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    man.scale(glm::vec3(50.0f, 50.0f, 50.0f));
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -37,9 +40,9 @@ int main(int argc, char* argv[]) {
         player.fpp_movement_keys();
         player.fpp_movement(sdl.get_dt());
 
-        model.translate(glm::vec3(0.0f, 0.0f, 0.0f));
         model.render(camera);
-        // man.render(camera, sdl.get_dt());
+        glBindTexture(GL_TEXTURE_2D, 0);
+        man.render(camera, sdl.get_dt());
 
         util::glerr();
 
