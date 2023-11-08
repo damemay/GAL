@@ -6,7 +6,7 @@
 
 namespace Object {
 
-class Player {
+class PlayerFPP {
     private:
         float move_speed {100.0f};
         glm::vec2 move_dir {0.0f, 0.0f};
@@ -24,9 +24,9 @@ class Player {
         void fpp_movement_keys();
         void fpp_movement(float dt);
 
-        Player(Camera* cam, std::vector<SDL_Event>* sdl) : camera{cam}, events{sdl} {}
-        Player(float speed, Camera* cam, std::vector<SDL_Event>* sdl) : move_speed{speed}, camera{cam}, events{sdl} {}
-        ~Player() = default;
+        PlayerFPP(Camera* cam, std::vector<SDL_Event>* sdl) : camera{cam}, events{sdl} {}
+        PlayerFPP(float speed, Camera* cam, std::vector<SDL_Event>* sdl) : move_speed{speed}, camera{cam}, events{sdl} {}
+        ~PlayerFPP() = default;
 
 };
 

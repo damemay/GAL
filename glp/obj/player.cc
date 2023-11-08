@@ -2,7 +2,7 @@
 
 namespace Object {
 
-void Player::mouse_update(int x, int y) {
+void PlayerFPP::mouse_update(int x, int y) {
     if(firstmouse) {
         x = camera->get_dimensions().x/2,
           y = camera->get_dimensions().y/2;
@@ -16,7 +16,7 @@ void Player::mouse_update(int x, int y) {
     rot_off.y*=sens;
 }
 
-void Player::fpp_movement(float dt) {
+void PlayerFPP::fpp_movement(float dt) {
     camera->position_change((move_speed*dt*camera->get_front())*move_dir.y);
     camera->position_change((glm::normalize(glm::cross(camera->get_front(), camera->get_up()))*move_speed*dt)*move_dir.x);
     camera->yaw_change(rot_off.x);
@@ -24,11 +24,11 @@ void Player::fpp_movement(float dt) {
     camera->calculate();
 }
 
-void Player::analog_rotate(int val) {
+void PlayerFPP::analog_rotate(int val) {
     
 }
 
-void Player::fpp_movement_keys() {
+void PlayerFPP::fpp_movement_keys() {
     for(auto& event: *events) {
         if(event.type == SDL_KEYDOWN) {
             if(event.key.keysym.sym == SDLK_w) move_dir.y = 1.0f;

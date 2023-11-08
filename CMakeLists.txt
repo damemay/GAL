@@ -28,6 +28,7 @@ if(VITA)
         glp/shader.cc
         glp/model.cc
         glp/anim.cc
+        glp/fonts.cc
         glp/obj/player.cc
         glp/obj/placables.cc
         main.cc
@@ -106,6 +107,7 @@ else()
         glp/shader.cc
         glp/model.cc
         glp/anim.cc
+        glp/fonts.cc
         glp/obj/player.cc
         glp/obj/placables.cc
         main.cc
@@ -113,6 +115,7 @@ else()
     
     if(USE_ASSIMP)
     target_link_libraries(${EXEC_NAME}
+        SDL2_ttf
         SDL2
         assimp
         GL
@@ -121,6 +124,7 @@ else()
     )
     else()
     target_link_libraries(${EXEC_NAME}
+        SDL2_ttf
         SDL2
         GL
         zstd
