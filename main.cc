@@ -9,7 +9,7 @@
 
 #include "glp/obj/camera.hh"
 #include "glp/obj/player.hh"
-#include "glp/obj/placables.hh"
+#include "glp/obj/scenes.hh"
 #include "glp/fonts.hh"
 #include <sstream>
 
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     player.use_mouse(false);
 #endif
     Object::Static model {"../res/models/plane/plane.model"};
-    Object::Animated man {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim"};
+    Object::Animated man {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim", &sdl.dt};
 
     Font font {"../res/fonts/karla.png", WIDTH, HEIGHT};
     Text text {&font};
@@ -50,11 +50,11 @@ int main(int argc, char* argv[]) {
         if(util::glerr()) glp_log("CLEAR");
 
         player.fpp_movement_keys();
-        player.fpp_movement(sdl.get_dt());
+        player.fpp_movement(sdl.dt);
 
         model.render(camera);
         glBindTexture(GL_TEXTURE_2D, 0);
-        man.render(camera, sdl.get_dt());
+        man.render(camera);
 
         text.render();
 

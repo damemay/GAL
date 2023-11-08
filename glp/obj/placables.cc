@@ -49,15 +49,16 @@ void Animated::add_animation(const std::string& anim_path) {
     animations.push_back(anim);
 }
 
-void Animated::render(Camera& camera, float dt) {
+void Animated::render(Camera& camera) {
     shader->bind();
     auto m = mvp(camera);
     shader->set("mvp", m);
-    animator.update(dt);
+    animator.update(*dt);
     model->render();
 }
 
-Animated::Animated(const std::string& path, const std::string& anim_path) {
+Animated::Animated(const std::string& path, const std::string& anim_path, float* dt_)
+    : dt{dt_} {
 #ifndef __vita__
     shader = new Shader("../res/shaders/skinned.vert", "../res/shaders/textured.frag");
 #else 

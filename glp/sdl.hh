@@ -30,7 +30,6 @@ class Window {
         
         bool run {true};
         uint64_t start_tick {0}, last_tick {0};
-        float dt {0.0f};
 
         glm::vec3 bg {0.0f, 0.5, 0.9f};
 
@@ -43,13 +42,13 @@ class Window {
 
         inline void check_stop() { for(auto& e: events) if(e.type == SDL_QUIT) stop(); }
     public:
+        float dt {0.0f};
         std::vector<SDL_Event> events;
         Window(std::string title, const size_t width, const size_t height);
         ~Window();
 
         inline bool is_running() { return run; }
         inline void stop() { run = false; }
-        inline float get_dt() { return dt; }
         inline size_t get_width() { return width; }
         inline size_t get_height() { return height; }
         inline void set_bg_color(const glm::vec3& color) { bg = color; }

@@ -7,7 +7,13 @@
 
 namespace Object {
 
-class Static {
+class Placable {
+    public: 
+        virtual void render(Camera& camera) = 0;
+        virtual ~Placable() {}
+};
+
+class Static : public Placable {
     protected:
         Shader* shader {nullptr};
         Model* model {nullptr};
@@ -33,6 +39,7 @@ class Static {
 class Animated: public Static {
     private:
         Animation::Animation* find_animation(const std::string& name);
+        float* dt {nullptr};
 
     protected:
         Animation::Animator animator;
@@ -42,9 +49,9 @@ class Animated: public Static {
         void add_animation(const std::string& anim_path);
         void change_animation(const std::string& name);
 
-        void render(Camera& camera, float dt);
+        void render(Camera& camera);
 
-        Animated(const std::string& path, const std::string& anim_path);
+        Animated(const std::string& path, const std::string& anim_path, float* dt);
         ~Animated();
 };
 

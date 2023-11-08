@@ -6,7 +6,12 @@
 
 namespace Object {
 
-class PlayerFPP {
+class Player {
+    public:
+        virtual ~Player() {}
+};
+
+class PlayerFPP : public Player {
     private:
         float move_speed {100.0f};
         glm::vec2 move_dir {0.0f, 0.0f};
