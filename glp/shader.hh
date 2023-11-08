@@ -59,7 +59,6 @@ struct Texture {
         std::string path{};
 
         Texture(const std::string& path);
-        Texture(GLsizei width, GLsizei height, uint8_t format, void* pixels);
         ~Texture();
 
         Texture(const Texture&) = delete;

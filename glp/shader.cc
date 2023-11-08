@@ -72,23 +72,6 @@ Texture::Texture(const std::string& path_) : path{path_} {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture::Texture(GLsizei width, GLsizei height, uint8_t format, void* pixels) {
-    glGenTextures(1, &id);
-    glBindTexture(GL_TEXTURE_2D, id);
-
-    glTexImage2D(GL_TEXTURE_2D, 0,
-            (format == 3 ? GL_RGB : GL_RGBA), width, height, 0,
-            (format == 3 ? GL_RGB : GL_RGBA), GL_UNSIGNED_BYTE, pixels);
-    
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
 Texture::~Texture() {
     glDeleteTextures(1, &id);
 }

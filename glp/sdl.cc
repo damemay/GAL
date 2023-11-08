@@ -1,5 +1,4 @@
 #include "sdl.hh"
-#include <SDL2/SDL_ttf.h>
 
 void Window::init(const uint32_t flags) {
     if(SDL_Init(flags) > 0) {
@@ -72,8 +71,6 @@ Window::Window(std::string title, const size_t width_, const size_t height_) : w
     create_glcontext(window, context, width, height);
     if(auto pads = gamepads_init())
         gamepads = std::move(*pads);
-    if(TTF_Init() < 0) glp_diev("could not init SDL_ttf: %s", TTF_GetError());
-    atexit(TTF_Quit);
 }
 
 Window::~Window() {

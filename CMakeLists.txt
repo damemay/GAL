@@ -115,7 +115,6 @@ else()
     
     if(USE_ASSIMP)
     target_link_libraries(${EXEC_NAME}
-        SDL2_ttf
         SDL2
         assimp
         GL
@@ -124,7 +123,6 @@ else()
     )
     else()
     target_link_libraries(${EXEC_NAME}
-        SDL2_ttf
         SDL2
         GL
         zstd

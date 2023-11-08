@@ -20,17 +20,22 @@ int main(int argc, char* argv[]) {
     Window sdl {"glp", WIDTH, HEIGHT};
     Object::Camera camera {glm::vec2(1280.0f, 720.0f), 90.0f};
     Object::PlayerFPP player {&camera, &sdl.events};
+#ifndef __vita__
+    player.use_mouse(true);
+#else
+    player.use_mouse(false);
+#endif
     Object::Static model {"../res/models/plane/plane.model"};
     Object::Animated man {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim"};
 
-    Font font {"../res/fonts/roboto.ttf", 16};
+    Font font {"../res/fonts/karla.png", WIDTH, HEIGHT};
     Text text {&font};
-    text.update("test", 100, 100);
+    text.update("enter space", 64, WIDTH/2, HEIGHT/2);
 
     model.translate(glm::vec3(0.0f, 0.0f, 0.0f));
     model.scale(glm::vec3(50.0f, 50.0f, 50.0f));
 
-    man.translate(glm::vec3(0.0f, 25.0f, 0.0f));
+    man.translate(glm::vec3(0.0f, 50.0f, 0.0f));
     //man.rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     man.scale(glm::vec3(50.0f, 50.0f, 50.0f));
 
