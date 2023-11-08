@@ -18,6 +18,7 @@
 #endif
 
 #include "utils.hh"
+#include "external/glm/glm.hpp"
 
 class Window {
     private:
@@ -30,6 +31,8 @@ class Window {
         bool run {true};
         uint64_t start_tick {0}, last_tick {0};
         float dt {0.0f};
+
+        glm::vec3 bg {0.0f, 0.5, 0.9f};
 
         void init(const uint32_t flags);
         std::optional<std::vector<SDL_GameController*>> gamepads_init();
@@ -49,13 +52,14 @@ class Window {
         inline float get_dt() { return dt; }
         inline size_t get_width() { return width; }
         inline size_t get_height() { return height; }
+        inline void set_bg_color(const glm::vec3& color) { bg = color; }
 
         inline void loop_start() {
             SDL_Event event;
             while(SDL_PollEvent(&event) != 0)
                 events.push_back(event);
             check_stop();
-            glClearColor(0.0f, 0.5f, 0.9f, 0.0f);
+            glClearColor(bg.x, bg.y, bg.z, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             start_tick = SDL_GetTicks64();
             dt = (start_tick - last_tick) / 1000.0f;

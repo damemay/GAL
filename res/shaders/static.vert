@@ -6,7 +6,6 @@ layout (location = 2) in vec2 texcoord0;
 layout (location = 3) in vec4 joints;
 layout (location = 4) in vec4 weights;
 
-out vec4 pos;
 out vec2 uv0;
 
 uniform mat4 mvp;

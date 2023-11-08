@@ -18,6 +18,7 @@ constexpr size_t HEIGHT = 720;
 
 int main(int argc, char* argv[]) {
     Window sdl {"glp", WIDTH, HEIGHT};
+    sdl.set_bg_color(glm::vec3(0.4, 0.4, 0.4));
     Object::Camera camera {glm::vec2(1280.0f, 720.0f), 90.0f};
     Object::PlayerFPP player {&camera, &sdl.events};
 #ifndef __vita__
@@ -38,6 +39,7 @@ int main(int argc, char* argv[]) {
     man.translate(glm::vec3(0.0f, 50.0f, 0.0f));
     //man.rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     man.scale(glm::vec3(50.0f, 50.0f, 50.0f));
+
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
