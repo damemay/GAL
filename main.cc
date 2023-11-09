@@ -19,6 +19,9 @@ constexpr size_t HEIGHT = 720;
 int main(int argc, char* argv[]) {
     Window sdl {"glp", WIDTH, HEIGHT};
     sdl.set_bg_color(glm::vec3(0.4, 0.4, 0.4));
+
+    Object::Scene scene {"playground"};
+
     Object::Camera camera {glm::vec2(1280.0f, 720.0f), 90.0f};
     Object::PlayerFPP player {&camera, &sdl.events};
 #ifndef __vita__

@@ -1,11 +1,11 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "../glp/utils.hh"
-#include "../glp/model.hh"
-#include "../glp/shader.hh"
-#include "../glp/sdl.hh"
-#include "../glp/anim.hh"
+#include "../../glp/utils.hh"
+#include "../../glp/model.hh"
+#include "../../glp/shader.hh"
+#include "../../glp/sdl.hh"
+#include "../../glp/anim.hh"
 
 int main(int argc, char* argv[]) {
 
