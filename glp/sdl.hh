@@ -49,8 +49,12 @@ class Window {
 
         inline bool is_running() { return run; }
         inline void stop() { run = false; }
+
         inline size_t get_width() { return width; }
         inline size_t get_height() { return height; }
+        inline SDL_Window** get_window() { return &window; }
+        inline SDL_GLContext* get_glcontext() { return &context; }
+
         inline void set_bg_color(const glm::vec3& color) { bg = color; }
 
         inline void loop_start() {
