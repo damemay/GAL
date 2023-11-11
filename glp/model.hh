@@ -89,7 +89,9 @@ class Model {
         void render();
 
         inline const std::vector<BoneInfo>& get_bone_info() const { return bones; }
-        inline const Shader* get_shader() const { return shader; }
+        inline Shader* get_shader() { return shader; }
+        inline std::vector<Mesh*> get_meshes() { return meshes; }
+        inline std::vector<Texture*> get_textures() { return textures; }
 
         std::stringstream serialize_data();
 
