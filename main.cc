@@ -15,6 +15,7 @@
 
 constexpr size_t WIDTH = 1280;
 constexpr size_t HEIGHT = 720;
+std::vector<Object::Static*> statics;
 
 int main(int argc, char* argv[]) {
     Window sdl {"glp", WIDTH, HEIGHT};
@@ -29,19 +30,20 @@ int main(int argc, char* argv[]) {
 #else
     player.use_mouse(false);
 #endif
-    Object::Static model {"../res/models/plane/plane.model"};
-    Object::Animated man {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim", &sdl.dt};
+    auto model = new Object::Static{"../res/models/plane/plane.model"};
+    statics.push_back(model);
+    auto man = new Object::Animated{"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim", &sdl.dt};
 
     Font font {"../res/fonts/karla.png", WIDTH, HEIGHT};
     Text text {&font};
     text.update("enter space", 64, WIDTH/2, HEIGHT/2);
 
-    model.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-    model.scale(glm::vec3(50.0f, 50.0f, 50.0f));
+    model->translate(glm::vec3(0.0f, 0.0f, 0.0f));
+    model->scale(glm::vec3(50.0f, 50.0f, 50.0f));
 
-    man.translate(glm::vec3(0.0f, 50.0f, 0.0f));
+    man->translate(glm::vec3(0.0f, 50.0f, 0.0f));
     //man.rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    man.scale(glm::vec3(50.0f, 50.0f, 50.0f));
+    man->scale(glm::vec3(50.0f, 50.0f, 50.0f));
 
 
     glEnable(GL_DEPTH_TEST);
@@ -55,9 +57,10 @@ int main(int argc, char* argv[]) {
         player.fpp_movement_keys();
         player.fpp_movement(sdl.dt);
 
-        model.render(camera);
+        //model->render(camera);
+        for(auto& e: statics) e->render(camera);
         glBindTexture(GL_TEXTURE_2D, 0);
-        man.render(camera);
+        man->render(camera);
 
         text.render();
 

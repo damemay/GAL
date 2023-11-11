@@ -34,14 +34,21 @@ class Camera {
         inline std::pair<glm::mat4, glm::mat4> view_projection() {
             auto view = glm::lookAt(position, position+front, up);
             auto projection = glm::mat4(1.0f);
-            projection = glm::perspective(glm::radians(90.0f), 
-                        width/height, 0.1f, 100000.0f);
+            projection = glm::perspective(glm::radians(fov), 
+                        width/height, near, far);
             return std::make_pair(view, projection);
         };
 
         inline void yaw_change(float add) { yaw += add; }
         inline void pitch_change(float add) { pitch += add; }
         inline void position_change(glm::vec3 add) { position += add; }
+
+        inline void set_position(glm::vec3 pos) { position = pos; }
+        inline void set_yaw(float val) { yaw = val; calculate(); }
+        inline void set_pitch(float val) { pitch = val; calculate(); }
+        inline void set_near(float val) { near = val; }
+        inline void set_far(float val) { far = val; }
+        inline void set_fov(float val) { fov = val; }
 
         inline glm::vec3 get_up() { return up; }
         inline glm::vec3 get_front() { return front; }
