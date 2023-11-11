@@ -20,8 +20,8 @@ if(VITA)
     include_directories(
       ../common
     )
-    
-    add_executable(${PROJECT_NAME}
+
+    add_library(glp STATIC
         glp/external/stbi.c
         glp/utils.cc
         glp/sdl.cc
@@ -31,10 +31,14 @@ if(VITA)
         glp/fonts.cc
         glp/obj/player.cc
         glp/obj/placables.cc
+    )
+    
+    add_executable(${PROJECT_NAME}
         main.cc
     )
     
     target_link_libraries(${PROJECT_NAME}
+      glp
       SDL2
       SDL2main
       vitaGL
@@ -98,8 +102,8 @@ else()
     if(USE_ASSIMP)
         add_compile_definitions(USE_ASSIMP)
     endif()
-    
-    add_executable(${EXEC_NAME}
+
+    add_library(glp STATIC
         glp/external/glad.c
         glp/external/stbi.c
         glp/utils.cc
@@ -110,11 +114,15 @@ else()
         glp/fonts.cc
         glp/obj/player.cc
         glp/obj/placables.cc
+    )
+    
+    add_executable(${EXEC_NAME}
         main.cc
     )
     
     if(USE_ASSIMP)
     target_link_libraries(${EXEC_NAME}
+        glp
         SDL2
         assimp
         GL
@@ -123,6 +131,7 @@ else()
     )
     else()
     target_link_libraries(${EXEC_NAME}
+        glp
         SDL2
         GL
         zstd
