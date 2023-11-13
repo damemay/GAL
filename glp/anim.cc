@@ -4,6 +4,7 @@
 #include "external/glm/gtc/type_ptr.hpp"
 #include "external/glm/gtx/quaternion.hpp"
 #include "model.hh"
+#include "utils.hh"
 #include <sstream>
 #include <fstream>
 
@@ -134,12 +135,9 @@ Animation::Animation(const std::string& path, const Model& model, bool assimp) {
 #endif
 
 Animation::Animation(const std::string& path, const Model& model) {
-    std::fstream out(path, std::ios::in);
-    if(!out) glp_logv("error opening file %s", path.c_str());
+    auto file = util::read_file(path);
+    auto decompressed = util::decompress(file);
     std::stringstream s;
-    s << out.rdbuf();
-    auto decompressed = util::decompress(s.str());
-    s.str("");
     s << decompressed;
     deserialize_data(model, s);
 }

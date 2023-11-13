@@ -103,14 +103,10 @@ Model::Model(const std::string& path, bool assimp, Shader* shader_)
 }
 #endif
 
-Model::Model(const std::string& path, Shader* shader_) 
-    : shader{shader_} {
-    std::fstream out(path, std::ios::in);
-    if(!out) glp_logv("error opening file %s", path.c_str());
+Model::Model(const std::string& path, Shader* shader_) : shader{shader_} {
+    auto file = util::read_file(path);
+    auto decompressed = util::decompress(file);
     std::stringstream s;
-    s << out.rdbuf();
-    auto decompressed = util::decompress(s.str());
-    s.str("");
     s << decompressed;
     deserialize_data(s);
 }
