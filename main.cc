@@ -21,8 +21,6 @@ int main(int argc, char* argv[]) {
     Window sdl {"glp", WIDTH, HEIGHT};
     sdl.set_bg_color(glm::vec3(0.4, 0.4, 0.4));
 
-    Object::Scene scene {"playground"};
-
     Object::Camera camera {glm::vec2(1280.0f, 720.0f), 90.0f};
     Object::PlayerFPP player {&camera, &sdl.events};
 #ifndef __vita__
@@ -32,7 +30,7 @@ int main(int argc, char* argv[]) {
 #endif
     auto model = new Object::Static{"../res/models/plane/plane.model"};
     statics.push_back(model);
-    auto man = new Object::Animated{"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim", &sdl.dt};
+    auto man = new Object::Animated{"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim", sdl.get_dt_ptr()};
 
     Font font {"../res/fonts/karla.png", WIDTH, HEIGHT};
     Text text {&font};
@@ -55,7 +53,7 @@ int main(int argc, char* argv[]) {
         if(util::glerr()) glp_log("CLEAR");
 
         player.fpp_movement_keys();
-        player.fpp_movement(sdl.dt);
+        player.fpp_movement(*sdl.get_dt_ptr());
 
         //model->render(camera);
         for(auto& e: statics) e->render(camera);

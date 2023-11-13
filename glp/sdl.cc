@@ -7,28 +7,19 @@ void Window::init(const uint32_t flags) {
     atexit(SDL_Quit);
 }
 
-std::optional<std::vector<SDL_GameController*>> Window::gamepads_init() {
+void Window::gamepads_init() {
     int joysticks;
     if((joysticks=SDL_NumJoysticks()) > 0) {
-        std::vector<SDL_GameController*> gamepads(joysticks);
         for(size_t i=0; i<joysticks; ++i)
-            gamepads.at(i) = SDL_GameControllerOpen(i);
-        return gamepads;
-    } else return {};
+            gamepads.push_back(SDL_GameControllerOpen(i));
+    }
 }
 
-void Window::gamepads_clean(const std::vector<SDL_GameController*>& gamepads) {
-    for(const auto& pad : gamepads)
-        SDL_GameControllerClose(pad);
-}
-
-SDL_Window* Window::window_init(const std::string title, const size_t width, const size_t height, const uint32_t flags) {
-    SDL_Window* window = nullptr;
+void Window::window_init(const std::string title, const size_t width, const size_t height, const uint32_t flags) {
     if(!(window = SDL_CreateWindow(title.c_str(),
                     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                     width, height, flags)))
         glp_diev("could not create SDL Window: %s", SDL_GetError());
-    return window;
 }
 
 void Window::gl_init() {
@@ -66,15 +57,16 @@ void Window::create_glcontext(SDL_Window*& window, SDL_GLContext& context, const
 
 Window::Window(std::string title, const size_t width_, const size_t height_) : width{width_}, height{height_} {
     init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
-    window = window_init(title, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+    window_init(title, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
     gl_init();
     create_glcontext(window, context, width, height);
-    if(auto pads = gamepads_init())
-        gamepads = std::move(*pads);
+    gamepads_init();
 }
 
 Window::~Window() {
-    if(!gamepads.empty()) gamepads_clean(gamepads);
+    if(!gamepads.empty())
+        for(const auto& pad : gamepads)
+            SDL_GameControllerClose(pad);
     if(context) SDL_GL_DeleteContext(context);
     if(window) SDL_DestroyWindow(window);
 }
