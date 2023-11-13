@@ -8,7 +8,7 @@ Font::Font(const std::string& path, const size_t& screen_w, const size_t& screen
 #ifndef __vita__
     shader = new Shader{"../res/shaders/text.vert", "../res/shaders/text.frag"};
 #else
-    shader = new Shader{"../res/shaders/vita_text.vert", "../res/shaders/vita_text.frag"};
+    shader = new Shader{"../res/shaders/vita/vita_text.vert", "../res/shaders/vita/vita_text.frag"};
 #endif
 }
 

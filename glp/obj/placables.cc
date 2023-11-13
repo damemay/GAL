@@ -19,7 +19,7 @@ Static::Static(const std::string& path) {
 #ifndef __vita__
     shader = new Shader("../res/shaders/static.vert", "../res/shaders/textured.frag");
 #else
-    shader = new Shader("../res/shaders/vita_static.vert", "../res/shaders/vita_textured.frag");
+    shader = new Shader("../res/shaders/vita/vita_static.vert", "../res/shaders/vita/vita_textured.frag");
 #endif
     model = new Model(path, shader);
 }
@@ -62,7 +62,7 @@ Animated::Animated(const std::string& path, const std::string& anim_path, float*
 #ifndef __vita__
     shader = new Shader("../res/shaders/skinned.vert", "../res/shaders/textured.frag");
 #else 
-    shader = new Shader("../res/shaders/vita_skinned.vert", "../res/shaders/vita_textured.frag");
+    shader = new Shader("../res/shaders/vita/vita_skinned.vert", "../res/shaders/vita/vita_textured.frag");
 #endif
     model = new Model(path, shader);
     
