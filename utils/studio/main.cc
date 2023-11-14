@@ -108,6 +108,7 @@ int main(int argc, char* argv[]) {
         shader->set("vp", vp);
         auto m = glm::mat4(1.0f);
         shader->set("model", m);
+        shader->set("camera_position", camera.get_position());
         model->render();
 
         if(util::glerr()) glp_log("Rendering did not pass without errors");
@@ -205,6 +206,7 @@ int main(int argc, char* argv[]) {
                     std::stringstream data = model->serialize_data();
                     auto compressed = util::compress(data.str(), 90);
                     output << compressed;
+                    glp_log("Saved! Be sure to copy the textures to the same directory as new file.");
                 }
                 ImGui::TreePop();
             }
