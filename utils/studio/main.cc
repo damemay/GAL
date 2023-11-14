@@ -1,26 +1,26 @@
-#include "glp/sdl.hh"
-#include "glp/model.hh"
-#include "glp/shader.hh"
-#include "glp/anim.hh"
+#include "sdl.hh"
+#include "model.hh"
+#include "shader.hh"
+#include "anim.hh"
 
-#include "glp/external/glm/glm.hpp"
-#include "glp/external/glm/gtc/matrix_transform.hpp"
-#include "glp/external/glm/gtc/type_ptr.hpp"
+#include "external/glm/glm.hpp"
+#include "external/glm/gtc/matrix_transform.hpp"
+#include "external/glm/gtc/type_ptr.hpp"
 
-#include "glp/obj/camera.hh"
-#include "glp/obj/player.hh"
-#include "glp/fonts.hh"
+#include "obj/camera.hh"
+#include "obj/player.hh"
+#include "fonts.hh"
 
-#include "glp/external/imgui/imgui.h"
-#include "glp/external/imgui/imgui_impl_sdl2.h"
-#include "glp/external/imgui/imgui_impl_opengl3.h"
-#include "glp/utils.hh"
+#include "external/imgui/imgui.h"
+#include "external/imgui/imgui_impl_sdl2.h"
+#include "external/imgui/imgui_impl_opengl3.h"
+#include "utils.hh"
 
 #include <sstream>
 #include <fstream>
 
-constexpr size_t WIDTH = 1920;
-constexpr size_t HEIGHT = 1080;
+constexpr size_t WIDTH = 1280;
+constexpr size_t HEIGHT = 720;
 
 static Model* model;
 static Shader* shader;
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
     Shader pbr {"../res/shaders/static.vert", "../res/shaders/pbr.frag"};
     shader = &phong;
 
-    model = new Model("../res/glTF-Sample-Models/2.0/Cube/glTF/Cube.gltf");
+    model = new Model("../res/cube/Cube.gltf");
     model->set_shader(shader);
     model->set_shading_type(ShadingType::PHONG);
 

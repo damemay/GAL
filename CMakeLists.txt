@@ -106,25 +106,14 @@ else()
     add_library(glp STATIC
         glp/external/glad.c
         glp/external/stbi.c
-        glp/utils.cc
-        glp/sdl.cc
-        glp/shader.cc
-        glp/model.cc
-        glp/anim.cc
-        glp/fonts.cc
-        glp/material.cc
-        glp/obj/player.cc
-    )
-    
-    add_executable(${EXEC_NAME}
-        main.cc
-        glp/external/imgui/imgui.cpp
-        glp/external/imgui/imgui_demo.cpp
-        glp/external/imgui/imgui_draw.cpp
-        glp/external/imgui/imgui_tables.cpp
-        glp/external/imgui/imgui_widgets.cpp
-        glp/external/imgui/imgui_impl_sdl2.cpp
-        glp/external/imgui/imgui_impl_opengl3.cpp
+        src/utils.cc
+        src/sdl.cc
+        src/shader.cc
+        src/model.cc
+        src/anim.cc
+        src/fonts.cc
+        src/material.cc
+        src/player.cc
     )
     
     if(USE_ASSIMP)
