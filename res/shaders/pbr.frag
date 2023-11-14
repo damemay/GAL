@@ -25,6 +25,14 @@ struct Light {
     vec3 direction;
 
     vec3 color;
+
+    bool directional;
+};
+
+struct Fog {
+    vec3 color;
+    float near;
+    float far;
 };
 
 in vec2 uv0;
@@ -34,6 +42,12 @@ in vec3 norm;
 uniform vec3 camera_position;
 uniform Material material;
 uniform Light light;
+uniform Fog fog;
+
+float lin_depth(float depth) {
+    float z = depth*2.0-1.0;
+    return (2.0*fog.near*fog.far)/(fog.far+fog.near-z*(fog.far-fog.near));
+}
 
 const float pi = 3.14159265359;
 
@@ -69,6 +83,8 @@ float geom_smith(vec3 n, vec3 v, vec3 l, float roughness) {
 }
 
 void main() {
+    if(texture(material.diffuse_tex, uv0).a < 0.1) discard;
+
     vec3 albedo;
     float metallic;
     float roughness;
@@ -118,9 +134,19 @@ void main() {
     f0 = mix(f0, albedo, metallic);
 
     vec3 lo = vec3(0.0);
-    vec3 l = normalize(-light.direction);
+    vec3 l;
+    if(light.directional) {
+        l = normalize(-light.direction);
+    } else {
+        l = normalize(light.position-wpos);
+    }
     vec3 h = normalize(v+l);
-    float dist = length(-light.direction);
+    float dist;
+    if(light.directional) {
+        dist = length(-light.direction);
+    } else {
+        dist = length(light.position-wpos);
+    }
     float attent = 1.0/(dist*dist);
     vec3 rad = light.color*attent;
     float ndf = dist_ggx(normal,h,roughness);
@@ -139,5 +165,9 @@ void main() {
     color = color/(color+vec3(1.0));
     color = pow(color, vec3(1.0/2.2));
 
-    out_color = vec4(color, 1.0);
+    float fog_factor = lin_depth(gl_FragCoord.z)/fog.far;
+    fog_factor = clamp(fog_factor, 0.0, 1.0);
+
+    out_color = mix(vec4(color,1.0), vec4(fog.color,1.0), fog_factor);
+    //out_color = vec4(color, 1.0);
 }

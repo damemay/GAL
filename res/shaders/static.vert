@@ -16,6 +16,6 @@ uniform mat4 model;
 void main() {
     uv0 = texcoord0;
     wpos = vec3(model * vec4(position, 1.0));
-    norm = mat3(transpose(inverse(model)))*normal;
+    norm = transpose(inverse(mat3(model)))*normal;
     gl_Position = vp * vec4(wpos, 1.0);
 }

@@ -17,13 +17,13 @@ int main(int argc, char* argv[]) {
     Window sdl {"glp-util", 1, 1};
 
     if(atoi(argv[1])) {
-        Model model = Model(argv[2], true, nullptr);
+        Model model = Model(argv[2]);
         std::fstream output(argv[3], std::ios::out | std::ios::trunc);
         std::stringstream data = model.serialize_data();
         auto compressed = util::compress(data.str(), 90);
         output << compressed;
     } else {
-        Model model = Model(argv[2], true, nullptr);
+        Model model = Model(argv[2]);
         auto anim = Animation::Animation(argv[2], model, true);
         std::fstream output(argv[3], std::ios::out | std::ios::trunc);
         std::stringstream data = anim.serialize_data();

@@ -25,18 +25,19 @@ class Camera {
     public:
         inline void calculate() {
             if(pitch < -89.0f) pitch = -89.0f;
+            if(pitch > 89.0f) pitch = 89.0f;
             front = glm::normalize(glm::vec3(
                         cos(glm::radians(yaw))*cos(glm::radians(pitch)),
                         sin(glm::radians(pitch)),
                         sin(glm::radians(yaw))*cos(glm::radians(pitch))));
         };
 
-        inline std::pair<glm::mat4, glm::mat4> view_projection() {
+        inline glm::mat4 view_projection() {
             auto view = glm::lookAt(position, position+front, up);
             auto projection = glm::mat4(1.0f);
             projection = glm::perspective(glm::radians(fov), 
                         width/height, near, far);
-            return std::make_pair(view, projection);
+            return projection * view;
         };
 
         inline void yaw_change(float add) { yaw += add; }

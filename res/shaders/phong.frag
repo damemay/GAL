@@ -24,6 +24,17 @@ struct Light {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    bool directional;
+
+    float linear;
+    float quadratic;
+};
+
+struct Fog {
+    vec3 color;
+    float near;
+    float far;
 };
 
 in vec2 uv0;
@@ -33,6 +44,12 @@ in vec3 norm;
 uniform vec3 camera_position;
 uniform Material material;
 uniform Light light;
+uniform Fog fog;
+
+float lin_depth(float depth) {
+    float z = depth*2.0-1.0;
+    return (2.0*fog.near*fog.far)/(fog.far+fog.near-z*(fog.far-fog.near));
+}
 
 void main()
 {
@@ -60,7 +77,12 @@ void main()
     } else {
         normal = normalize(norm);
     }
-    vec3 light_dir = normalize(-light.direction);
+    vec3 light_dir;
+    if(light.directional) {
+        light_dir = normalize(-light.direction);
+    } else {
+        light_dir = normalize(light.position-wpos);
+    }
     float diff = max(dot(normal, light_dir), 0.0);
     vec3 diffuse;
     if(material.diffuse_tex_exists) {
@@ -81,6 +103,18 @@ void main()
         specular = light.specular * (spec * material.specular);
     }
 
+    if(!light.directional) {
+        float dist = length(light.position-wpos);
+        float attent = 1.0/(1.0+light.linear*dist+light.quadratic*(dist*dist));
+        ambient *= attent;
+        diffuse *= attent;
+        specular *= attent;
+    }
+
     vec3 result = ambient + diffuse + specular;
-    color = vec4(result, 1.0);
+    float fog_factor = lin_depth(gl_FragCoord.z)/fog.far;
+    fog_factor = clamp(fog_factor, 0.0, 1.0);
+
+    color = mix(vec4(result,1.0), vec4(fog.color,1.0), fog_factor);
+    //color = vec4(result, 1.0);
 }
