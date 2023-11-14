@@ -53,14 +53,3 @@ class Shader {
         Shader(const Shader&) = delete;
         Shader& operator=(const Shader&) = delete;
 };
-
-struct Texture {
-        GLuint id{0};
-        std::string path{};
-
-        Texture(const std::string& path);
-        ~Texture();
-
-        Texture(const Texture&) = delete;
-        Texture& operator=(const Texture&) = delete;
-};

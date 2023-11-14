@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include "shader.hh"
+#include "material.hh"
 
 struct Font {
         Texture* texture {nullptr};

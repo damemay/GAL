@@ -112,12 +112,19 @@ else()
         glp/model.cc
         glp/anim.cc
         glp/fonts.cc
+        glp/material.cc
         glp/obj/player.cc
-        glp/obj/placables.cc
     )
     
     add_executable(${EXEC_NAME}
         main.cc
+        glp/external/imgui/imgui.cpp
+        glp/external/imgui/imgui_demo.cpp
+        glp/external/imgui/imgui_draw.cpp
+        glp/external/imgui/imgui_tables.cpp
+        glp/external/imgui/imgui_widgets.cpp
+        glp/external/imgui/imgui_impl_sdl2.cpp
+        glp/external/imgui/imgui_impl_opengl3.cpp
     )
     
     if(USE_ASSIMP)

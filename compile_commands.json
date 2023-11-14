@@ -1,60 +1,68 @@
 [
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-g",
-      "-std=c++20",
-      "-o",
-      "game",
-      "glp/external/glad.c"
-    ],
-    "directory": "/home/mar/gl-gltf",
-    "file": "/home/mar/gl-gltf/glp/external/glad.c",
-    "output": "/home/mar/gl-gltf/game"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-g",
-      "-std=c++20",
-      "-lSDL2",
-      "-o",
-      "game",
-      "glp/sdl.cc"
-    ],
-    "directory": "/home/mar/gl-gltf",
-    "file": "/home/mar/gl-gltf/glp/sdl.cc",
-    "output": "/home/mar/gl-gltf/game"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-g",
-      "-std=c++20",
-      "-o",
-      "game",
-      "glp/model.cc"
-    ],
-    "directory": "/home/mar/gl-gltf",
-    "file": "/home/mar/gl-gltf/glp/model.cc",
-    "output": "/home/mar/gl-gltf/game"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-g",
-      "-std=c++20",
-      "-lSDL2",
-      "-o",
-      "game",
-      "main.cc"
-    ],
-    "directory": "/home/mar/gl-gltf",
-    "file": "/home/mar/gl-gltf/main.cc",
-    "output": "/home/mar/gl-gltf/game"
-  }
+{
+  "directory": "/home/mar/gl/build",
+  "command": "/usr/bin/cc -DUSE_ASSIMP  -g -o CMakeFiles/glp.dir/glp/external/glad.c.o -c /home/mar/gl/glp/external/glad.c",
+  "file": "/home/mar/gl/glp/external/glad.c",
+  "output": "CMakeFiles/glp.dir/glp/external/glad.c.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "/usr/bin/cc -DUSE_ASSIMP  -g -o CMakeFiles/glp.dir/glp/external/stbi.c.o -c /home/mar/gl/glp/external/stbi.c",
+  "file": "/home/mar/gl/glp/external/stbi.c",
+  "output": "CMakeFiles/glp.dir/glp/external/stbi.c.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "g++ -DUSE_ASSIMP  -std=gnu++20 -g -o CMakeFiles/glp.dir/glp/utils.cc.o -c /home/mar/gl/glp/utils.cc",
+  "file": "/home/mar/gl/glp/utils.cc",
+  "output": "CMakeFiles/glp.dir/glp/utils.cc.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "g++ -DUSE_ASSIMP  -std=gnu++20 -g -o CMakeFiles/glp.dir/glp/sdl.cc.o -c /home/mar/gl/glp/sdl.cc",
+  "file": "/home/mar/gl/glp/sdl.cc",
+  "output": "CMakeFiles/glp.dir/glp/sdl.cc.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "g++ -DUSE_ASSIMP  -std=gnu++20 -g -o CMakeFiles/glp.dir/glp/shader.cc.o -c /home/mar/gl/glp/shader.cc",
+  "file": "/home/mar/gl/glp/shader.cc",
+  "output": "CMakeFiles/glp.dir/glp/shader.cc.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "g++ -DUSE_ASSIMP  -std=gnu++20 -g -o CMakeFiles/glp.dir/glp/model.cc.o -c /home/mar/gl/glp/model.cc",
+  "file": "/home/mar/gl/glp/model.cc",
+  "output": "CMakeFiles/glp.dir/glp/model.cc.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "g++ -DUSE_ASSIMP  -std=gnu++20 -g -o CMakeFiles/glp.dir/glp/anim.cc.o -c /home/mar/gl/glp/anim.cc",
+  "file": "/home/mar/gl/glp/anim.cc",
+  "output": "CMakeFiles/glp.dir/glp/anim.cc.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "g++ -DUSE_ASSIMP  -std=gnu++20 -g -o CMakeFiles/glp.dir/glp/fonts.cc.o -c /home/mar/gl/glp/fonts.cc",
+  "file": "/home/mar/gl/glp/fonts.cc",
+  "output": "CMakeFiles/glp.dir/glp/fonts.cc.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "g++ -DUSE_ASSIMP  -std=gnu++20 -g -o CMakeFiles/glp.dir/glp/obj/player.cc.o -c /home/mar/gl/glp/obj/player.cc",
+  "file": "/home/mar/gl/glp/obj/player.cc",
+  "output": "CMakeFiles/glp.dir/glp/obj/player.cc.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "g++ -DUSE_ASSIMP  -std=gnu++20 -g -o CMakeFiles/glp.dir/glp/obj/placables.cc.o -c /home/mar/gl/glp/obj/placables.cc",
+  "file": "/home/mar/gl/glp/obj/placables.cc",
+  "output": "CMakeFiles/glp.dir/glp/obj/placables.cc.o"
+},
+{
+  "directory": "/home/mar/gl/build",
+  "command": "g++ -DUSE_ASSIMP  -std=gnu++20 -g -o CMakeFiles/game.dir/main.cc.o -c /home/mar/gl/main.cc",
+  "file": "/home/mar/gl/main.cc",
+  "output": "CMakeFiles/game.dir/main.cc.o"
+}
 ]

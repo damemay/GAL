@@ -84,8 +84,9 @@ void Text::update(const std::string& text, uint8_t size, uint16_t x, uint16_t y)
 
 void Text::render() {
     glDisable(GL_DEPTH_TEST);
-    glBindTexture(GL_TEXTURE_2D, font->texture->id);
     font->shader->bind();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, font->texture->id);
     glBindVertexArray(VAO);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

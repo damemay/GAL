@@ -25,6 +25,7 @@
 #include "external/glm/gtc/type_ptr.hpp"
 
 #include "shader.hh"
+#include "material.hh"
 
 constexpr GLuint POSITION_ATTRIBUTE_INDEX       = 0;
 constexpr GLuint NORMAL_ATTRIBUTE_INDEX         = 1;
@@ -56,11 +57,11 @@ class Mesh {
     public:
         std::vector<Vertex>             vertices;
         std::vector<unsigned int>       indices;
-        std::vector<Texture*>           textures;
+        Material*                       material;
 
-        void render(Shader* shader);
+        void render(Shader* shader, ShadingType type);
 
-        Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, std::vector<Texture*> tex, Shader* shader);
+        Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, Material* mat);
         ~Mesh();
 
         Mesh(const Mesh&) = delete;
@@ -73,6 +74,8 @@ class Model {
         std::vector<BoneInfo> bones {};
         std::vector<Texture*> textures {};
 
+        ShadingType shading {ShadingType::PBR};
+
         Shader* shader;
         std::string directory;
 
@@ -80,7 +83,7 @@ class Model {
         void assimp_load(const std::string& path);
         void assimp_node_process(aiNode* node, const aiScene* scene);
         Mesh* assimp_mesh_process(aiMesh* mesh, const aiScene* scene);
-        std::vector<Texture*> assimp_textures_load(aiMaterial* mat, aiTextureType type);
+        Texture* assimp_textures_load(aiMaterial* mat, aiTextureType type);
 #endif
         Texture* texture_load(const std::string& path);
         void deserialize_data(std::stringstream& s);
@@ -89,16 +92,20 @@ class Model {
         void render();
 
         inline const std::vector<BoneInfo>& get_bone_info() const { return bones; }
+
         inline Shader* get_shader() { return shader; }
+        inline void set_shader(Shader* s) { shader = s; }
+        inline void set_shading_type(ShadingType s) { shading = s; }
+
         inline std::vector<Mesh*> get_meshes() { return meshes; }
         inline std::vector<Texture*> get_textures() { return textures; }
 
+        void load(const std::string& path);
+
         std::stringstream serialize_data();
 
-#ifdef USE_ASSIMP
-        Model(const std::string& path, bool assimp, Shader* shader);
-#endif
-        Model(const std::string& path, Shader* shader);
+        Model() {};
+        Model(const std::string& path);
         ~Model();
 
 };
