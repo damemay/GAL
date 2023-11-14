@@ -60,6 +60,8 @@ static float cx = 300.0f;
 static float cy = 300.0f;
 static float cz = 300.0f;
 
+bool mouse = false;
+
 int main(int argc, char* argv[]) {
     Window sdl {"glp", WIDTH, HEIGHT};
     sdl.set_bg_color(glm::vec3(0.4, 0.4, 0.4));
@@ -94,14 +96,16 @@ int main(int argc, char* argv[]) {
         for(auto& e: sdl.events) {
             ImGui_ImplSDL2_ProcessEvent(&e);
             if(e.type == SDL_KEYUP) {
-                if(e.key.keysym.sym == SDLK_q) SDL_SetRelativeMouseMode(SDL_TRUE);
-                if(e.key.keysym.sym == SDLK_e) SDL_SetRelativeMouseMode(SDL_FALSE);
+                if(e.key.keysym.sym == SDLK_q) mouse = true, SDL_SetRelativeMouseMode(SDL_TRUE);
+                if(e.key.keysym.sym == SDLK_e) mouse = false, SDL_SetRelativeMouseMode(SDL_FALSE);
             }
         }
         if(util::glerr()) glp_log("GL Error left from last frame");
 
-        player.fpp_movement_keys();
-        player.fpp_movement(*sdl.get_dt_ptr());
+        if(mouse) {
+            player.fpp_movement_keys();
+            player.fpp_movement(*sdl.get_dt_ptr());
+        }
 
         shader->bind();
         auto vp = camera.view_projection();
@@ -113,6 +117,7 @@ int main(int argc, char* argv[]) {
 
         if(util::glerr()) glp_log("Rendering did not pass without errors");
 
+        if(!mouse){
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
@@ -258,6 +263,7 @@ int main(int argc, char* argv[]) {
         ImGui::End();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        }
 
         sdl.loop_end();
     }
