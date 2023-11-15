@@ -9,36 +9,29 @@ namespace glp {
 
 namespace Object {
 
-class Placable {
-    public: 
-        virtual void render(Camera& camera) = 0;
-        virtual ~Placable() {}
-};
-
-class Static : public Placable {
+class Renderable {
     protected:
         Shader* shader {nullptr};
         Model* model {nullptr};
 
         glm::mat4 transform {1.0f};
 
-        glm::mat4 mvp(Camera& camera);
-
-    public:
+    public: 
         inline void translate(glm::vec3 translation) { transform = glm::translate(transform, translation); }
         inline void rotate(float rad, glm::vec3 axis) { transform = glm::rotate(transform, glm::radians(rad), axis); }
         inline void scale(glm::vec3 scale) { transform = glm::scale(transform, scale); }
 
+        void load(const std::string& path, Shader* shader, ShadingType shading_type=ShadingType::PBR);
         void render(Camera& camera);
 
-        Static() {}
-        Static(const std::string& path);
-        ~Static();
+        Renderable() {};
+        Renderable(const std::string& path, Shader* shader, ShadingType shading_type=ShadingType::PBR);
+        Renderable(Model* model, Shader* shader, ShadingType shading_type);
+        virtual ~Renderable() {};
 };
 
 
-
-class Animated: public Static {
+class Animated: public Renderable {
     private:
         Animation::Animation* find_animation(const std::string& name);
         float* dt {nullptr};

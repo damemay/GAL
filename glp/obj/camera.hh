@@ -34,6 +34,10 @@ class Camera {
                         sin(glm::radians(yaw))*cos(glm::radians(pitch))));
         };
 
+        inline glm::mat4 view() {
+            return glm::lookAt(position, position+front, up);
+        }
+
         inline glm::mat4 view_projection() {
             auto view = glm::lookAt(position, position+front, up);
             auto projection = glm::mat4(1.0f);
@@ -53,6 +57,8 @@ class Camera {
         inline void set_far(float val) { far = val; }
         inline void set_fov(float val) { fov = val; }
 
+        inline float get_yaw() { return yaw; }
+        inline float get_pitch() { return pitch; }
         inline glm::vec3 get_up() { return up; }
         inline glm::vec3 get_front() { return front; }
         inline glm::vec3 get_position() { return position; }

@@ -1,62 +1,68 @@
 [
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "/usr/bin/cc  -I/home/mar/gl-gltf/glp -g -o CMakeFiles/glp.dir/glp/external/glad.c.o -c /home/mar/gl-gltf/glp/external/glad.c",
+  "command": "/usr/bin/cc  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -g -o CMakeFiles/glp.dir/glp/external/glad.c.o -c /home/mar/gl-gltf/glp/external/glad.c",
   "file": "/home/mar/gl-gltf/glp/external/glad.c",
   "output": "CMakeFiles/glp.dir/glp/external/glad.c.o"
 },
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "/usr/bin/cc  -I/home/mar/gl-gltf/glp -g -o CMakeFiles/glp.dir/glp/external/stbi.c.o -c /home/mar/gl-gltf/glp/external/stbi.c",
+  "command": "/usr/bin/cc  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -g -o CMakeFiles/glp.dir/glp/external/stbi.c.o -c /home/mar/gl-gltf/glp/external/stbi.c",
   "file": "/home/mar/gl-gltf/glp/external/stbi.c",
   "output": "CMakeFiles/glp.dir/glp/external/stbi.c.o"
 },
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "g++  -I/home/mar/gl-gltf/glp -std=gnu++20 -g -o CMakeFiles/glp.dir/src/utils.cc.o -c /home/mar/gl-gltf/src/utils.cc",
+  "command": "g++  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -std=gnu++20 -g -o CMakeFiles/glp.dir/src/utils.cc.o -c /home/mar/gl-gltf/src/utils.cc",
   "file": "/home/mar/gl-gltf/src/utils.cc",
   "output": "CMakeFiles/glp.dir/src/utils.cc.o"
 },
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "g++  -I/home/mar/gl-gltf/glp -std=gnu++20 -g -o CMakeFiles/glp.dir/src/sdl.cc.o -c /home/mar/gl-gltf/src/sdl.cc",
+  "command": "g++  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -std=gnu++20 -g -o CMakeFiles/glp.dir/src/sdl.cc.o -c /home/mar/gl-gltf/src/sdl.cc",
   "file": "/home/mar/gl-gltf/src/sdl.cc",
   "output": "CMakeFiles/glp.dir/src/sdl.cc.o"
 },
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "g++  -I/home/mar/gl-gltf/glp -std=gnu++20 -g -o CMakeFiles/glp.dir/src/shader.cc.o -c /home/mar/gl-gltf/src/shader.cc",
+  "command": "g++  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -std=gnu++20 -g -o CMakeFiles/glp.dir/src/shader.cc.o -c /home/mar/gl-gltf/src/shader.cc",
   "file": "/home/mar/gl-gltf/src/shader.cc",
   "output": "CMakeFiles/glp.dir/src/shader.cc.o"
 },
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "g++  -I/home/mar/gl-gltf/glp -std=gnu++20 -g -o CMakeFiles/glp.dir/src/model.cc.o -c /home/mar/gl-gltf/src/model.cc",
+  "command": "g++  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -std=gnu++20 -g -o CMakeFiles/glp.dir/src/model.cc.o -c /home/mar/gl-gltf/src/model.cc",
   "file": "/home/mar/gl-gltf/src/model.cc",
   "output": "CMakeFiles/glp.dir/src/model.cc.o"
 },
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "g++  -I/home/mar/gl-gltf/glp -std=gnu++20 -g -o CMakeFiles/glp.dir/src/anim.cc.o -c /home/mar/gl-gltf/src/anim.cc",
+  "command": "g++  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -std=gnu++20 -g -o CMakeFiles/glp.dir/src/anim.cc.o -c /home/mar/gl-gltf/src/anim.cc",
   "file": "/home/mar/gl-gltf/src/anim.cc",
   "output": "CMakeFiles/glp.dir/src/anim.cc.o"
 },
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "g++  -I/home/mar/gl-gltf/glp -std=gnu++20 -g -o CMakeFiles/glp.dir/src/fonts.cc.o -c /home/mar/gl-gltf/src/fonts.cc",
+  "command": "g++  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -std=gnu++20 -g -o CMakeFiles/glp.dir/src/fonts.cc.o -c /home/mar/gl-gltf/src/fonts.cc",
   "file": "/home/mar/gl-gltf/src/fonts.cc",
   "output": "CMakeFiles/glp.dir/src/fonts.cc.o"
 },
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "g++  -I/home/mar/gl-gltf/glp -std=gnu++20 -g -o CMakeFiles/glp.dir/src/material.cc.o -c /home/mar/gl-gltf/src/material.cc",
+  "command": "g++  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -std=gnu++20 -g -o CMakeFiles/glp.dir/src/material.cc.o -c /home/mar/gl-gltf/src/material.cc",
   "file": "/home/mar/gl-gltf/src/material.cc",
   "output": "CMakeFiles/glp.dir/src/material.cc.o"
 },
 {
   "directory": "/home/mar/gl-gltf/build",
-  "command": "g++  -I/home/mar/gl-gltf/glp -std=gnu++20 -g -o CMakeFiles/glp.dir/src/player.cc.o -c /home/mar/gl-gltf/src/player.cc",
+  "command": "g++  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -std=gnu++20 -g -o CMakeFiles/glp.dir/src/player.cc.o -c /home/mar/gl-gltf/src/player.cc",
   "file": "/home/mar/gl-gltf/src/player.cc",
   "output": "CMakeFiles/glp.dir/src/player.cc.o"
+},
+{
+  "directory": "/home/mar/gl-gltf/build",
+  "command": "g++  -I/home/mar/gl-gltf/glp -I/usr/include/bullet -std=gnu++20 -g -o CMakeFiles/game.dir/main.cc.o -c /home/mar/gl-gltf/main.cc",
+  "file": "/home/mar/gl-gltf/main.cc",
+  "output": "CMakeFiles/game.dir/main.cc.o"
 }
 ]

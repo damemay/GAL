@@ -102,6 +102,9 @@ class Model {
         inline std::vector<Mesh*> get_meshes() { return meshes; }
         inline std::vector<Texture*> get_textures() { return textures; }
 
+        glm::vec3 calculate_bounding_box();
+        std::vector<glm::vec3> calculate_bounding_boxes();
+
         void load(const std::string& path);
 
         std::stringstream serialize_data();

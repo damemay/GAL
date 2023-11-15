@@ -14,6 +14,16 @@ include_directories(
 
 add_executable(${EXEC_NAME}
     main.cc
+    ../../glp/external/glad.c
+    ../../glp/external/stbi.c
+    ../../src/utils.cc
+    ../../src/sdl.cc
+    ../../src/shader.cc
+    ../../src/model.cc
+    ../../src/anim.cc
+    ../../src/fonts.cc
+    ../../src/material.cc
+    ../../src/player.cc
     ../../glp/external/imgui/imgui.cpp
     ../../glp/external/imgui/imgui_demo.cpp
     ../../glp/external/imgui/imgui_draw.cpp
@@ -24,7 +34,6 @@ add_executable(${EXEC_NAME}
 )
 
 target_link_libraries(${EXEC_NAME}
-    ${CMAKE_SOURCE_DIR}/../../build/libglp.a
     SDL2
     GL
     zstd

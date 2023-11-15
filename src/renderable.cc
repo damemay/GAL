@@ -1,38 +1,34 @@
-#include "obj/placables.hh"
+#include "obj/renderable.hh"
 
 namespace glp {
 
 namespace Object {
 
-glm::mat4 Static::mvp(Camera& camera) {
-    auto vp = camera.view_projection();
-    auto mvp = vp * transform;
-    return mvp;
+void Renderable::render(Camera& camera) {
+    if(shader) {
+        shader->bind();
+        shader->set("vp", camera.view_projection());
+        shader->set("model", transform);
+        shader->set("camera_position", camera.get_position());
+        model->render();
+    }
 }
 
-void Static::render(Camera& camera) {
-    shader->bind();
-    auto m = mvp(camera);
-    shader->set("mvp", m);
-    model->render();
-}
-
-Static::Static(const std::string& path) {
-#ifndef __vita__
-    shader = new Shader("../res/shaders/static.vert", "../res/shaders/textured.frag");
-#else
-    shader = new Shader("../res/shaders/vita/vita_static.vert", "../res/shaders/vita/vita_textured.frag");
-#endif
+void Renderable::load(const std::string& path, Shader* shader_, ShadingType shading_type) {
     model = new Model(path);
-    model->set_shader(shader);
+    shader = shader_;
+    model->set_shader(shader_);
+    model->set_shading_type(shading_type);
 }
 
-Static::~Static() {
-    delete model;
-    delete shader;
+Renderable::Renderable(const std::string& path, Shader* shader, ShadingType shading_type) {
+    load(path, shader, shading_type);
 }
 
-
+Renderable::Renderable(Model* m, Shader* s, ShadingType shading_type) : model{m}, shader{s} {
+    model->set_shader(s);
+    model->set_shading_type(shading_type);
+}
 
 Animation::Animation* Animated::find_animation(const std::string& name) {
     for(auto& anim: animations)
@@ -54,8 +50,9 @@ void Animated::add_animation(const std::string& anim_path) {
 
 void Animated::render(Camera& camera) {
     shader->bind();
-    auto m = mvp(camera);
-    shader->set("mvp", m);
+    shader->set("vp", camera.view_projection());
+    shader->set("model", transform);
+    shader->set("camera_position", camera.get_position());
     animator.update(*dt);
     model->render();
 }
