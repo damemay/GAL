@@ -28,10 +28,7 @@ class Shader {
         bool link_shaders(GLuint vertex, GLuint fragment);
         void make(const std::string& v, const std::string& f);
     public:
-        inline Shader(const std::string& vertex, const std::string& fragment) {
-            handle = glCreateProgram();
-            make(vertex, fragment);
-        }
+        Shader(const std::string& vertex, const std::string& fragment, bool from_path=true);
 
         inline ~Shader() {
             glDeleteShader(handle);

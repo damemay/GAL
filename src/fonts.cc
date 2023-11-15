@@ -1,15 +1,49 @@
 #include "fonts.hh"
 #include "utils.hh"
 
+#ifndef __vita__
+constexpr auto text_vert = "#version 330 core\n"
+"layout(location = 0) in vec2 position;\n"
+"layout(location = 1) in vec2 uv_in;\n"
+"out vec2 uv;\n"
+"void main() {\n"
+"    gl_Position = vec4(position, 0.0f, 1.0f);\n"
+"    uv = uv_in;\n"
+"}\n";
+
+constexpr auto text_frag = "#version 330 core\n"
+"in vec2 uv;\n"
+"out vec4 out_color;\n"
+"uniform sampler2D tex;\n"
+"void main() {\n"
+"    out_color = texture(tex, vec2(uv.x, uv.y));\n"
+"}\n";
+#else
+constexpr auto text_vert = "void main(\n"
+"    float2 position,\n"
+"    float2 uv_in,\n"
+"    float4 out gl_Position : POSITION,\n"
+"    float2 out uv : TEXCOORD0)\n"
+"{\n"
+"    gl_Position = float4(position, 0.0, 1.0);\n"
+"    uv = uv_in;\n"
+"}\n";
+
+constexpr auto text_frag = "float4 main(\n"
+"    float4 gl_FragColor : COLOR,\n"
+"    float2 uv : TEXCOORD0,\n"
+"    uniform sampler2D tex\n"
+") {\n"
+"    gl_FragColor = tex2D(tex, float2(uv.x, uv.y));\n"
+"    return gl_FragColor;\n"
+"}\n";
+#endif
+
 Font::Font(const std::string& path, const size_t& screen_w, const size_t& screen_h)
     : screen_width{screen_w}, screen_height{screen_h} {
     texture = new Texture{path};
 
-#ifndef __vita__
-    shader = new Shader{"../res/shaders/text.vert", "../res/shaders/text.frag"};
-#else
-    shader = new Shader{"../res/shaders/vita/vita_text.vert", "../res/shaders/vita/vita_text.frag"};
-#endif
+    shader = new Shader{text_vert, text_frag, false};
 }
 
 Font::~Font() {

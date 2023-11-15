@@ -50,3 +50,12 @@ void Shader::make(const std::string& v, const std::string& f) {
     link_shaders(vert, frag);
 }
 
+Shader::Shader(const std::string& vertex, const std::string& fragment, bool path) {
+    handle = glCreateProgram();
+    if(path) make(vertex, fragment);
+    else {
+        auto vert = compile(GL_VERTEX_SHADER, vertex);
+        auto frag = compile(GL_FRAGMENT_SHADER, fragment);
+        link_shaders(vert, frag);
+    }
+}

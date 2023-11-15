@@ -18,7 +18,7 @@ if(VITA)
     set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
     
     include_directories(
-      ../common
+      glp/
     )
 
     add_library(glp STATIC
@@ -96,12 +96,16 @@ else()
     set(CMAKE_CXX_STANDARD 20)
     add_compile_options(-g)
     
-    set(EXEC_NAME game)
+    #    set(EXEC_NAME game)
     
     option(USE_ASSIMP "Link with assimp" OFF)
     if(USE_ASSIMP)
         add_compile_definitions(USE_ASSIMP)
     endif()
+
+    include_directories(
+      glp/
+    )
 
     add_library(glp STATIC
         glp/external/glad.c
@@ -116,22 +120,22 @@ else()
         src/player.cc
     )
     
-    if(USE_ASSIMP)
-    target_link_libraries(${EXEC_NAME}
-        glp
-        SDL2
-        assimp
-        GL
-        zstd
-        m
-    )
-    else()
-    target_link_libraries(${EXEC_NAME}
-        glp
-        SDL2
-        GL
-        zstd
-        m
-    )
-    endif()
+#    if(USE_ASSIMP)
+#    target_link_libraries(${EXEC_NAME}
+#        glp
+#        SDL2
+#        assimp
+#        GL
+#        zstd
+#        m
+#    )
+#    else()
+#    target_link_libraries(${EXEC_NAME}
+#        glp
+#        SDL2
+#        GL
+#        zstd
+#        m
+#    )
+#    endif()
 endif()
