@@ -1,5 +1,7 @@
 #include "obj/player.hh"
 
+namespace glp {
+
 namespace Object {
 
 void PlayerFPP::mouse_update(int x, int y) {
@@ -66,6 +68,8 @@ void PlayerFPP::fpp_movement_keys() {
             }
         }
     }
+}
+
 }
 
 }

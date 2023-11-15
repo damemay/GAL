@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <vector>
 
+namespace glp {
+
 namespace Object {
 
 class Player {
@@ -36,5 +38,7 @@ class PlayerFPP : public Player {
         ~PlayerFPP() = default;
 
 };
+
+}
 
 }

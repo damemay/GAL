@@ -2,6 +2,8 @@
 
 #include "shader.hh"
 
+namespace glp {
+
 struct Texture {
     GLuint id{0};
     std::string path{};
@@ -47,3 +49,5 @@ struct Material {
     Material(const Material&) = delete;
     Material& operator=(const Material&) = delete;
 };
+
+}

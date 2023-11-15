@@ -27,6 +27,8 @@
 #include "shader.hh"
 #include "material.hh"
 
+namespace glp {
+
 constexpr GLuint POSITION_ATTRIBUTE_INDEX       = 0;
 constexpr GLuint NORMAL_ATTRIBUTE_INDEX         = 1;
 constexpr GLuint TEXCOORD0_ATTRIBUTE_INDEX      = 2;
@@ -109,3 +111,5 @@ class Model {
         ~Model();
 
 };
+
+}

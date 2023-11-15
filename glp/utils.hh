@@ -19,6 +19,8 @@
 #define glp_logv(msg, ...) printf("glp: " msg "\n", __VA_ARGS__)
 #define glp_log(msg) printf("glp: " msg "\n")
 
+namespace glp {
+
 namespace util {
 
 std::string read_file(const std::string& path);
@@ -32,6 +34,8 @@ inline bool glerr() {
         return true;
     }
     return false;
+}
+
 }
 
 }

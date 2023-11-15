@@ -8,6 +8,8 @@
 #include <sstream>
 #include <fstream>
 
+namespace glp {
+
 namespace Animation {
 
 #ifdef USE_ASSIMP
@@ -315,3 +317,4 @@ void Animation::deserialize_data(const Model& m, std::stringstream& s) {
 
 }
 
+}

@@ -22,8 +22,8 @@
 constexpr size_t WIDTH = 1280;
 constexpr size_t HEIGHT = 720;
 
-static Model* model;
-static Shader* shader;
+static glp::Model* model;
+static glp::Shader* shader;
 static int is_phong = 1;
 static int is_directional = 1;
 
@@ -63,7 +63,7 @@ static float cz = 300.0f;
 bool mouse = false;
 
 int main(int argc, char* argv[]) {
-    Window sdl {"glp", WIDTH, HEIGHT};
+    glp::Window sdl {"glp", WIDTH, HEIGHT};
     sdl.set_bg_color(glm::vec3(0.4, 0.4, 0.4));
 
     IMGUI_CHECKVERSION();
@@ -75,17 +75,17 @@ int main(int argc, char* argv[]) {
     ImGui_ImplSDL2_InitForOpenGL(*sdl.get_window(), sdl.get_glcontext());
     ImGui_ImplOpenGL3_Init();
 
-    Object::Camera camera {glm::vec2(WIDTH, HEIGHT), 90.0f, 0.1, 2000.0f};
-    Object::PlayerFPP player {&camera, &sdl.events};
+    glp::Object::Camera camera {glm::vec2(WIDTH, HEIGHT), 90.0f, 0.1, 2000.0f};
+    glp::Object::PlayerFPP player {&camera, &sdl.events};
     player.use_mouse(true);
 
-    Shader phong {"../res/shaders/static.vert", "../res/shaders/phong.frag"};
-    Shader pbr {"../res/shaders/static.vert", "../res/shaders/pbr.frag"};
+    glp::Shader phong {"../res/shaders/static.vert", "../res/shaders/phong.frag"};
+    glp::Shader pbr {"../res/shaders/static.vert", "../res/shaders/pbr.frag"};
     shader = &phong;
 
-    model = new Model("../res/cube/Cube.gltf");
+    model = new glp::Model("../res/cube/Cube.gltf");
     model->set_shader(shader);
-    model->set_shading_type(ShadingType::PHONG);
+    model->set_shading_type(glp::ShadingType::PHONG);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
                 if(e.key.keysym.sym == SDLK_e) mouse = false, SDL_SetRelativeMouseMode(SDL_FALSE);
             }
         }
-        if(util::glerr()) glp_log("GL Error left from last frame");
+        if(glp::util::glerr()) glp_log("GL Error left from last frame");
 
         if(mouse) {
             player.fpp_movement_keys();
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
         shader->set("camera_position", camera.get_position());
         model->render();
 
-        if(util::glerr()) glp_log("Rendering did not pass without errors");
+        if(glp::util::glerr()) glp_log("Rendering did not pass without errors");
 
         if(!mouse){
         ImGui_ImplOpenGL3_NewFrame();
@@ -201,7 +201,7 @@ int main(int argc, char* argv[]) {
             ImGui::InputText("path", buf, IM_ARRAYSIZE(buf));
             if(ImGui::Button("Load")) {
                 delete model;
-                model = new Model(buf);
+                model = new glp::Model(buf);
             }
             if(ImGui::TreeNode("Export")) {
                 static char buf1[2048];
@@ -209,7 +209,7 @@ int main(int argc, char* argv[]) {
                 if(ImGui::Button("Save")) {
                     std::fstream output(buf1, std::ios::out | std::ios::trunc);
                     std::stringstream data = model->serialize_data();
-                    auto compressed = util::compress(data.str(), 90);
+                    auto compressed = glp::util::compress(data.str(), 90);
                     output << compressed;
                     glp_log("Saved! Be sure to copy the textures to the same directory as new file.");
                 }
@@ -225,7 +225,7 @@ int main(int argc, char* argv[]) {
         if(is_phong) {
             shader = &phong;
             model->set_shader(shader);
-            model->set_shading_type(ShadingType::PHONG);
+            model->set_shading_type(glp::ShadingType::PHONG);
             shader->bind();
             shader->set("fog.color", glm::vec3(fr, fg, fb));
             shader->set("fog.near", fn);
@@ -245,7 +245,7 @@ int main(int argc, char* argv[]) {
         } else {
             shader = &pbr;
             model->set_shader(shader);
-            model->set_shading_type(ShadingType::PBR);
+            model->set_shading_type(glp::ShadingType::PBR);
             shader->bind();
             shader->set("fog.color", glm::vec3(fr, fg, fb));
             shader->set("fog.near", fn);

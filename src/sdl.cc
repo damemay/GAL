@@ -1,5 +1,7 @@
 #include "sdl.hh"
 
+namespace glp {
+
 void Window::init(const uint32_t flags) {
     if(SDL_Init(flags) > 0) {
         glp_diev("could not init SDL: %s", SDL_GetError());
@@ -69,4 +71,6 @@ Window::~Window() {
             SDL_GameControllerClose(pad);
     if(context) SDL_GL_DeleteContext(context);
     if(window) SDL_DestroyWindow(window);
+}
+
 }

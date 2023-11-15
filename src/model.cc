@@ -8,6 +8,8 @@
 #include "model.hh"
 #include "utils.hh"
 
+namespace glp {
+
 Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, Material* mat)
     : vertices{vert}, indices{idx}, material{mat} {
     glGenVertexArrays(1, &VAO);
@@ -514,4 +516,6 @@ void Model::deserialize_data(std::stringstream& s) {
             >> to[3].x >> to[3].y >> to[3].z >> to[3].w;
         bones[i].offset = to;
     }
+}
+
 }

@@ -1,6 +1,8 @@
 #include "material.hh"
 #include "external/stb_image.h"
 
+namespace glp {
+
 Texture::Texture(const std::string& path_) : path{path_} {
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);
@@ -24,4 +26,6 @@ Texture::Texture(const std::string& path_) : path{path_} {
 
 Texture::~Texture() {
     glDeleteTextures(1, &id);
+}
+
 }

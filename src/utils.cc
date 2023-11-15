@@ -4,6 +4,8 @@
 
 #include "utils.hh"
 
+namespace glp {
+
 namespace util {
 
 std::string read_file(const std::string& path) {
@@ -47,3 +49,5 @@ std::string decompress(const std::string& data) {
 }
 
 };
+
+}

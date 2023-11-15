@@ -20,6 +20,8 @@
 #include "utils.hh"
 #include "external/glm/glm.hpp"
 
+namespace glp {
+
 class Window {
     private:
         SDL_Window* window {nullptr};
@@ -75,3 +77,5 @@ class Window {
             SDL_GL_SwapWindow(window);
         }
 };
+
+}

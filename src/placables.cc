@@ -1,10 +1,12 @@
-#include "placables.hh"
+#include "obj/placables.hh"
+
+namespace glp {
 
 namespace Object {
 
 glm::mat4 Static::mvp(Camera& camera) {
     auto vp = camera.view_projection();
-    auto mvp = vp.second * vp.first * transform;
+    auto mvp = vp * transform;
     return mvp;
 }
 
@@ -21,7 +23,8 @@ Static::Static(const std::string& path) {
 #else
     shader = new Shader("../res/shaders/vita/vita_static.vert", "../res/shaders/vita/vita_textured.frag");
 #endif
-    model = new Model(path, shader);
+    model = new Model(path);
+    model->set_shader(shader);
 }
 
 Static::~Static() {
@@ -64,7 +67,8 @@ Animated::Animated(const std::string& path, const std::string& anim_path, float*
 #else 
     shader = new Shader("../res/shaders/vita/vita_skinned.vert", "../res/shaders/vita/vita_textured.frag");
 #endif
-    model = new Model(path, shader);
+    model = new Model(path);
+    model->set_shader(shader);
     
     auto anim = new Animation::Animation(anim_path, *model);
     animations.push_back(anim);
@@ -74,6 +78,8 @@ Animated::Animated(const std::string& path, const std::string& anim_path, float*
 
 Animated::~Animated() {
     for(auto& anim: animations) delete anim;
+}
+
 }
 
 }

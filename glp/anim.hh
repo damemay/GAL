@@ -2,6 +2,8 @@
 
 #include "model.hh"
 
+namespace glp {
+
 namespace Animation {
 
 template <typename T>
@@ -90,5 +92,7 @@ class Animator {
         Animator() {};
         ~Animator() = default;
 };
+
+}
 
 }

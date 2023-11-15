@@ -1,6 +1,8 @@
 #include "shader.hh"
 #include "utils.hh"
 
+namespace glp {
+
 GLuint Shader::compile(const GLenum shader, const std::string& code) {
     GLuint s = glCreateShader(shader);
     const char* source = code.c_str();
@@ -58,4 +60,6 @@ Shader::Shader(const std::string& vertex, const std::string& fragment, bool path
         auto frag = compile(GL_FRAGMENT_SHADER, fragment);
         link_shaders(vert, frag);
     }
+}
+
 }

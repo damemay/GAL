@@ -5,6 +5,8 @@
 #include "shader.hh"
 #include "material.hh"
 
+namespace glp {
+
 struct Font {
         Texture* texture {nullptr};
         Shader* shader {nullptr};
@@ -33,3 +35,5 @@ class Text {
         Text(const Text&) = delete;
         Text& operator=(const Text&) = delete;
 };
+
+}

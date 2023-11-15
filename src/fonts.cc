@@ -1,6 +1,8 @@
 #include "fonts.hh"
 #include "utils.hh"
 
+namespace glp {
+
 #ifndef __vita__
 constexpr auto text_vert = "#version 330 core\n"
 "layout(location = 0) in vec2 position;\n"
@@ -132,4 +134,6 @@ void Text::render() {
 Text::~Text() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+}
+
 }

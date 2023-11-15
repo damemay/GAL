@@ -20,6 +20,8 @@
 
 #include "utils.hh"
 
+namespace glp {
+
 class Shader {
     private:
         GLuint handle;
@@ -50,3 +52,5 @@ class Shader {
         Shader(const Shader&) = delete;
         Shader& operator=(const Shader&) = delete;
 };
+
+}

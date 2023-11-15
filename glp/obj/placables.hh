@@ -5,6 +5,8 @@
 #include "../anim.hh"
 #include "camera.hh"
 
+namespace glp {
+
 namespace Object {
 
 class Placable {
@@ -54,5 +56,7 @@ class Animated: public Static {
         Animated(const std::string& path, const std::string& anim_path, float* dt);
         ~Animated();
 };
+
+}
 
 }

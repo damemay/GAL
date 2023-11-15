@@ -4,6 +4,8 @@
 #include "../external/glm/gtc/matrix_transform.hpp"
 #include "../external/glm/gtc/type_ptr.hpp"
 
+namespace glp {
+
 namespace Object {
 
 class Camera {
@@ -67,5 +69,7 @@ class Camera {
 
         ~Camera() = default;
 };
+
+}
 
 }
