@@ -27,6 +27,8 @@ int main(int argc, char* argv[]) {
     glp::Shader shader {"../res/shaders/vita/static.vert", "../res/shaders/vita/phong.frag"};
 #endif
 
+    glp::Shader anim_shader {"../res/shaders/skinned.vert", "../res/shaders/pbr.frag"};
+
     glp::Object::Scene scene {width, height, &sdl.events, &shader};
 
 #ifndef __vita__
@@ -44,6 +46,9 @@ int main(int argc, char* argv[]) {
     scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader, shading_t,
             1.0f, btVector3(1, 10, 0)});
 
+    glp::Object::Animated anim {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim",
+        sdl.get_dt_ptr(), &anim_shader, shading_t};
+
     SDL_SetRelativeMouseMode(SDL_TRUE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -52,6 +57,7 @@ int main(int argc, char* argv[]) {
         float dt = *sdl.get_dt_ptr();
 
         scene.update(dt);
+        anim.render(scene.get_camera());
 
         sdl.loop_end();
     }

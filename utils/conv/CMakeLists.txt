@@ -13,11 +13,18 @@ include_directories(
 )
 
 add_executable(${EXEC_NAME}
+    ../../glp/external/glad.c
+    ../../glp/external/stbi.c
+    ../../src/utils.cc
+    ../../src/sdl.cc
+    ../../src/shader.cc
+    ../../src/model.cc
+    ../../src/anim.cc
+    ../../src/material.cc
     main.cc
 )
 
 target_link_libraries(${EXEC_NAME}
-    ${CMAKE_SOURCE_DIR}/../../build/libglp.a
     SDL2
     GL
     zstd

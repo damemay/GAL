@@ -55,9 +55,10 @@ void Animated::render(Camera& camera) {
     model->render();
 }
 
-Animated::Animated(const std::string& path, const std::string& anim_path, float* dt_, Shader* shader, ShadingType shading_type)
+Animated::Animated(const std::string& path, const std::string& anim_path, float* dt_, Shader* shader_, ShadingType shading_type)
     : dt{dt_} {
-    model = new Model(path, shader, shading_type);
+    model = new Model(path, shader_, shading_type);
+    shader = shader_;
     
     auto anim = new Animation::Animation(anim_path, *model);
     animations.push_back(anim);

@@ -15,16 +15,17 @@ int main(int argc, char* argv[]) {
     }
 
     glp::Window sdl {"glp-util", 1, 1};
+    glp::Shader sh {"../../../res/shaders/static.vert", "../../../res/shaders/phong.frag"};
 
     if(atoi(argv[1])) {
-        auto model = glp::Model(argv[2]);
+        auto model = glp::Model(argv[2], &sh, glp::ShadingType::PHONG);
         std::fstream output(argv[3], std::ios::out | std::ios::trunc);
         std::stringstream data = model.serialize_data();
         auto compressed = glp::util::compress(data.str(), 90);
         output << compressed;
     } else {
-        auto model = glp::Model(argv[2]);
-        auto anim = glp::Animation::Animation(argv[2], model, true);
+        auto model = glp::Model(argv[2], &sh, glp::ShadingType::PHONG);
+        auto anim = glp::Animation::Animation(argv[2], model);
         std::fstream output(argv[3], std::ios::out | std::ios::trunc);
         std::stringstream data = anim.serialize_data();
         auto compressed = glp::util::compress(data.str(), 90);
