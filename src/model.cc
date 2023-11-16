@@ -12,7 +12,7 @@
 
 namespace glp {
 
-Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, Material* mat)
+Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, Material* mat, Shader* shader)
     : vertices{vert}, indices{idx}, material{mat} {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -47,6 +47,30 @@ Mesh::Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, Material* ma
     glVertexAttribPointer(WEIGHTS_ATTRIBUTE_INDEX,
             4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
     glEnableVertexAttribArray(WEIGHTS_ATTRIBUTE_INDEX);
+
+#ifdef __vita__
+    shader->bind();
+    GLuint id = glGetAttribLocation(shader->get(), "position");
+    glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(id);
+
+    id = glGetAttribLocation(shader->get(), "normal");
+    glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(id);
+
+    id = glGetAttribLocation(shader->get(), "texcoord0");
+    glVertexAttribPointer(id, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+    glEnableVertexAttribArray(id);
+
+    id = glGetAttribLocation(shader->get(), "joints");
+    glVertexAttribPointer(id, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bone_index));
+    glEnableVertexAttribArray(id);
+
+    id = glGetAttribLocation(shader->get(), "weights");
+    glVertexAttribPointer(id, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
+    glEnableVertexAttribArray(id);
+    shader->unbind();
+#endif
 
     glBindVertexArray(0);
 }
@@ -132,7 +156,8 @@ Mesh::~Mesh() {
     glDeleteBuffers(1, &EBO);
 }
 
-Model::Model(const std::string& path) {
+Model::Model(const std::string& path, Shader* shader_, ShadingType shading_t) 
+    : shader{shader_}, shading{shading_t} {
     load(path);
 }
 
@@ -321,7 +346,7 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
         }
     }
     
-    return new Mesh(verts, idxs, mat);
+    return new Mesh(verts, idxs, mat, shader);
 }
 #endif
 
@@ -540,7 +565,7 @@ void Model::deserialize_data(std::stringstream& s) {
         s >>   mat->ao_id;
         s >> name; assert(name == "nid");
         s >>   mat->normal_id;
-        meshes[i] = new Mesh(verts, idxs, mat);
+        meshes[i] = new Mesh(verts, idxs, mat, shader);
     }
 
     s >> name; assert("bones");

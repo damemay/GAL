@@ -5,7 +5,7 @@ option(VITA "Build for PS Vita" OFF)
 if(VITA)
     set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
     
-    project(glp)
+    project(glp-game)
       include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
     
     set(VITA_APP_NAME "GLP")
@@ -19,18 +19,21 @@ if(VITA)
     
     include_directories(
       glp/
+      $ENV{VITASDK}/arm-vita-eabi/include/bullet/
     )
 
     add_library(glp STATIC
+        glp/external/glad.c
         glp/external/stbi.c
-        glp/utils.cc
-        glp/sdl.cc
-        glp/shader.cc
-        glp/model.cc
-        glp/anim.cc
-        glp/fonts.cc
-        glp/obj/player.cc
-        glp/obj/placables.cc
+        src/utils.cc
+        src/sdl.cc
+        src/shader.cc
+        src/model.cc
+        src/anim.cc
+        src/material.cc
+        src/player.cc
+        src/renderable.cc
+        src/collidable.cc
     )
     
     add_executable(${PROJECT_NAME}
@@ -41,6 +44,11 @@ if(VITA)
       glp
       SDL2
       SDL2main
+      Bullet3Geometry
+      BulletDynamics
+      BulletCollision
+      Bullet3Common
+      LinearMath
       vitaGL
       mathneon
       freetype

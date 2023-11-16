@@ -15,20 +15,34 @@ int main(int argc, char* argv[]) {
     glp::Window sdl {"glp-bullet", width, height};
     sdl.set_bg_color(glm::vec3(0.4,0.4,0.4));
 
+#ifndef __vita__
+    glp::ShadingType shading_t = glp::ShadingType::PBR;
+#else
+    glp::ShadingType shading_t = glp::ShadingType::PHONG;
+#endif
+
+#ifndef __vita__
     glp::Shader shader {"../res/shaders/static.vert", "../res/shaders/pbr.frag"};
+#else
+    glp::Shader shader {"../res/shaders/vita/static.vert", "../res/shaders/vita/phong.frag"};
+#endif
+
     glp::Object::Scene scene {width, height, &sdl.events, &shader};
 
+#ifndef __vita__
     scene.get_player()->use_mouse(true);
+#endif
+
     scene.get_light().set_color(glm::vec3(25,25,25));
 
-    scene.new_object(new glp::Object::CollRenderableModel{"../res/models/plane/plane.model", &shader,
-            glp::ShadingType::PBR, 0.0f, btVector3(0, -5, 0)});
+    scene.new_object(new glp::Object::CollRenderableModel{"../res/models/plane/plane.model", &shader, shading_t,
+            0.0f, btVector3(0, -5, 0)});
 
-    glp::Model cube {"../res/models/cube/cube.model"};
-    scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader,
-            glp::ShadingType::PBR, 1.0f, btVector3(0, -2, 0)});
-    scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader,
-            glp::ShadingType::PBR, 1.0f, btVector3(1, 10, 0)});
+    glp::Model cube {"../res/models/cube/cube.model", &shader, shading_t};
+    scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader, shading_t,
+            1.0f, btVector3(0, -2, 0)});
+    scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader, shading_t,
+            1.0f, btVector3(1, 10, 0)});
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
     glEnable(GL_DEPTH_TEST);

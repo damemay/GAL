@@ -63,7 +63,7 @@ class Mesh {
 
         void render(Shader* shader, ShadingType type);
 
-        Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, Material* mat);
+        Mesh(std::vector<Vertex> vert, std::vector<unsigned int> idx, Material* mat, Shader* shader);
         ~Mesh();
 
         Mesh(const Mesh&) = delete;
@@ -110,7 +110,7 @@ class Model {
         std::stringstream serialize_data();
 
         Model() {};
-        Model(const std::string& path);
+        Model(const std::string& path, Shader* shader, ShadingType shading_t);
         ~Model();
 
 };

@@ -93,7 +93,12 @@ void main()
 
     vec3 view_dir = normalize(camera_position - wpos);
     vec3 reflect_dir = reflect(-light_dir, normal);
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
+    float spec;
+    if(material.shininess > 0) {
+        spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
+    } else {
+        spec = pow(max(dot(view_dir, reflect_dir), 0.0), 0);
+    }
     vec3 specular;
     if(material.specular_tex_exists) {
         specular = light.specular * spec * texture(material.specular_tex, uv0).rgb;

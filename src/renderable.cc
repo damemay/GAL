@@ -15,10 +15,8 @@ void Renderable::render(Camera& camera) {
 }
 
 void Renderable::load(const std::string& path, Shader* shader_, ShadingType shading_type) {
-    model = new Model(path);
+    model = new Model(path, shader_, shading_type);
     shader = shader_;
-    model->set_shader(shader_);
-    model->set_shading_type(shading_type);
 }
 
 Renderable::Renderable(const std::string& path, Shader* shader, ShadingType shading_type) {
@@ -57,15 +55,9 @@ void Animated::render(Camera& camera) {
     model->render();
 }
 
-Animated::Animated(const std::string& path, const std::string& anim_path, float* dt_)
+Animated::Animated(const std::string& path, const std::string& anim_path, float* dt_, Shader* shader, ShadingType shading_type)
     : dt{dt_} {
-#ifndef __vita__
-    shader = new Shader("../res/shaders/skinned.vert", "../res/shaders/textured.frag");
-#else 
-    shader = new Shader("../res/shaders/vita/vita_skinned.vert", "../res/shaders/vita/vita_textured.frag");
-#endif
-    model = new Model(path);
-    model->set_shader(shader);
+    model = new Model(path, shader, shading_type);
     
     auto anim = new Animation::Animation(anim_path, *model);
     animations.push_back(anim);

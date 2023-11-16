@@ -87,6 +87,11 @@ void PlayerCollFPP::update() {
     rigidbody->setLinearVelocity(btVector3(moving*move_speed*forward.x,
                 rigidbody->getGravity().getY(),
                 moving*move_speed*forward.z));
+    if(!mouse) {
+        camera->yaw_change(rot_off.x);
+        camera->pitch_change(-rot_off.y);
+        camera->calculate();
+    }
 }
 
 }

@@ -46,7 +46,7 @@ class Animated: public Renderable {
 
         void render(Camera& camera);
 
-        Animated(const std::string& path, const std::string& anim_path, float* dt);
+        Animated(const std::string& path, const std::string& anim_path, float* dt_, Shader* shader, ShadingType shading_type);
         ~Animated();
 };
 
