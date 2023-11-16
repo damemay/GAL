@@ -45,22 +45,6 @@ CollRenderableModel::CollRenderableModel(Model* model, Shader* shader, ShadingTy
     setup(new btBoxShape(btVector3(box.x, box.y, box.z)), mass, position, rotation);
 }
 
-CollRenderableModelSeparate::CollRenderableModelSeparate(const std::string& path, Shader* shader, ShadingType shading_t, const btVector3& position, const btQuaternion& rotation) : Renderable{path, shader, shading_t} {
-    auto boxes = model->calculate_bounding_boxes();
-    for(auto& box: boxes) {
-        objects.push_back(new Collidable{new btBoxShape(btVector3(box.x, box.y, box.z)), 0.0f, position, rotation});
-    }
-    transform = glm::translate(glm::mat4(1.0f), glm::vec3(position.getX(), position.getY(), position.getZ()));
-}
-
-CollRenderableModelSeparate::CollRenderableModelSeparate(Model* model, Shader* shader, ShadingType shading_t, const btVector3& position, const btQuaternion& rotation) : Renderable{model, shader, shading_t} {
-    auto boxes = model->calculate_bounding_boxes();
-    for(auto& box: boxes) {
-        objects.push_back(new Collidable{new btBoxShape(btVector3(box.x, box.y, box.z)), 0.0f, position, rotation});
-    }
-    transform = glm::translate(glm::mat4(1.0f), glm::vec3(position.getX(), position.getY(), position.getZ()));
-}
-
 Collidable::Collidable(btCollisionShape* shape_, float mass_, const btVector3& position, const btQuaternion& rotation) : shape{shape_}, mass{mass_} {
     setup(shape_, mass_, position, rotation);
 }

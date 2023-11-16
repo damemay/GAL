@@ -46,14 +46,6 @@ class CollRenderableModel : public Collidable, public Renderable {
 
 };
 
-class CollRenderableModelSeparate : public CollidableInterface, public Renderable {
-    public:
-        std::vector<Collidable*> objects;
-
-        CollRenderableModelSeparate(const std::string& path, Shader* shader, ShadingType shading_t, const btVector3& position=btVector3{0.0f, 0.0f, 0.0f}, const btQuaternion& rotation=btQuaternion{0, 0, 0, 1});
-        CollRenderableModelSeparate(Model* model, Shader* shader, ShadingType shading_t, const btVector3& position=btVector3{0.0f, 0.0f, 0.0f}, const btQuaternion& rotation=btQuaternion{0, 0, 0, 1});
-};
-
 class World {
     protected:
         btCollisionConfiguration* coll_config;
@@ -67,18 +59,10 @@ class World {
     public:
         inline void add_collidable(CollidableInterface* c) {
             auto collidable = dynamic_cast<Collidable*>(c);
-            auto separate = dynamic_cast<CollRenderableModelSeparate*>(c);
             if(collidable) {
                 world->addRigidBody(collidable->get_rigidbody());
                 objects.push_back(c);
-            } else if(separate) {
-                for(auto& obj: separate->objects) {
-                    world->addRigidBody(obj->get_rigidbody());
-                    objects.push_back(obj);
-                }
-                objects.push_back(separate);
-            }
-        }
+            }        }
 
         inline void render(Camera& camera) {
             for(auto& obj: objects) {
