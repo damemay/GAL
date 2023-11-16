@@ -70,6 +70,25 @@ void PlayerFPP::fpp_movement_keys() {
     }
 }
 
+PlayerCollFPP::PlayerCollFPP(float speed, Camera* cam, std::vector<SDL_Event>* sdl) : PlayerFPP{speed, cam, sdl}, Collidable{new btBoxShape(btVector3(1,2,1)), 1.0f, btVector3(cam->get_position().x, cam->get_position().y, cam->get_position().z)} {
+    
+}
+
+void PlayerCollFPP::update() {
+    rigidbody->activate();
+    btTransform t;
+    motion_state->getWorldTransform(t);
+    auto origin = t.getOrigin();
+    camera->set_position(glm::vec3(origin.getX()+cam_off.x,
+                origin.getY()+cam_off.y,
+                origin.getZ()+cam_off.z));
+    auto forward = glm::mat3(glm::inverse(camera->view()))*glm::vec3(move_dir.x,0,-move_dir.y);
+    float moving = (move_dir.x != 0.0f ? 1.0f : 0.0f) || (move_dir.y != 0.0f ? 1.0f : 0.0f);
+    rigidbody->setLinearVelocity(btVector3(moving*move_speed*forward.x,
+                rigidbody->getGravity().getY(),
+                moving*move_speed*forward.z));
+}
+
 }
 
 }

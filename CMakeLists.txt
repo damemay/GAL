@@ -92,11 +92,12 @@ if(VITA)
 else()
     project(glp)
     find_package(SDL2 REQUIRED)
+    find_package(Bullet REQUIRED)
     set(CMAKE_CXX_COMPILER g++)
     set(CMAKE_CXX_STANDARD 20)
     add_compile_options(-g)
     
-    #    set(EXEC_NAME game)
+    set(EXEC_NAME game)
     
     option(USE_ASSIMP "Link with assimp" OFF)
     if(USE_ASSIMP)
@@ -105,6 +106,7 @@ else()
 
     include_directories(
       glp/
+      ${BULLET_INCLUDE_DIRS}
     )
 
     add_library(glp STATIC
@@ -118,24 +120,31 @@ else()
         src/fonts.cc
         src/material.cc
         src/player.cc
+        src/renderable.cc
+        src/collidable.cc
+    )
+
+    add_executable(${EXEC_NAME}
+        main.cc
     )
     
-#    if(USE_ASSIMP)
-#    target_link_libraries(${EXEC_NAME}
-#        glp
-#        SDL2
-#        assimp
-#        GL
-#        zstd
-#        m
-#    )
-#    else()
-#    target_link_libraries(${EXEC_NAME}
-#        glp
-#        SDL2
-#        GL
-#        zstd
-#        m
-#    )
-#    endif()
+    if(USE_ASSIMP)
+    target_link_libraries(${EXEC_NAME}
+        glp
+        SDL2
+        assimp
+        GL
+        zstd
+        m
+    )
+    else()
+    target_link_libraries(${EXEC_NAME}
+        glp
+        ${BULLET_LIBRARIES}
+        SDL2
+        GL
+        zstd
+        m
+    )
+    endif()
 endif()

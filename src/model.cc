@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <algorithm>
+#include <limits>
 
 #include "material.hh"
 #include "model.hh"
@@ -325,6 +327,44 @@ Mesh* Model::assimp_mesh_process(aiMesh* mesh, const aiScene* scene) {
 
 void Model::render() {
     for(auto& mesh: meshes) mesh->render(shader, shading);
+}
+
+glm::vec3 Model::calculate_bounding_box() {
+    glm::vec3 min {std::numeric_limits<float>::max()};
+    glm::vec3 max {-std::numeric_limits<float>::max()};
+    for(const auto& mesh: meshes) {
+        for(const auto& vert: mesh->vertices) {
+            min.x = std::min(min.x, vert.position.x);
+            min.y = std::min(min.y, vert.position.y);
+            min.z = std::min(min.z, vert.position.z);
+            max.x = std::max(max.x, vert.position.x);
+            max.y = std::max(max.y, vert.position.y);
+            max.z = std::max(max.z, vert.position.z);
+        }
+    }
+    return glm::vec3((max.x-min.x)/2,
+            (max.y-min.y)/2,
+            (max.z-min.z)/2);
+}
+
+std::vector<glm::vec3> Model::calculate_bounding_boxes() {
+    std::vector<glm::vec3> boxes;
+    for(const auto& mesh: meshes) {
+        glm::vec3 min {std::numeric_limits<float>::max()};
+        glm::vec3 max {-std::numeric_limits<float>::max()};
+        for(const auto& vert: mesh->vertices) {
+            min.x = std::min(min.x, vert.position.x);
+            min.y = std::min(min.y, vert.position.y);
+            min.z = std::min(min.z, vert.position.z);
+            max.x = std::max(max.x, vert.position.x);
+            max.y = std::max(max.y, vert.position.y);
+            max.z = std::max(max.z, vert.position.z);
+        }
+        boxes.emplace_back((max.x-min.x)/2,
+                (max.y-min.y)/2,
+                (max.z-min.z)/2);
+    }
+    return boxes;
 }
 
 Model::~Model() {
