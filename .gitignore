@@ -3,3 +3,4 @@ build
 res/glTF-Sample-Models/
 vita-build
 sce_sys/
+compile_commands.json
