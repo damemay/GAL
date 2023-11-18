@@ -189,8 +189,7 @@ Animator::Animator(Animation* animation, Model* m)
 }
 
 void Animator::update(float dt) {
-    for(size_t i=0; i<bone_mat.size(); i++)
-        model->get_shader()->set("pose["+std::to_string(i)+"]", bone_mat[i]);
+    model->get_shader()->set("pose", bone_mat);
     delta_time = dt;
     if(current_animation) {
         current_time += current_animation->get_tps()*dt;

@@ -26,17 +26,16 @@ void main(
         float4 out gl_Position : POSITION,
         float2 out uv0 : TEXCOORD0,
         float3 out wpos : TEXCOORD1,
-        float3 out norm : TEXCOORD2,
-        )
+        float3 out norm : TEXCOORD2)
 {
-    int4 joint = (int4)joints;
-    float4x4 skin = weights.x * pose[joint.x] +
-                weights.y * pose[joint.y] +
-                weights.z * pose[joint.z] +
-                weights.w * pose[joint.w];
+    float3 pos = 0;
+    pos += weights.x * mul(pose[(int)(joints.x)], float4(position, 1.0f)).xyz;
+    pos += weights.y * mul(pose[(int)(joints.y)], float4(position, 1.0f)).xyz;
+    pos += weights.z * mul(pose[(int)(joints.z)], float4(position, 1.0f)).xyz;
+    pos += weights.w * mul(pose[(int)(joints.w)], float4(position, 1.0f)).xyz;
+    wpos = float3(mul(model, float4(pos, 1.0f)));
     uv0 = texcoord0;
-    wpos = float3(mul(model, float4(position, 1.0f)));
     norm = mul(transpose(inverse(float3x3(model))), normal);
-    gl_Position = mul(mvp, mul(skin, float4(position, 1.0f)));
+    gl_Position = mul(vp, float4(wpos, 1.0f));
     uv0 = texcoord0;
 }

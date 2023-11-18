@@ -49,7 +49,9 @@ float4 main(
         varying in float4 gl_FragCoord : WPOS
         )
 {
-    if(tex2D(material.diffuse_tex, uv0).a < 0.1) discard;
+    if(material.diffuse_tex_exists) {
+        if(tex2D(material.diffuse_tex, uv0).a < 0.1) discard;
+    }
 
     float3 ambient;
     if(material.diffuse_tex_exists) {

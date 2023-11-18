@@ -48,6 +48,7 @@ class Shader {
         inline void set(const std::string& name, const glm::vec4& value) const { glUniform4fv(glGetUniformLocation(handle, name.c_str()), 1, &value[0]); }
         inline void set(const std::string& name, const glm::quat& value) const { glUniform4fv(glGetUniformLocation(handle, name.c_str()), 1, &value[0]); }
         inline void set(const std::string& name, const glm::mat4& value) const { glUniformMatrix4fv(glGetUniformLocation(handle, name.c_str()), 1, GL_FALSE, &value[0][0]); }
+        inline void set(const std::string& name, const std::vector<glm::mat4>& value) const { glUniformMatrix4fv(glGetUniformLocation(handle, name.c_str()), value.size(), GL_FALSE, &value.data()[0][0][0]); }
 
         Shader(const Shader&) = delete;
         Shader& operator=(const Shader&) = delete;
