@@ -1,5 +1,6 @@
 #pragma once
 
+#include "LinearMath/btIDebugDraw.h"
 #include <obj/camera.hh>
 #include <obj/player.hh>
 #include <obj/light.hh>
@@ -22,6 +23,8 @@ class Scene {
 
         World* world;
 
+        BulletDebugDraw* debug_draw;
+
         std::vector<CollRenderableModel*> objects;
 
     public:
@@ -30,7 +33,11 @@ class Scene {
                light{LightType::DIRECTIONAL, shader_} {
             player = new PlayerCollFPP{25.0f, &camera, ev};
             world = new World{};
+            debug_draw = new BulletDebugDraw{};
             world->add_collidable(player);
+
+            debug_draw->setDebugMode(0);
+            world->get_bullet_world()->setDebugDrawer(debug_draw);
         }
 
         inline void new_object(CollRenderableModel* object) {
@@ -45,6 +52,8 @@ class Scene {
             world->render(camera);
         }
 
+        inline void set_debug(bool b) { debug_draw->setDebugMode(b ? btIDebugDraw::DBG_DrawWireframe : 0); }
+
         inline Camera& get_camera() { return camera; }
         inline Fog& get_fog() { return fog; }
         inline Light& get_light() { return light; }
@@ -53,6 +62,7 @@ class Scene {
 
         inline ~Scene() {
             delete world;
+            delete debug_draw;
             delete player;
             for(auto& obj: objects) delete obj;
         }

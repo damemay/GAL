@@ -11,6 +11,7 @@ void Renderable::render(Camera& camera) {
         shader->set("model", transform);
         shader->set("camera_position", camera.get_position());
         model->render();
+        shader->unbind();
     }
 }
 
@@ -53,6 +54,7 @@ void Animated::render(Camera& camera) {
     shader->set("camera_position", camera.get_position());
     animator.update(*dt);
     model->render();
+    shader->unbind();
 }
 
 Animated::Animated(const std::string& path, const std::string& anim_path, float* dt_, Shader* shader_, ShadingType shading_type)

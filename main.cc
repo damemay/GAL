@@ -38,6 +38,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     glp::Object::Scene scene {width, height, &sdl.events, &shader};
+    scene.set_debug(true);
 
 #ifndef __vita__
     scene.get_player()->use_mouse(true);
