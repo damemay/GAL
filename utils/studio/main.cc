@@ -24,6 +24,7 @@ constexpr size_t HEIGHT = 720;
 
 static glp::Model* model;
 static glp::Shader* shader;
+static glp::ShadingType shading_t;
 static int is_phong = 1;
 static int is_directional = 1;
 
@@ -62,6 +63,11 @@ static float cz = 300.0f;
 
 bool mouse = false;
 
+extern const unsigned char pbr_frag[];
+extern const unsigned char phong_frag[];
+extern const unsigned char static_vert[];
+extern const unsigned char skinned_vert[];
+
 int main(int argc, char* argv[]) {
     glp::Window sdl {"glp", WIDTH, HEIGHT};
     sdl.set_bg_color(glm::vec3(0.4, 0.4, 0.4));
@@ -79,13 +85,12 @@ int main(int argc, char* argv[]) {
     glp::Object::PlayerFPP player {&camera, &sdl.events};
     player.use_mouse(true);
 
-    glp::Shader phong {"../res/shaders/static.vert", "../res/shaders/phong.frag"};
-    glp::Shader pbr {"../res/shaders/static.vert", "../res/shaders/pbr.frag"};
+    glp::Shader phong {reinterpret_cast<const char*>(static_vert), reinterpret_cast<const char*>(phong_frag), false};
+    glp::Shader pbr {reinterpret_cast<const char*>(static_vert), reinterpret_cast<const char*>(pbr_frag), false};
     shader = &phong;
+    shading_t = glp::ShadingType::PHONG;
 
-    model = new glp::Model("../res/cube/Cube.gltf");
-    model->set_shader(shader);
-    model->set_shading_type(glp::ShadingType::PHONG);
+    model = new glp::Model("../res/cube/Cube.gltf", shader, shading_t);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -201,7 +206,7 @@ int main(int argc, char* argv[]) {
             ImGui::InputText("path", buf, IM_ARRAYSIZE(buf));
             if(ImGui::Button("Load")) {
                 delete model;
-                model = new glp::Model(buf);
+                model = new glp::Model(buf, shader, shading_t);
             }
             if(ImGui::TreeNode("Export")) {
                 static char buf1[2048];

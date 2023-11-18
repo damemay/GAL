@@ -1,11 +1,14 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "../../glp/utils.hh"
-#include "../../glp/model.hh"
-#include "../../glp/shader.hh"
-#include "../../glp/sdl.hh"
-#include "../../glp/anim.hh"
+#include "utils.hh"
+#include "model.hh"
+#include "shader.hh"
+#include "sdl.hh"
+#include "anim.hh"
+
+extern const unsigned char phong_frag[];
+extern const unsigned char static_vert[];
 
 int main(int argc, char* argv[]) {
 
@@ -15,7 +18,7 @@ int main(int argc, char* argv[]) {
     }
 
     glp::Window sdl {"glp-util", 1, 1};
-    glp::Shader sh {"../../../res/shaders/static.vert", "../../../res/shaders/phong.frag"};
+    glp::Shader sh {reinterpret_cast<const char*>(static_vert), reinterpret_cast<const char*>(phong_frag), false};
 
     if(atoi(argv[1])) {
         auto model = glp::Model(argv[2], &sh, glp::ShadingType::PHONG);

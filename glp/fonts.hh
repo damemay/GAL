@@ -12,7 +12,7 @@ struct Font {
         Shader* shader {nullptr};
         size_t screen_width, screen_height;
 
-        Font(const std::string& path, const size_t& screen_w, const size_t& screen_h);
+        Font(const size_t& screen_w, const size_t& screen_h, const std::string& path="");
         ~Font();
 
         Font(const Font&) = delete;

@@ -12,7 +12,7 @@ include_directories(
     ../../glp
 )
 
-add_executable(${EXEC_NAME}
+add_library(glp STATIC
     ../../glp/external/glad.c
     ../../glp/external/stbi.c
     ../../src/utils.cc
@@ -21,10 +21,20 @@ add_executable(${EXEC_NAME}
     ../../src/model.cc
     ../../src/anim.cc
     ../../src/material.cc
+)
+
+add_executable(${EXEC_NAME}
     main.cc
 )
 
+target_precompile_headers(${EXEC_NAME}
+    PUBLIC
+    ../../res/shaders/phong.h
+    ../../res/shaders/static.h
+)
+
 target_link_libraries(${EXEC_NAME}
+    glp
     SDL2
     GL
     zstd

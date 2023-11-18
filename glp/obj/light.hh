@@ -32,6 +32,7 @@ class Fog {
         }
 
         Fog(Shader* s) : shader{s} {
+            shader->bind();
             shader->set("fog.color", color);
             shader->set("fog.near", near);
             shader->set("fog.far", far);
@@ -113,6 +114,7 @@ class Light {
 
         Light(LightType t, Shader* s) : shader{s} {
             set_type(t);
+            shader->bind();
             shader->set("light.directional", t == LightType::DIRECTIONAL ? 1 : 0);
             shader->set("light.position", position);
             shader->set("light.direction", direction);

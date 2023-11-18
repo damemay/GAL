@@ -9,6 +9,7 @@ struct Texture {
     std::string path{};
 
     Texture(const std::string& path);
+    Texture(const unsigned char* strliteral, const unsigned int len);
     ~Texture();
 
     Texture(const Texture&) = delete;

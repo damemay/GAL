@@ -41,11 +41,15 @@ constexpr auto text_frag = "float4 main(\n"
 "}\n";
 #endif
 
-Font::Font(const std::string& path, const size_t& screen_w, const size_t& screen_h)
+Font::Font(const size_t& screen_w, const size_t& screen_h, const std::string& path)
     : screen_width{screen_w}, screen_height{screen_h} {
-    texture = new Texture{path};
+        if(path.empty()) {
+            extern const unsigned char karla_png[];
+            extern const unsigned int karla_png_len;
+            texture = new Texture{karla_png, karla_png_len};
+        } else texture = new Texture{path};
 
-    shader = new Shader{text_vert, text_frag, false};
+        shader = new Shader{text_vert, text_frag, false};
 }
 
 Font::~Font() {

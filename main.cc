@@ -16,6 +16,11 @@ constexpr int width = 960;
 constexpr int height = 544;
 #endif
 
+extern const unsigned char pbr_frag[];
+extern const unsigned char phong_frag[];
+extern const unsigned char static_vert[];
+extern const unsigned char skinned_vert[];
+
 int main(int argc, char* argv[]) {
     glp::Window sdl {"glp-bullet", width, height};
     sdl.set_bg_color(glm::vec3(0.4,0.4,0.4));
@@ -27,7 +32,7 @@ int main(int argc, char* argv[]) {
 #endif
 
 #ifndef __vita__
-    glp::Shader shader {"../res/shaders/static.vert", "../res/shaders/pbr.frag"};
+    glp::Shader shader {reinterpret_cast<const char*>(static_vert), reinterpret_cast<const char*>(pbr_frag), false};
 #else
     glp::Shader shader {"../res/shaders/vita/static.vert", "../res/shaders/vita/phong.frag"};
 #endif
@@ -50,7 +55,7 @@ int main(int argc, char* argv[]) {
             1.0f, btVector3(1, 10, 0)});
 
 #ifndef __vita__
-    glp::Shader anim_shader {"../res/shaders/skinned.vert", "../res/shaders/pbr.frag"};
+    glp::Shader anim_shader {reinterpret_cast<const char*>(skinned_vert), reinterpret_cast<const char*>(pbr_frag), false};
 #else
     glp::Shader anim_shader {"../res/shaders/vita/skinned.vert", "../res/shaders/vita/phong.frag"};
 #endif
@@ -66,9 +71,7 @@ int main(int argc, char* argv[]) {
         float dt = *sdl.get_dt_ptr();
 
         scene.update(dt);
-        if(glp::util::glerr()) glp_log("err after scene update!!");
         anim.render(scene.get_camera());
-        if(glp::util::glerr()) glp_log("err!!");
 
         sdl.loop_end();
     }

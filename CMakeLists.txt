@@ -39,6 +39,11 @@ if(VITA)
     add_executable(${PROJECT_NAME}
         main.cc
     )
+
+    target_precompile_headers(${PROJECT_NAME}
+        PUBLIC
+        res/fonts/karla.h
+    )
     
     target_link_libraries(${PROJECT_NAME}
       glp
@@ -134,6 +139,15 @@ else()
 
     add_executable(${EXEC_NAME}
         main.cc
+    )
+
+    target_precompile_headers(${EXEC_NAME}
+        PUBLIC
+        res/fonts/karla.h
+        res/shaders/pbr.h
+        res/shaders/phong.h
+        res/shaders/skinned.h
+        res/shaders/static.h
     )
     
     if(USE_ASSIMP)

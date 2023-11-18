@@ -6,14 +6,17 @@ set(CMAKE_CXX_STANDARD 20)
 add_compile_options(-g)
 add_compile_definitions(USE_ASSIMP)
 
+
 set(EXEC_NAME glp-studio)
+
+find_package(Bullet REQUIRED)
 
 include_directories(
     ../../glp
+    ${BULLET_INCLUDE_DIRS}
 )
 
-add_executable(${EXEC_NAME}
-    main.cc
+add_library(glp STATIC
     ../../glp/external/glad.c
     ../../glp/external/stbi.c
     ../../src/utils.cc
@@ -24,6 +27,11 @@ add_executable(${EXEC_NAME}
     ../../src/fonts.cc
     ../../src/material.cc
     ../../src/player.cc
+    ../../src/renderable.cc
+    ../../src/collidable.cc
+)
+
+add_library(imgui STATIC
     ../../glp/external/imgui/imgui.cpp
     ../../glp/external/imgui/imgui_demo.cpp
     ../../glp/external/imgui/imgui_draw.cpp
@@ -33,7 +41,22 @@ add_executable(${EXEC_NAME}
     ../../glp/external/imgui/imgui_impl_opengl3.cpp
 )
 
+add_executable(${EXEC_NAME}
+    main.cc
+)
+
+target_precompile_headers(${EXEC_NAME}
+    PUBLIC
+    ../../res/shaders/phong.h
+    ../../res/shaders/pbr.h
+    ../../res/shaders/static.h
+    ../../res/shaders/skinned.h
+)
+
 target_link_libraries(${EXEC_NAME}
+    glp
+    ${BULLET_LIBRARIES}
+    imgui
     SDL2
     GL
     zstd
