@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
     glp::Shader shader {"../res/shaders/vita/static.vert", "../res/shaders/vita/phong.frag"};
 #endif
 
-    glp::Object::Scene scene {width, height, &sdl.events, &shader};
+    glp::Object::Scene scene {"../res/scenes/scene/cubes.scene", width, height, &sdl.events, &shader, shading_t};
     scene.set_debug(true);
 
 #ifndef __vita__
@@ -46,14 +46,14 @@ int main(int argc, char* argv[]) {
 
     scene.get_light().set_color(glm::vec3(25,25,25));
 
-    scene.new_object(new glp::Object::CollRenderableModel{"../res/models/plane/plane.model", &shader, shading_t,
-            0.0f, btVector3(0, -5, 0)});
+    //scene.new_object(new glp::Object::CollRenderableModel{"../res/models/plane/plane.model", &shader, shading_t,
+    //        0.0f, btVector3(0, -5, 0)});
 
-    glp::Model cube {"../res/models/cube/cube.model", &shader, shading_t};
-    scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader, shading_t,
-            1.0f, btVector3(0, -2, 0)});
-    scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader, shading_t,
-            1.0f, btVector3(1, 10, 0)});
+    //glp::Model cube {"../res/models/cube/cube.model", &shader, shading_t};
+    //scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader, shading_t,
+    //        1.0f, btVector3(0, -2, 0)});
+    //scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader, shading_t,
+    //        1.0f, btVector3(1, 10, 0)});
 
 #ifndef __vita__
     glp::Shader anim_shader {reinterpret_cast<const char*>(skinned_vert), reinterpret_cast<const char*>(pbr_frag), false};

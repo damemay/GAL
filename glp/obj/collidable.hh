@@ -114,6 +114,7 @@ class Collidable : public CollidableInterface {
 class CollRenderableModel : public Collidable, public Renderable {
     public:
         void update(float dt);
+        void reset(const btVector3& position, const btQuaternion& rotation);
 
         CollRenderableModel(const std::string& path, Shader* shader, ShadingType shading_t, btCollisionShape* shape, float mass, const btVector3& position=btVector3{0.0f, 0.0f, 0.0f}, const btQuaternion& rotation=btQuaternion{0, 0, 0, 1});
         CollRenderableModel(const std::string& path, Shader* shader, ShadingType shading_t, float mass, const btVector3& position=btVector3{0.0f, 0.0f, 0.0f}, const btQuaternion& rotation=btQuaternion{0, 0, 0, 1});

@@ -135,6 +135,7 @@ else()
         src/player.cc
         src/renderable.cc
         src/collidable.cc
+        src/scene.cc
     )
 
     add_executable(${EXEC_NAME}

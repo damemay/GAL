@@ -17,12 +17,20 @@ class Renderable {
         glm::mat4 transform {1.0f};
 
     public: 
-        inline void translate(glm::vec3 translation) { transform = glm::translate(transform, translation); }
-        inline void rotate(float rad, glm::vec3 axis) { transform = glm::rotate(transform, glm::radians(rad), axis); }
-        inline void scale(glm::vec3 scale) { transform = glm::scale(transform, scale); }
+        //inline void translate(glm::vec3 translation) { transform = glm::translate(transform, translation); }
+        //inline void rotate(float rad, glm::vec3 axis) { transform = glm::rotate(transform, glm::radians(rad), axis); }
+        //inline void scale(glm::vec3 scale) { transform = glm::scale(transform, scale); }
 
         void load(const std::string& path, Shader* shader, ShadingType shading_type=ShadingType::PBR);
         void render(Camera& camera);
+
+        inline Model* get_model() { return model; }
+
+        void set_shader(Shader* shader_, ShadingType shading_type) {
+            shader = shader_;
+            model->set_shader(shader);
+            model->set_shading_type(shading_type);
+        }
 
         Renderable() {};
         Renderable(const std::string& path, Shader* shader, ShadingType shading_type=ShadingType::PBR);

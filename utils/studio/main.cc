@@ -1,7 +1,10 @@
+#include "obj/collidable.hh"
+#include "obj/light.hh"
 #include "sdl.hh"
 #include "model.hh"
 #include "shader.hh"
 #include "anim.hh"
+#include "obj/scene.hh"
 
 #include "external/glm/glm.hpp"
 #include "external/glm/gtc/matrix_transform.hpp"
@@ -22,7 +25,6 @@
 constexpr size_t WIDTH = 1280;
 constexpr size_t HEIGHT = 720;
 
-static glp::Model* model;
 static glp::Shader* shader;
 static glp::ShadingType shading_t;
 static int is_phong = 1;
@@ -61,6 +63,17 @@ static float cx = 300.0f;
 static float cy = 300.0f;
 static float cz = 300.0f;
 
+struct transform {
+    float x     {0.0f};
+    float y     {0.0f};
+    float z     {0.0f};
+    float yaw   {0.0f};
+    float pitch {0.0f};
+    float roll  {0.0f};
+};
+
+static std::vector<transform*> transforms;
+
 bool mouse = false;
 
 extern const unsigned char pbr_frag[];
@@ -90,7 +103,8 @@ int main(int argc, char* argv[]) {
     shader = &phong;
     shading_t = glp::ShadingType::PHONG;
 
-    model = new glp::Model("../res/cube/Cube.gltf", shader, shading_t);
+    auto scene = glp::Object::Scene{WIDTH, HEIGHT, nullptr, shader, &camera, false};
+    scene.set_debug(true);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -112,13 +126,7 @@ int main(int argc, char* argv[]) {
             player.fpp_movement(*sdl.get_dt_ptr());
         }
 
-        shader->bind();
-        auto vp = camera.view_projection();
-        shader->set("vp", vp);
-        auto m = glm::mat4(1.0f);
-        shader->set("model", m);
-        shader->set("camera_position", camera.get_position());
-        model->render();
+        scene.update(*sdl.get_dt_ptr());
 
         if(glp::util::glerr()) glp_log("Rendering did not pass without errors");
 
@@ -133,12 +141,12 @@ int main(int argc, char* argv[]) {
             if(ImGui::TreeNode("Color")) {
                 if(ImGui::InputFloat("R", &fr, 0.1f) || ImGui::InputFloat("G", &fg, 0.1f)
                         || ImGui::InputFloat("B", &fb, 0.1f))
-                    shader->set("fog.color", glm::vec3(fr, fg, fb));
+                    scene.get_fog().set_color(glm::vec3(fr, fg, fb));
                 ImGui::TreePop();
             }
             if(ImGui::InputFloat("Near", &fn, 0.1f) || ImGui::InputFloat("Far", &ff, 0.1f)) {
-                shader->set("fog.near", fn);
-                shader->set("fog.far", ff);
+                scene.get_fog().set_far(ff);
+                scene.get_fog().set_near(fn);
             }
             ImGui::TreePop();
         }
@@ -151,21 +159,21 @@ int main(int argc, char* argv[]) {
                 if(ImGui::TreeNode("Direction")) {
                     if(ImGui::InputFloat("X", &dirx, 0.1f) || ImGui::InputFloat("Y", &diry, 0.1f)
                             || ImGui::InputFloat("Z", &dirz, 0.1f))
-                        shader->set("light.direction", glm::vec3(dirx, diry, dirz));
+                        scene.get_light().set_direction(glm::vec3(dirx, diry, dirz));
                     ImGui::TreePop();
                 }
             } else {
                 if(ImGui::TreeNode("Position")) {
                     if(ImGui::InputFloat("X", &posx, 0.1f) || ImGui::InputFloat("Y", &posy, 0.1f)
                             || ImGui::InputFloat("Z", &posz, 0.1f))
-                        shader->set("light.position", glm::vec3(posx, posy, posz));
+                        scene.get_light().set_position(glm::vec3(posx, posy, posz));
                     ImGui::TreePop();
                 }
                 if(is_phong) {
                     if(ImGui::TreeNode("Range")) {
                         if(ImGui::InputFloat("Linear", &linear, 0.01f) || ImGui::InputFloat("Quadratic", &quadratic, 0.01f)) {
-                            shader->set("light.linear", linear);
-                            shader->set("light.quadratic", quadratic);
+                            scene.get_light().set_linear(linear);
+                            scene.get_light().set_quadratic(quadratic);
                         }
                         ImGui::TreePop();
                     }
@@ -175,50 +183,88 @@ int main(int argc, char* argv[]) {
                 if(ImGui::TreeNode("Ambient")) {
                     if(ImGui::InputFloat("R", &ax, 0.1f) || ImGui::InputFloat("G", &ay, 0.1f)
                             || ImGui::InputFloat("B", &az, 0.1f))
-                        shader->set("light.ambient", glm::vec3(ax, ay, az));
+                        scene.get_light().set_ambient(glm::vec3(ax, ay, az));
                     ImGui::TreePop();
                 }
                 if(ImGui::TreeNode("Diffuse")) {
                     if(ImGui::InputFloat("R", &difx, 0.1f) || ImGui::InputFloat("G", &dify, 0.1f)
                             || ImGui::InputFloat("B", &difz, 0.1f))
-                        shader->set("light.diffuse", glm::vec3(difx, dify, difz));
+                        scene.get_light().set_diffuse(glm::vec3(difx, dify, difz));
                     ImGui::TreePop();
                 }
                 if(ImGui::TreeNode("Specular")) {
                     if(ImGui::InputFloat("R", &sx, 0.1f) || ImGui::InputFloat("G", &sy, 0.1f)
                             || ImGui::InputFloat("B", &sz, 0.1f))
-                        shader->set("light.specular", glm::vec3(sx, sy, sz));
+                        scene.get_light().set_specular(glm::vec3(sx, sy, sz));
                     ImGui::TreePop();
                 }
             } else {
                 if(ImGui::TreeNode("Color")) {
                     if(ImGui::InputFloat("R", &cx, 1.0f) || ImGui::InputFloat("G", &cy, 1.0f)
                             || ImGui::InputFloat("B", &cz, 1.0f))
-                        shader->set("light.color", glm::vec3(cx, cy, cz));
+                        scene.get_light().set_color(glm::vec3(cx, cy, cz));
                     ImGui::TreePop();
                 }
             }
             ImGui::TreePop();
         }
 
-        if(ImGui::TreeNode("Model")) {
+        if(ImGui::TreeNode("Scene")) {
+            for(size_t i=0; i<scene.get_objects().size(); i++) {
+                if(ImGui::TreeNode(("Object" + std::to_string(i)).data())) {
+                    auto obj = scene.get_objects().at(i);
+                    auto t = transforms.at(i);
+                    if(ImGui::InputFloat("X", &t->x, 0.1f) || ImGui::InputFloat("Y", &t->y, 0.1f) || ImGui::InputFloat("Z", &t->z, 0.1f))
+                        obj->reset(btVector3(t->x,t->y,t->z), btQuaternion(t->yaw, t->pitch, t->roll));
+                    if(ImGui::InputFloat("YAW", &t->yaw, 0.1f) || ImGui::InputFloat("PITCH", &t->pitch, 0.1f) || ImGui::InputFloat("ROLL", &t->roll, 0.1f))
+                        obj->reset(btVector3(t->x,t->y,t->z), btQuaternion(t->yaw, t->pitch, t->roll));
+                    ImGui::TreePop();
+                }
+            }
+            ImGui::TreePop();
+        }
+
+        if(ImGui::TreeNode("Import")) {
             static char buf[2048];
             ImGui::InputText("path", buf, IM_ARRAYSIZE(buf));
             if(ImGui::Button("Load")) {
-                delete model;
-                model = new glp::Model(buf, shader, shading_t);
+                scene.new_object(new glp::Object::CollRenderableModel{buf, shader, shading_t, 0.0f, btVector3(0,0,0)});
+                transforms.push_back(new transform);
             }
-            if(ImGui::TreeNode("Export")) {
-                static char buf1[2048];
-                ImGui::InputText("path", buf1, IM_ARRAYSIZE(buf1));
-                if(ImGui::Button("Save")) {
-                    std::fstream output(buf1, std::ios::out | std::ios::trunc);
-                    std::stringstream data = model->serialize_data();
+            ImGui::TreePop();
+        }
+
+        if(ImGui::TreeNode("Export")) {
+            static char buf0[2048];
+            ImGui::InputText("path", buf0, IM_ARRAYSIZE(buf0));
+            static char buf1[2048];
+            ImGui::InputText("name", buf1, IM_ARRAYSIZE(buf1));
+            if(ImGui::Button("Save")) {
+                {
+                    auto name =std::string(buf0) + '/' + std::string(buf1) + ".scene";
+                    glp_logv("exporting scene %s...", name.c_str());
+                    std::fstream output(name, std::ios::out | std::ios::trunc);
+                    std::stringstream data = scene.serialize_data();
                     auto compressed = glp::util::compress(data.str(), 90);
                     output << compressed;
-                    glp_log("Saved! Be sure to copy the textures to the same directory as new file.");
                 }
-                ImGui::TreePop();
+                std::vector<std::string> dirs;
+                for(size_t i=0;i<scene.get_objects().size();i++) {
+                    bool skip = false;
+                    auto model = scene.get_objects().at(i)->get_model();
+                    for(auto& dir: dirs) if(dir==model->get_directory()) skip = true;
+                    if(skip) continue;
+                    dirs.push_back(model->get_directory());
+                    auto name = std::string(buf0) + '/' + std::string(buf1) +std::to_string(i)+".model";
+                    glp_logv("exporting model %s...", name.c_str());
+                    std::fstream output(name, std::ios::out | std::ios::trunc);
+                    std::stringstream data = scene.serialize_data();
+                    auto compressed = glp::util::compress(data.str(), 90);
+                    output << compressed;
+                    model->set_directory(std::string(buf0));
+                    model->serialize_data();
+                }
+                glp_log("exported!");
             }
             ImGui::TreePop();
         }
@@ -229,16 +275,17 @@ int main(int argc, char* argv[]) {
 
         if(is_phong) {
             shader = &phong;
-            model->set_shader(shader);
-            model->set_shading_type(glp::ShadingType::PHONG);
             shader->bind();
+            for(auto& obj: scene.get_objects()) obj->set_shader(shader, shading_t);
             shader->set("fog.color", glm::vec3(fr, fg, fb));
             shader->set("fog.near", fn);
             shader->set("fog.far", ff);
             if(is_directional) {
+                scene.get_light().set_type(glp::Object::LightType::DIRECTIONAL);
                 shader->set("light.direction", glm::vec3(dirx, diry, dirz));
                 shader->set("light.directional", 1);
             } else {
+                scene.get_light().set_type(glp::Object::LightType::POINT);
                 shader->set("light.position", glm::vec3(posx, posy, posz));
                 shader->set("light.directional", 0);
                 shader->set("light.linear", linear);
@@ -249,16 +296,17 @@ int main(int argc, char* argv[]) {
             shader->set("light.specular", glm::vec3(sx, sy, sz));
         } else {
             shader = &pbr;
-            model->set_shader(shader);
-            model->set_shading_type(glp::ShadingType::PBR);
             shader->bind();
+            for(auto& obj: scene.get_objects()) obj->set_shader(shader, shading_t);
             shader->set("fog.color", glm::vec3(fr, fg, fb));
             shader->set("fog.near", fn);
             shader->set("fog.far", ff);
             if(is_directional) {
+                scene.get_light().set_type(glp::Object::LightType::DIRECTIONAL);
                 shader->set("light.direction", glm::vec3(dirx, diry, dirz));
                 shader->set("light.directional", 1);
             } else {
+                scene.get_light().set_type(glp::Object::LightType::POINT);
                 shader->set("light.position", glm::vec3(posx, posy, posz));
                 shader->set("light.directional", 0);
             }

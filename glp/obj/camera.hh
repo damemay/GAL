@@ -57,6 +57,9 @@ class Camera {
         inline void set_far(float val) { far = val; }
         inline void set_fov(float val) { fov = val; }
 
+        inline float get_fov() { return fov; }
+        inline float get_near() { return near; }
+        inline float get_far() { return far; }
         inline float get_yaw() { return yaw; }
         inline float get_pitch() { return pitch; }
         inline glm::vec3 get_up() { return up; }

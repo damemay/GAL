@@ -29,6 +29,7 @@ add_library(glp STATIC
     ../../src/player.cc
     ../../src/renderable.cc
     ../../src/collidable.cc
+    ../../src/scene.cc
 )
 
 add_library(imgui STATIC

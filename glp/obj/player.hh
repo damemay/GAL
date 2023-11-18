@@ -34,6 +34,8 @@ class PlayerFPP : public Player {
 
         inline void use_mouse(bool b) { mouse = b; }
 
+        inline float get_speed() { return move_speed; }
+
         PlayerFPP(Camera* cam, std::vector<SDL_Event>* sdl) : camera{cam}, events{sdl} {}
         PlayerFPP(float speed, Camera* cam, std::vector<SDL_Event>* sdl) : move_speed{speed}, camera{cam}, events{sdl} {}
         ~PlayerFPP() = default;

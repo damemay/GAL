@@ -31,6 +31,10 @@ class Fog {
             shader->set("fog.far", far);
         }
 
+        inline glm::vec3 get_color() { return color; }
+        inline float get_near() { return near; }
+        inline float get_far() { return far; }
+
         Fog(Shader* s) : shader{s} {
             shader->bind();
             shader->set("fog.color", color);
@@ -111,6 +115,15 @@ class Light {
             shader->bind();
             shader->set("light.quadratic", quadratic);
         }
+
+        inline LightType get_type() { return type; }
+        inline glm::vec3 get_position() { return position; }
+        inline glm::vec3 get_direction() { return direction; }
+        inline glm::vec3 get_ambient() { return ambient; }
+        inline glm::vec3 get_diffuse() { return diffuse; }
+        inline glm::vec3 get_specular() { return specular; }
+        inline float get_linear() { return linear; }
+        inline float get_quadratic() { return quadratic; }
 
         Light(LightType t, Shader* s) : shader{s} {
             set_type(t);

@@ -45,6 +45,15 @@ CollRenderableModel::CollRenderableModel(Model* model, Shader* shader, ShadingTy
     setup(new btBoxShape(btVector3(box.x, box.y, box.z)), mass, position, rotation);
 }
 
+void CollRenderableModel::reset(const btVector3& position, const btQuaternion& rotation) {
+    btTransform t;
+    t.setIdentity();
+    t.setOrigin(position);
+    t.setRotation(rotation);
+    rigidbody->setWorldTransform(t);
+    motion_state->setWorldTransform(t);
+}
+
 Collidable::Collidable(btCollisionShape* shape_, float mass_, const btVector3& position, const btQuaternion& rotation) : shape{shape_}, mass{mass_} {
     setup(shape_, mass_, position, rotation);
 }
