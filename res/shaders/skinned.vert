@@ -23,5 +23,4 @@ void main() {
     wpos = vec3(model * vec4(position, 1.0));
     norm = transpose(inverse(mat3(model)))*normal;
     gl_Position = vp * skin * vec4(wpos, 1.0);
-    uv0 = texcoord0;
 }

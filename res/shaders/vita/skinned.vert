@@ -47,5 +47,4 @@ void main(
     uv0 = texcoord0;
     norm = mul(transpose(inverse(float3x3(model))), normal);
     gl_Position = mul(vp, mul(skin, float4(wpos, 1.0f)));
-    uv0 = texcoord0;
 }
