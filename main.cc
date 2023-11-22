@@ -7,6 +7,7 @@
 #include <obj/light.hh>
 #include <obj/collidable.hh>
 #include <obj/scene.hh>
+#include <obj/builtin-shaders.hh>
 
 #ifndef __vita__
 constexpr int width = 1280;
@@ -16,28 +17,17 @@ constexpr int width = 960;
 constexpr int height = 544;
 #endif
 
-extern const unsigned char pbr_frag[];
-extern const unsigned char phong_frag[];
-extern const unsigned char static_vert[];
-extern const unsigned char skinned_vert[];
-
 int main(int argc, char* argv[]) {
     glp::Window sdl {"glp-bullet", width, height};
     sdl.set_bg_color(glm::vec3(0.4,0.4,0.4));
 
 #ifndef __vita__
-    glp::ShadingType shading_t = glp::ShadingType::PBR;
+    auto [shader, shading_t] = glp::Object::make_static_pbr();
 #else
-    glp::ShadingType shading_t = glp::ShadingType::PHONG;
+    auto [shader, shading_t] = glp::Object::make_static_phong();
 #endif
 
-#ifndef __vita__
-    glp::Shader shader {reinterpret_cast<const char*>(static_vert), reinterpret_cast<const char*>(pbr_frag), false};
-#else
-    glp::Shader shader {"../res/shaders/vita/static.vert", "../res/shaders/vita/phong.frag"};
-#endif
-
-    glp::Object::Scene scene {"../res/scenes/scene/cubes.scene", width, height, &sdl.events, &shader, shading_t};
+    glp::Object::Scene scene {"../res/scenes/scene/cubes.scene", width, height, &sdl.events, shader, shading_t};
     scene.set_debug(true);
 
 #ifndef __vita__
@@ -56,13 +46,13 @@ int main(int argc, char* argv[]) {
     //        1.0f, btVector3(1, 10, 0)});
 
 #ifndef __vita__
-    glp::Shader anim_shader {reinterpret_cast<const char*>(skinned_vert), reinterpret_cast<const char*>(pbr_frag), false};
+    [[maybe_unused]] auto [anim_shader, _] = glp::Object::make_skinned_pbr();
 #else
-    glp::Shader anim_shader {"../res/shaders/vita/skinned.vert", "../res/shaders/vita/phong.frag"};
+    [[maybe_unused]] auto [anim_shader, _] = glp::Object::make_skinned_pbr();
 #endif
 
     glp::Object::Animated anim {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim",
-        sdl.get_dt_ptr(), &anim_shader, shading_t};
+        sdl.get_dt_ptr(), anim_shader, shading_t};
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
     glEnable(GL_DEPTH_TEST);

@@ -46,14 +46,6 @@ add_executable(${EXEC_NAME}
     main.cc
 )
 
-target_precompile_headers(${EXEC_NAME}
-    PUBLIC
-    ../../res/shaders/phong.h
-    ../../res/shaders/pbr.h
-    ../../res/shaders/static.h
-    ../../res/shaders/skinned.h
-)
-
 target_link_libraries(${EXEC_NAME}
     glp
     ${BULLET_LIBRARIES}

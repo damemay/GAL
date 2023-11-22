@@ -6,9 +6,7 @@
 #include "shader.hh"
 #include "sdl.hh"
 #include "anim.hh"
-
-extern const unsigned char phong_frag[];
-extern const unsigned char static_vert[];
+#include <obj/builtin-shaders.hh>
 
 int main(int argc, char* argv[]) {
 
@@ -18,16 +16,16 @@ int main(int argc, char* argv[]) {
     }
 
     glp::Window sdl {"glp-util", 1, 1};
-    glp::Shader sh {reinterpret_cast<const char*>(static_vert), reinterpret_cast<const char*>(phong_frag), false};
+    auto [sh, sh_t] = glp::Object::make_static_phong();
 
     if(atoi(argv[1])) {
-        auto model = glp::Model(argv[2], &sh, glp::ShadingType::PHONG);
+        auto model = glp::Model(argv[2], sh, sh_t);
         std::fstream output(argv[3], std::ios::out | std::ios::trunc);
         std::stringstream data = model.serialize_data();
         auto compressed = glp::util::compress(data.str(), 90);
         output << compressed;
     } else {
-        auto model = glp::Model(argv[2], &sh, glp::ShadingType::PHONG);
+        auto model = glp::Model(argv[2], sh, sh_t);
         auto anim = glp::Animation::Animation(argv[2], model);
         std::fstream output(argv[3], std::ios::out | std::ios::trunc);
         std::stringstream data = anim.serialize_data();

@@ -12,6 +12,7 @@
 
 #include "obj/camera.hh"
 #include "obj/player.hh"
+#include "obj/builtin-shaders.hh"
 #include "fonts.hh"
 
 #include "external/imgui/imgui.h"
@@ -76,11 +77,6 @@ static std::vector<transform*> transforms;
 
 bool mouse = false;
 
-extern const unsigned char pbr_frag[];
-extern const unsigned char phong_frag[];
-extern const unsigned char static_vert[];
-extern const unsigned char skinned_vert[];
-
 int main(int argc, char* argv[]) {
     glp::Window sdl {"glp", WIDTH, HEIGHT};
     sdl.set_bg_color(glm::vec3(0.4, 0.4, 0.4));
@@ -98,9 +94,9 @@ int main(int argc, char* argv[]) {
     glp::Object::PlayerFPP player {&camera, &sdl.events};
     player.use_mouse(true);
 
-    glp::Shader phong {reinterpret_cast<const char*>(static_vert), reinterpret_cast<const char*>(phong_frag), false};
-    glp::Shader pbr {reinterpret_cast<const char*>(static_vert), reinterpret_cast<const char*>(pbr_frag), false};
-    shader = &phong;
+    [[maybe_unused]] auto [phong, _] = glp::Object::make_static_phong();
+    [[maybe_unused]] auto [pbr, __] = glp::Object::make_static_pbr();
+    shader = phong;
     shading_t = glp::ShadingType::PHONG;
 
     auto scene = glp::Object::Scene{WIDTH, HEIGHT, nullptr, shader, &camera, false};
@@ -274,7 +270,7 @@ int main(int argc, char* argv[]) {
         ImGui::RadioButton("PBR", &is_phong, 0);
 
         if(is_phong) {
-            shader = &phong;
+            shader = phong;
             shader->bind();
             for(auto& obj: scene.get_objects()) obj->set_shader(shader, shading_t);
             shader->set("fog.color", glm::vec3(fr, fg, fb));
@@ -295,7 +291,7 @@ int main(int argc, char* argv[]) {
             shader->set("light.diffuse", glm::vec3(difx, dify, difz));
             shader->set("light.specular", glm::vec3(sx, sy, sz));
         } else {
-            shader = &pbr;
+            shader = pbr;
             shader->bind();
             for(auto& obj: scene.get_objects()) obj->set_shader(shader, shading_t);
             shader->set("fog.color", glm::vec3(fr, fg, fb));

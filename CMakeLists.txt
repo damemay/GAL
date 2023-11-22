@@ -145,10 +145,6 @@ else()
     target_precompile_headers(${EXEC_NAME}
         PUBLIC
         res/fonts/karla.h
-        res/shaders/pbr.h
-        res/shaders/phong.h
-        res/shaders/skinned.h
-        res/shaders/static.h
     )
     
     if(USE_ASSIMP)

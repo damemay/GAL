@@ -27,12 +27,6 @@ add_executable(${EXEC_NAME}
     main.cc
 )
 
-target_precompile_headers(${EXEC_NAME}
-    PUBLIC
-    ../../res/shaders/phong.h
-    ../../res/shaders/static.h
-)
-
 target_link_libraries(${EXEC_NAME}
     glp
     SDL2
