@@ -22,6 +22,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <string>
 
 constexpr size_t WIDTH = 1280;
 constexpr size_t HEIGHT = 720;
@@ -207,7 +208,7 @@ int main(int argc, char* argv[]) {
 
         if(ImGui::TreeNode("Scene")) {
             for(size_t i=0; i<scene.get_objects().size(); i++) {
-                if(ImGui::TreeNode(("Object" + std::to_string(i)).data())) {
+                if(ImGui::TreeNode(scene.get_objects().at(i)->get_model()->get_name().data())) {
                     auto obj = scene.get_objects().at(i);
                     auto t = transforms.at(i);
                     if(ImGui::InputFloat("X", &t->x, 0.1f) || ImGui::InputFloat("Y", &t->y, 0.1f) || ImGui::InputFloat("Z", &t->z, 0.1f))
@@ -225,6 +226,8 @@ int main(int argc, char* argv[]) {
             ImGui::InputText("path", buf, IM_ARRAYSIZE(buf));
             if(ImGui::Button("Load")) {
                 scene.new_object(new glp::Object::CollRenderableModel{buf, shader, shading_t, 0.0f, btVector3(0,0,0)});
+                std::string sbuf = buf;
+                scene.get_objects().back()->get_model()->set_name(sbuf.substr(sbuf.find_last_of('/'), sbuf.length())+std::to_string(scene.get_objects().size()));
                 transforms.push_back(new transform);
             }
             ImGui::TreePop();
@@ -236,6 +239,26 @@ int main(int argc, char* argv[]) {
             static char buf1[2048];
             ImGui::InputText("name", buf1, IM_ARRAYSIZE(buf1));
             if(ImGui::Button("Save")) {
+                std::vector<std::string> dirs;
+                std::string name;
+                for(size_t i=0;i<scene.get_objects().size();i++) {
+                    bool skip = false;
+                    auto model = scene.get_objects().at(i)->get_model();
+                    for(auto& dir: dirs) if(dir==model->get_directory()) skip = true;
+                    if(skip) { 
+                        model->set_directory(name);
+                        continue;
+                    }
+                    dirs.push_back(model->get_directory());
+                    name = std::string(buf1) +std::to_string(i)+".model";
+                    auto path = std::string(buf0) + '/' + name;
+                    glp_logv("exporting model %s...", name.c_str());
+                    std::fstream output(path, std::ios::out | std::ios::trunc);
+                    model->set_directory(name);
+                    std::stringstream data = model->serialize_data();
+                    auto compressed = glp::util::compress(data.str(), 90);
+                    output << compressed;
+                }
                 {
                     auto name =std::string(buf0) + '/' + std::string(buf1) + ".scene";
                     glp_logv("exporting scene %s...", name.c_str());
@@ -243,22 +266,6 @@ int main(int argc, char* argv[]) {
                     std::stringstream data = scene.serialize_data();
                     auto compressed = glp::util::compress(data.str(), 90);
                     output << compressed;
-                }
-                std::vector<std::string> dirs;
-                for(size_t i=0;i<scene.get_objects().size();i++) {
-                    bool skip = false;
-                    auto model = scene.get_objects().at(i)->get_model();
-                    for(auto& dir: dirs) if(dir==model->get_directory()) skip = true;
-                    if(skip) continue;
-                    dirs.push_back(model->get_directory());
-                    auto name = std::string(buf0) + '/' + std::string(buf1) +std::to_string(i)+".model";
-                    glp_logv("exporting model %s...", name.c_str());
-                    std::fstream output(name, std::ios::out | std::ios::trunc);
-                    std::stringstream data = scene.serialize_data();
-                    auto compressed = glp::util::compress(data.str(), 90);
-                    output << compressed;
-                    model->set_directory(std::string(buf0));
-                    model->serialize_data();
                 }
                 glp_log("exported!");
             }

@@ -29,7 +29,7 @@ class Scene {
 
         std::vector<CollRenderableModel*> objects;
 
-        void deserialize_data(std::stringstream& s, size_t width, size_t height, std::vector<SDL_Event>* ev, ShadingType shading_t);
+        void deserialize_data(std::stringstream& s, size_t width, size_t height, std::vector<SDL_Event>* ev, ShadingType shading_t, const std::string& path);
 
     public:
         inline Scene(size_t width, size_t height, std::vector<SDL_Event>* ev, Shader* shader_) : shader{shader_},
@@ -63,7 +63,8 @@ class Scene {
             s << decompressed;
 
             world = new World{};
-            deserialize_data(s, width, height, ev, shading_t);
+            deserialize_data(s, width, height, ev, shading_t, path);
+            debug_draw = new BulletDebugDraw{};
         }
 
         inline void new_object(CollRenderableModel* object) {

@@ -30,6 +30,10 @@ int main(int argc, char* argv[]) {
     glp::Object::Scene scene {"../res/scenes/scene/cubes.scene", width, height, &sdl.events, shader, shading_t};
     scene.set_debug(true);
 
+    for(auto& obj: scene.get_objects()) {
+        //glp_logv("obj: %s", obj->get_model()->get_directory().c_str());
+    }
+
 #ifndef __vita__
     scene.get_player()->use_mouse(true);
 #endif

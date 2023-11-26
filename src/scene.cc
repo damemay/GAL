@@ -63,7 +63,9 @@ std::stringstream Scene::serialize_data() {
     return s;
 }
 
-void Scene::deserialize_data(std::stringstream& s, size_t width, size_t height, std::vector<SDL_Event>* ev, ShadingType shading_t) {
+void Scene::deserialize_data(std::stringstream& s, size_t width, size_t height, std::vector<SDL_Event>* ev, ShadingType shading_t, const std::string& path) {
+    auto scene_path = path.substr(0, path.find_last_of('/')) + '/';
+    glp_logv("scene path: %s", scene_path.c_str());
     std::string name;
     size_t count;
 
@@ -111,16 +113,16 @@ void Scene::deserialize_data(std::stringstream& s, size_t width, size_t height, 
     std::map<std::string, Model*> dirs;
     for(size_t i=0; i<count; i++) {
         s >> name; assert(name=="obj");
-        s >> name;
-        if(name=="null") continue;
+        s >> name; if(name=="null") continue;
         Model* mod{nullptr};
         for(auto& dir: dirs) if(dir.first==name) mod = dir.second;
-        std::string file = name.substr(name.find_last_of('/'), name.length()) + ".model";
-        if(!mod) mod = new Model{name + '/'+file, shader, shading_t};
-        dirs.emplace(name, mod);
+        if(!mod) {
+            mod = new Model{scene_path+name, shader, shading_t};
+            dirs.emplace(name, mod);
+        }
         float posx, posy, posz, rotx, roty, rotz, rotw;
         s >> posx >> posy >> posz >> rotx >> roty >> rotz >> rotw;
-        auto obj = new CollRenderableModel{mod, shader, shading_t, 0.0f, btVector3(posx,posy,posz), btQuaternion(rotx,roty,rotz,rotw)};
+        new_object(new CollRenderableModel{mod, shader, shading_t, 0.0f, btVector3(posx,posy,posz), btQuaternion(rotx,roty,rotz,rotw)});
 
     }
 }

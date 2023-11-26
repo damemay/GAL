@@ -372,26 +372,6 @@ glm::vec3 Model::calculate_bounding_box() {
             (max.z-min.z)/2);
 }
 
-std::vector<glm::vec3> Model::calculate_bounding_boxes() {
-    std::vector<glm::vec3> boxes;
-    for(const auto& mesh: meshes) {
-        glm::vec3 min {std::numeric_limits<float>::max()};
-        glm::vec3 max {-std::numeric_limits<float>::max()};
-        for(const auto& vert: mesh->vertices) {
-            min.x = std::min(min.x, vert.position.x);
-            min.y = std::min(min.y, vert.position.y);
-            min.z = std::min(min.z, vert.position.z);
-            max.x = std::max(max.x, vert.position.x);
-            max.y = std::max(max.y, vert.position.y);
-            max.z = std::max(max.z, vert.position.z);
-        }
-        boxes.emplace_back((max.x-min.x)/2,
-                (max.y-min.y)/2,
-                (max.z-min.z)/2);
-    }
-    return boxes;
-}
-
 Model::~Model() {
     for(auto& mesh: meshes) delete mesh;
     for(auto& tex: textures) delete tex;

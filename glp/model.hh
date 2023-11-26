@@ -80,6 +80,7 @@ class Model {
 
         Shader* shader;
         std::string directory;
+        std::string name;
 
 #ifdef USE_ASSIMP
         void assimp_load(const std::string& path);
@@ -102,10 +103,11 @@ class Model {
         inline std::vector<Mesh*> get_meshes() { return meshes; }
         inline std::vector<Texture*> get_textures() { return textures; }
         inline std::string& get_directory() { return directory; }
-        inline void set_directory(const std::string& path) { directory = path; }
+        inline void set_directory(const std::string& s) { directory = s; }
+        inline std::string& get_name() { return name; }
+        inline void set_name(const std::string& s) { name = s; }
 
         glm::vec3 calculate_bounding_box();
-        std::vector<glm::vec3> calculate_bounding_boxes();
 
         void load(const std::string& path);
 
