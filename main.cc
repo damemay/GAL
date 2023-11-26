@@ -22,17 +22,13 @@ int main(int argc, char* argv[]) {
     sdl.set_bg_color(glm::vec3(0.4,0.4,0.4));
 
 #ifndef __vita__
-    auto [shader, shading_t] = glp::Object::make_static_pbr();
+    auto [shader, shading_t] = glp::Object::make_static_phong();
 #else
     auto [shader, shading_t] = glp::Object::make_static_phong();
 #endif
 
-    glp::Object::Scene scene {"../res/scenes/scene/cubes.scene", width, height, &sdl.events, shader, shading_t};
+    glp::Object::Scene scene {"../res/scenes/plane/planes.scene", width, height, &sdl.events, shader, shading_t};
     scene.set_debug(true);
-
-    for(auto& obj: scene.get_objects()) {
-        //glp_logv("obj: %s", obj->get_model()->get_directory().c_str());
-    }
 
 #ifndef __vita__
     scene.get_player()->use_mouse(true);
@@ -40,19 +36,10 @@ int main(int argc, char* argv[]) {
 
     scene.get_light().set_color(glm::vec3(25,25,25));
 
-    //scene.new_object(new glp::Object::CollRenderableModel{"../res/models/plane/plane.model", &shader, shading_t,
-    //        0.0f, btVector3(0, -5, 0)});
-
-    //glp::Model cube {"../res/models/cube/cube.model", &shader, shading_t};
-    //scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader, shading_t,
-    //        1.0f, btVector3(0, -2, 0)});
-    //scene.new_object(new glp::Object::CollRenderableModel{&cube, &shader, shading_t,
-    //        1.0f, btVector3(1, 10, 0)});
-
 #ifndef __vita__
     [[maybe_unused]] auto [anim_shader, _] = glp::Object::make_skinned_pbr();
 #else
-    [[maybe_unused]] auto [anim_shader, _] = glp::Object::make_skinned_pbr();
+    [[maybe_unused]] auto [anim_shader, _] = glp::Object::make_skinned_phong();
 #endif
 
     glp::Object::Animated anim {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim",
