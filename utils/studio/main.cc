@@ -20,6 +20,7 @@
 #include "external/imgui/imgui_impl_opengl3.h"
 #include "utils.hh"
 
+#include <filesystem>
 #include <sstream>
 #include <fstream>
 #include <string>
@@ -258,6 +259,8 @@ int main(int argc, char* argv[]) {
                     std::stringstream data = model->serialize_data();
                     auto compressed = glp::util::compress(data.str(), 90);
                     output << compressed;
+                    for(auto& tex: model->get_textures())
+                        std::filesystem::copy_file(tex->path, std::string(buf0)+'/'+tex->path.substr(tex->path.find_last_of('/')+1));
                 }
                 {
                     auto name =std::string(buf0) + '/' + std::string(buf1) + ".scene";
