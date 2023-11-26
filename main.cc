@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     auto [shader, shading_t] = glp::Object::make_static_phong();
 #endif
 
-    glp::Object::Scene scene {"../res/scenes/plane/planes.scene", width, height, &sdl.events, shader, shading_t};
+    glp::Object::PhysicsScene scene {"../res/scenes/plane/planes.scene", width, height, &sdl.events, shader, shading_t};
     scene.set_debug(true);
 
 #ifndef __vita__
