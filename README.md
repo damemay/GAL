@@ -9,7 +9,7 @@ SDL2 + OpenGL 3.3 game engine/framework written in C++. Compatible with vitaGL.
 - 2d text rendering interface
 - low and high level classes that range from just mesh rendering to building collision objects with bullet3
 - fpp player movement and collisions with bullet3
-- creating scenes/maps with lighting/fog options with separate util - [studio](utils/studio) (currently with wip data serialization to custom format)
+- creating bullet3 scenes with lighting/fog options in separate util - [studio](utils/studio)
 
 ## example usage
 [main.cc](main.cc) usually tests new features.
