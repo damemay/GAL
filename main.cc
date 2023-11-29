@@ -1,5 +1,6 @@
 #include "external/glm/ext/matrix_transform.hpp"
 #include "material.hh"
+#include "obj/renderable.hh"
 #include <sdl.hh>
 #include <model.hh>
 #include <obj/camera.hh>
@@ -42,8 +43,10 @@ int main(int argc, char* argv[]) {
     [[maybe_unused]] auto [anim_shader, _] = glp::Object::make_skinned_phong();
 #endif
 
-    glp::Object::Animated anim {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim",
-        sdl.get_dt_ptr(), anim_shader, shading_t};
+    std::vector<glp::Object::Animated*> anims;
+
+    anims.push_back(new glp::Object::Animated {"../res/models/anim/untitled.model", "../res/models/anim/untitled.anim",
+        sdl.get_dt_ptr(), anim_shader, shading_t});
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
     glEnable(GL_DEPTH_TEST);
@@ -53,7 +56,9 @@ int main(int argc, char* argv[]) {
         float dt = *sdl.get_dt_ptr();
 
         scene.update(dt);
-        anim.render(scene.get_camera());
+        for(auto& anim: anims)
+            anim->render(scene.get_camera());
+        //anim.render(scene.get_camera());
 
         sdl.loop_end();
     }

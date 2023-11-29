@@ -63,9 +63,6 @@ class Animation {
 
         std::stringstream serialize_data();
 
-#ifdef USE_ASSIMP
-        Animation(const std::string& path, const Model& model, bool assimp);
-#endif
         Animation(const std::string& path, const Model& model);
         Animation() {};
         ~Animation();
@@ -84,6 +81,8 @@ class Animator {
 
     public:
         inline const std::vector<glm::mat4> get_bone_matrices() const { return bone_mat; }
+
+        inline Animation* get_animation() { return current_animation; }
 
         void update(float dt);
         void play_animation(Animation* animation);

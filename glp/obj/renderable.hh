@@ -17,7 +17,7 @@ class Renderable {
         glm::mat4 transform {1.0f};
 
     public: 
-        inline void translate(glm::vec3 translation) { transform = glm::translate(transform, translation); }
+        inline void translate(glm::vec3 translation) { transform = glm::translate(glm::mat4(1.0f), translation); }
         inline void rotate(float rad, glm::vec3 axis) { transform = glm::rotate(transform, glm::radians(rad), axis); }
         inline void scale(glm::vec3 scale) { transform = glm::scale(transform, scale); }
 
@@ -55,6 +55,7 @@ class Animated: public Renderable {
         void add_animation(const std::string& anim_path);
         void change_animation(const std::string& name);
 
+        inline Animation::Animation* get_animation() { return animator.get_animation(); }
         inline std::string get_path() { return animation_path; }
         void set_path(const std::string& p) { animation_path = p; }
 

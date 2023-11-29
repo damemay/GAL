@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
     shader = phong;
     shading_t = glp::ShadingType::PHONG;
 
-    auto scene = glp::Object::Scene{WIDTH, HEIGHT, nullptr, shader, &camera, false};
+    auto scene = glp::Object::PhysicsScene{WIDTH, HEIGHT, nullptr, shader, &camera, false};
     scene.set_debug(true);
 
     glEnable(GL_DEPTH_TEST);

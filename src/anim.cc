@@ -96,52 +96,42 @@ glm::mat4 Node::interpolate_scale(float time) {
     return glm::scale(glm::mat4(1.0f), scale);
 }
 
-#ifdef USE_ASSIMP
-Animation::Animation(const std::string& path, const Model& model, bool assimp) {
-    if(assimp) {
-        Assimp::Importer import;
-        const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate);
-
-        if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            glp_logv("assimp returned %s", import.GetErrorString());
-            return;
-        }
-
-        if(!scene->HasAnimations() || scene->mNumAnimations < 0) {
-            glp_log("wowzie! you just tried to load an animation that has no animations!");
-            return;
-        }
-
-        auto anim = scene->mAnimations[0];
-        name = anim->mName.C_Str();
-        duration = anim->mDuration;
-        ticks_per_second = anim->mTicksPerSecond;
-
-        root_node = new Node;
-        read_assimp_hierarchy(root_node, scene->mRootNode, model);
-
-        for(size_t i=0; i<anim->mNumChannels; i++) {
-            auto chan = anim->mChannels[i];
-            std::string name = chan->mNodeName.C_Str();
-            Node* node = find_node(root_node, name);
-            node->assimp_set_keys(chan);
-        }
-    } else {
-        std::fstream out(path, std::ios::in);
-        if(!out) glp_logv("error opening file %s", path.c_str());
-        std::stringstream s;
-        s << out.rdbuf();
-        deserialize_data(model, s);
-    }
-}
-#endif
-
 Animation::Animation(const std::string& path, const Model& model) {
+#ifdef USE_ASSIMP
+    Assimp::Importer import;
+    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate);
+    
+    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+        glp_logv("assimp returned %s", import.GetErrorString());
+        return;
+    }
+    
+    if(!scene->HasAnimations() || scene->mNumAnimations < 0) {
+        glp_log("wowzie! you just tried to load an animation that has no animations!");
+        return;
+    }
+    
+    auto anim = scene->mAnimations[0];
+    name = anim->mName.C_Str();
+    duration = anim->mDuration;
+    ticks_per_second = anim->mTicksPerSecond;
+    
+    root_node = new Node;
+    read_assimp_hierarchy(root_node, scene->mRootNode, model);
+    
+    for(size_t i=0; i<anim->mNumChannels; i++) {
+        auto chan = anim->mChannels[i];
+        std::string name = chan->mNodeName.C_Str();
+        Node* node = find_node(root_node, name);
+        node->assimp_set_keys(chan);
+    }
+#else
     auto file = util::read_file(path);
     auto decompressed = util::decompress(file);
     std::stringstream s;
     s << decompressed;
     deserialize_data(model, s);
+#endif
 }
 
 void Animation::clear_nodes(Node* parent) {

@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(glp-conv)
+project(glp-studio)
 set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD 20)
 add_compile_options(-g)
 add_compile_definitions(USE_ASSIMP)
 
-
-set(EXEC_NAME glp-studio)
+set(BULLET_NAME glp-studio-bullet)
 
 find_package(Bullet REQUIRED)
 
@@ -42,11 +41,11 @@ add_library(imgui STATIC
     ../../glp/external/imgui/imgui_impl_opengl3.cpp
 )
 
-add_executable(${EXEC_NAME}
-    main.cc
+add_executable(${BULLET_NAME}
+    bullet.cc
 )
 
-target_link_libraries(${EXEC_NAME}
+target_link_libraries(${BULLET_NAME}
     glp
     ${BULLET_LIBRARIES}
     imgui
