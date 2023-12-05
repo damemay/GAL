@@ -5,3 +5,4 @@ vita-build
 sce_sys/
 compile_commands.json
 utils/studio/res/shaders
+glp/external/
