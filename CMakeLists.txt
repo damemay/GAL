@@ -26,6 +26,7 @@ if(VITA)
         glp/external/glad.c
         glp/external/stbi.c
         src/utils.cc
+        src/fonts.cc
         src/sdl.cc
         src/shader.cc
         src/model.cc
@@ -38,11 +39,6 @@ if(VITA)
     
     add_executable(${PROJECT_NAME}
         main.cc
-    )
-
-    target_precompile_headers(${PROJECT_NAME}
-        PUBLIC
-        res/fonts/karla.h
     )
     
     target_link_libraries(${PROJECT_NAME}
@@ -140,11 +136,6 @@ else()
 
     add_executable(${EXEC_NAME}
         main.cc
-    )
-
-    target_precompile_headers(${EXEC_NAME}
-        PUBLIC
-        res/fonts/karla.h
     )
     
     if(USE_ASSIMP)
