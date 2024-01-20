@@ -4,7 +4,6 @@
 #include <map>
 #include "shader.hh"
 #include "material.hh"
-#include "../res/fonts/karla.h"
 
 namespace glp {
 
