@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <sdl.hh>
+#include <scene.hh>
 
 namespace glp {
     namespace render {
@@ -35,14 +36,19 @@ namespace glp {
             Primitive(const std::vector<Vertex>& vert, const std::vector<unsigned int>& idx);
         };
         
-        class Mesh {
+        struct Mesh {
             std::vector<Primitive> primitives_ {};
         
-            public:
-                Mesh(const std::string& path);
-                ~Mesh();
+            Mesh(const std::string& path);
+            ~Mesh();
         
-                void draw();
+            void draw();
         };
     }
+
+    struct Model: scene::Renderable, render::Mesh {
+        Model(const std::string& path);
+        ~Model() = default;
+        void render();
+    };
 }

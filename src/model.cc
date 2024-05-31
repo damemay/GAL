@@ -30,4 +30,12 @@ namespace glp {
             }
         }
     }
+
+    Model::Model(const std::string& path) : render::Mesh{path} {
+
+    }
+
+    void Model::render() {
+        draw();
+    }
 }

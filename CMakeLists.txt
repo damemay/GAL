@@ -30,9 +30,12 @@ add_library(glp STATIC
     src/glp.cc
     src/sdl.cc
     src/gl.cc
+    src/gltf.cc
 
     src/scene.cc
     src/camera.cc
+    src/controller.cc
+    src/model.cc
 )
 
 if(GLP_SAMPLE)
