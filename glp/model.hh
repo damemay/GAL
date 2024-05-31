@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -7,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <sdl.hh>
 #include <scene.hh>
+#include <material.hh>
 
 namespace glp {
     namespace render {
@@ -34,10 +36,26 @@ namespace glp {
             std::vector<unsigned int>       indices;
         
             Primitive(const std::vector<Vertex>& vert, const std::vector<unsigned int>& idx);
+            bool operator==(const Primitive& o) const {
+                return (vao == o.vao && vbo == o.vbo && o.ebo);
+            }
         };
-        
+    }
+}
+
+template <>
+struct std::hash<glp::render::Primitive> {
+    std::size_t operator()(const glp::render::Primitive& k) const {
+        return ((std::hash<unsigned int>()(k.vao)
+                 ^ (std::hash<unsigned int>()(k.vbo) << 1)) >> 1)
+                 ^ (std::hash<unsigned int>()(k.ebo) << 1);
+      }
+};
+
+namespace glp {
+    namespace render {
         struct Mesh {
-            std::vector<Primitive> primitives_ {};
+            std::unordered_map<Primitive, Material> primitives;
         
             Mesh(const std::string& path);
             ~Mesh();
@@ -46,9 +64,10 @@ namespace glp {
         };
     }
 
-    struct Model: scene::Renderable, render::Mesh {
-        Model(const std::string& path);
-        ~Model() = default;
-        void render();
+    struct Render_Model: scene::Renderable, render::Mesh {
+        inline Render_Model(const std::string& path) : render::Mesh{path} {}
+        ~Render_Model() = default;
+        inline void render() { draw(); }
     };
 }
+

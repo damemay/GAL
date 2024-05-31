@@ -1,7 +1,7 @@
 #include <model.hh>
 #include <utils.hh>
-#include <gl.hh>
 #include <gltf.hh>
+#include <gl.hh>
 
 namespace glp {
     namespace render {
@@ -10,32 +10,31 @@ namespace glp {
         }
 
         Mesh::Mesh(const std::string& path) {
-            auto tinygltf_model = gltf::load_model(path);
-            primitives_ = gltf::setup_primitives(tinygltf_model);
+            auto tinygltf_model = gltf::Model(path);
+            primitives = tinygltf_model.primitives;
+            for(auto& [prim, mat]: primitives) mat.generate_shader();
         }
 
         Mesh::~Mesh() {
-            for(auto& prim: primitives_) {
+            for(auto& [prim, mat]: primitives) {
                 glDeleteVertexArrays(1, &prim.vao);
                 glDeleteBuffers(1, &prim.vbo);
                 glDeleteBuffers(1, &prim.ebo);
+                for(auto& [id, tex]: mat.textures) {
+                    glDeleteTextures(1, &tex);
+                }
+                glDeleteProgram(mat.shader);
             }
         }
 
         void Mesh::draw() {
-            for(auto& prim: primitives_) {
+            for(auto& [prim, mat]: primitives) {
+                glUseProgram(mat.shader);
                 glBindVertexArray(prim.vao);
                 glDrawElements(GL_TRIANGLES, prim.indices.size(), GL_UNSIGNED_INT, nullptr);
                 glBindVertexArray(0);
+                glUseProgram(0);
             }
         }
-    }
-
-    Model::Model(const std::string& path) : render::Mesh{path} {
-
-    }
-
-    void Model::render() {
-        draw();
     }
 }

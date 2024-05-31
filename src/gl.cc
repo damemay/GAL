@@ -40,6 +40,24 @@ namespace glp {
             glBindVertexArray(0);
         }
 
+        GLuint load_texture2d(const tinygltf::Image& image, const tinygltf::Sampler& sampler) {
+            GLuint texture_ {0};
+
+            glGenTextures(1, &texture_);
+            glBindTexture(GL_TEXTURE_2D, texture_);
+
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height,
+                    0, GL_RGBA, image.pixel_type, image.image.data());
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sampler.wrapS);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, sampler.wrapT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampler.minFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampler.magFilter);
+            glGenerateMipmap(GL_TEXTURE_2D);
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+            return texture_;
+        }
+
         GLuint load_texture2d(const std::string& texture, bool from_file) {
             GLuint texture_ {0};
 
@@ -79,8 +97,11 @@ namespace glp {
             int result {0};
             glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
             if(!result) {
+                char log[512];
+                glGetShaderInfoLog(shader, 512, NULL, log);
+                auto info = std::format("failed to compile {} shader: {}", (shader == GL_VERTEX_SHADER ? "vertex" : "fragment"), log);
                 glDeleteShader(shader);
-                throw std::runtime_error("Failed to compile shader");
+                throw std::runtime_error(info);
             }
 
             return shader;

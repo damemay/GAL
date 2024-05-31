@@ -32,6 +32,7 @@ add_library(glp STATIC
     src/gl.cc
     src/gltf.cc
 
+    src/material.cc
     src/scene.cc
     src/camera.cc
     src/controller.cc

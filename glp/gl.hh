@@ -2,6 +2,7 @@
 
 #include <sdl.hh>
 #include <model.hh>
+#include <tiny_gltf.h>
 
 namespace glp {
     namespace opengl {
@@ -14,6 +15,7 @@ namespace glp {
         void load_primitive(render::Primitive* mesh);
         GLuint load_shader(const std::string& vertex, const std::string& fragment, bool from_file=true);
         GLuint load_texture2d(const std::string& texture, bool from_file=true);
+        GLuint load_texture2d(const tinygltf::Image& image, const tinygltf::Sampler& sampler);
 
         void load(SDL_Window* window, SDL_GLContext& context, uint32_t width, uint32_t height);
 #ifdef GLP_DEBUG

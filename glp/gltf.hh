@@ -2,10 +2,20 @@
 
 #include <tiny_gltf.h>
 #include <model.hh>
+#include <material.hh>
+#include <unordered_map>
 
 namespace glp {
     namespace gltf {
-        tinygltf::Model load_model(const std::string& path);
-        std::vector<render::Primitive> setup_primitives(tinygltf::Model& model);
+        struct Model {
+            tinygltf::Model tinygltf_model;
+            std::unordered_map<render::Primitive, render::Material> primitives;
+
+            Model(const std::string& path);
+
+            private:
+                void load(const std::string& path);
+                void setup_primitives();
+        };
     }
 }

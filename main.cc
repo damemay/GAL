@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
         auto fpp {std::make_unique<glp::Basic_FPP_Controller>(25.0f, 0.1f)};
         scene->add_controller("Player", fpp);
 
-        auto model {std::make_unique<glp::Model>("/home/mar/glTF-Sample-Models/2.0/Triangle/glTF/Triangle.gltf")};
+        auto model {std::make_unique<glp::Render_Model>("/home/mar/glTF-Sample-Models/2.0/Box/glTF/Box.gltf")};
         scene->add_renderable("Model", model);
     }
 
