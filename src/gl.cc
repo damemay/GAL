@@ -9,36 +9,36 @@
 
 namespace glp {
     namespace opengl {
-        // void load_mesh(render::mesh* mesh) {
-        //     glGenVertexArrays(1, &mesh->vao);
-        //     glGenBuffers(1, &mesh->vbo);
-        //     glGenBuffers(1, &mesh->ebo);
+        void load_primitive(render::Primitive* mesh) {
+            glGenVertexArrays(1, &mesh->vao);
+            glGenBuffers(1, &mesh->vbo);
+            glGenBuffers(1, &mesh->ebo);
 
-        //     glBindVertexArray(mesh->vao);
+            glBindVertexArray(mesh->vao);
 
-        //     glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
-        //     glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(render::vertex), mesh->vertices.data(), GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
+            glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(render::Vertex), mesh->vertices.data(), GL_STATIC_DRAW);
 
-        //     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
-        //     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(unsigned int), mesh->indices.data(), GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(unsigned int), mesh->indices.data(), GL_STATIC_DRAW);
 
-        //     glVertexAttribPointer(position_attribute_index, 3, GL_FLOAT, GL_FALSE, sizeof(render::vertex), nullptr);
-        //     glEnableVertexAttribArray(position_attribute_index);
+            glVertexAttribPointer(position_attribute_index, 3, GL_FLOAT, GL_FALSE, sizeof(render::Vertex), nullptr);
+            glEnableVertexAttribArray(position_attribute_index);
 
-        //     glVertexAttribPointer(normal_attribute_index, 3, GL_FLOAT, GL_FALSE, sizeof(render::vertex), (void*)offsetof(render::vertex, normal));
-        //     glEnableVertexAttribArray(normal_attribute_index);
+            glVertexAttribPointer(normal_attribute_index, 3, GL_FLOAT, GL_FALSE, sizeof(render::Vertex), (void*)offsetof(render::Vertex, normal));
+            glEnableVertexAttribArray(normal_attribute_index);
 
-        //     glVertexAttribPointer(texcoord0_attribute_index, 2, GL_FLOAT, GL_FALSE, sizeof(render::vertex), (void*)offsetof(render::vertex, uv));
-        //     glEnableVertexAttribArray(texcoord0_attribute_index);
+            glVertexAttribPointer(texcoord0_attribute_index, 2, GL_FLOAT, GL_FALSE, sizeof(render::Vertex), (void*)offsetof(render::Vertex, uv));
+            glEnableVertexAttribArray(texcoord0_attribute_index);
 
-        //     glVertexAttribPointer(joints_attribute_index, 4, GL_FLOAT, GL_FALSE, sizeof(render::vertex), (void*)offsetof(render::vertex, bone_index));
-        //     glEnableVertexAttribArray(joints_attribute_index);
+            glVertexAttribPointer(joints_attribute_index, 4, GL_FLOAT, GL_FALSE, sizeof(render::Vertex), (void*)offsetof(render::Vertex, bone_index));
+            glEnableVertexAttribArray(joints_attribute_index);
 
-        //     glVertexAttribPointer(weights_attribute_index, 4, GL_FLOAT, GL_FALSE, sizeof(render::vertex), (void*)offsetof(render::vertex, weights));
-        //     glEnableVertexAttribArray(weights_attribute_index);
+            glVertexAttribPointer(weights_attribute_index, 4, GL_FLOAT, GL_FALSE, sizeof(render::Vertex), (void*)offsetof(render::Vertex, weights));
+            glEnableVertexAttribArray(weights_attribute_index);
 
-        //     glBindVertexArray(0);
-        // }
+            glBindVertexArray(0);
+        }
 
         GLuint load_texture2d(const std::string& texture, bool from_file) {
             GLuint texture_ {0};
