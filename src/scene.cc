@@ -15,6 +15,8 @@ namespace glp {
             current_controller_->delta_time_update(delta_time);
         }
 
+        if(callback_) callback_();
+
         for(const auto &[name, renderable]: renderables_) {
             renderable->render();
         }

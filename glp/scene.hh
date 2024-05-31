@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <vector>
 #include <memory>
+#include <functional>
 #include <glm/glm.hpp>
 #include <SDL2/SDL.h>
 
@@ -60,19 +61,21 @@ namespace glp {
         scene::Controller* current_controller_ {nullptr};
         scene::Camera* current_camera_ {nullptr};
 
+        std::function<void()> callback_ {nullptr};
+
         public:
             Scene(const glm::vec2& screen_dimensions);
 
             void loop(float delta_time, const std::vector<SDL_Event>& sdl_events);
 
             inline void set_background_color(const glm::vec3& color) { background_color_ = color; }
+            inline void set_callback(const std::function<void()> callback) { callback_ = callback; }
+            void set_controller(const std::string& name);
+            void set_camera(const std::string& name);
 
             inline scene::Renderable* get_renderable(const std::string& name) { return renderables_.at(name).get(); }
             inline scene::Controller* get_controller(const std::string& name) { return controllers_.at(name).get(); }
             inline scene::Camera* get_camera(const std::string& name) { return cameras_.at(name).get(); }
-
-            void set_controller(const std::string& name);
-            void set_camera(const std::string& name);
 
             template<typename T>
             inline void add_camera(const std::string& name, std::unique_ptr<T>& object) {

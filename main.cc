@@ -44,10 +44,13 @@ int main(int argc, char* argv[]) {
 
     auto main_camera = scene->get_camera("Main Camera");
     glUseProgram(gl_shader);
-    sample.loop([gl_shader, main_camera, pos] {
+
+    scene->set_callback([gl_shader, main_camera, pos] {
         glUniformMatrix4fv(glGetUniformLocation(gl_shader, "view_projection"), 1, GL_FALSE, &main_camera->view_projection()[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(gl_shader, "model"), 1, GL_FALSE, &pos[0][0]);
     });
+
+    sample.loop(nullptr);
     glDeleteProgram(gl_shader);
 
     return EXIT_SUCCESS;

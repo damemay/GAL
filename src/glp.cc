@@ -15,8 +15,8 @@ namespace glp {
             start_tick_ = SDL_GetTicks64();
             delta_time_ = (start_tick_ - last_tick_) / 1000.0f;
 
-            if(current_scene_) current_scene_->loop(delta_time_, sdl_events_);
             if(callback) callback();
+            if(current_scene_) current_scene_->loop(delta_time_, sdl_events_);
 
             last_tick_ = start_tick_;
             sdl_events_.clear();
