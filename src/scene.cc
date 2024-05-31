@@ -23,14 +23,12 @@ namespace glp {
     }
 
     void Scene::set_controller(const std::string& name) {
-        current_controller_ = controllers_.at(name).get();
-        if(current_camera_)
-            current_controller_->camera = current_camera_;
+        current_controller_ = get_controller(name);
+        if(current_camera_) current_controller_->camera = current_camera_;
     }
 
     void Scene::set_camera(const std::string& name) {
-        current_camera_ = cameras_.at(name).get();
-        if(current_controller_)
-            current_controller_->camera = current_camera_;
+        current_camera_ = get_camera(name);
+        if(current_controller_) current_controller_->camera = current_camera_;
     }
 }

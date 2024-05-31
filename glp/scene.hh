@@ -51,17 +51,18 @@ namespace glp {
     }
 
     class Scene {
-        glm::vec2 screen_dimensions_;
-        glm::vec3 background_color_;
+        protected:
+            glm::vec2 screen_dimensions_;
+            glm::vec3 background_color_;
 
-        std::map<std::string, std::unique_ptr<scene::Renderable>> renderables_;
-        std::map<std::string, std::unique_ptr<scene::Controller>> controllers_;
-        std::map<std::string, std::unique_ptr<scene::Camera>> cameras_;
+            std::map<std::string, std::unique_ptr<scene::Renderable>> renderables_;
+            std::map<std::string, std::unique_ptr<scene::Controller>> controllers_;
+            std::map<std::string, std::unique_ptr<scene::Camera>> cameras_;
 
-        scene::Controller* current_controller_ {nullptr};
-        scene::Camera* current_camera_ {nullptr};
+            scene::Controller* current_controller_ {nullptr};
+            scene::Camera* current_camera_ {nullptr};
 
-        std::function<void()> callback_ {nullptr};
+            std::function<void()> callback_ {nullptr};
 
         public:
             Scene(const glm::vec2& screen_dimensions);
