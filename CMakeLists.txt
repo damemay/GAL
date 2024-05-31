@@ -9,9 +9,9 @@ add_compile_definitions(GLM_ENABLE_EXPERIMENTAL)
 option(GLP_SAMPLE "Build sample" ON)
 option(GLP_DEBUG "Build with debug options" OFF)
 
-if(CG_DEBUG)
+if(GLP_DEBUG)
     add_compile_options(-O1 -g -fsanitize=address -fno-omit-frame-pointer)
-    add_compile_definitions(CG_DEBUG)
+    add_compile_definitions(GLP_DEBUG)
 else()
     add_compile_definitions(-O2)
 endif()
@@ -45,6 +45,10 @@ if(GLP_SAMPLE)
     add_executable(${EXEC_NAME}
         main.cc
     )
+    
+    find_package(SDL2 REQUIRED)
+    find_package(glm REQUIRED)
+    find_package(Bullet REQUIRED)
 
     include_directories(
         glp/
@@ -53,10 +57,6 @@ if(GLP_SAMPLE)
         ext/tinygltf/
         ${BULLET_INCLUDE_DIRS}
     )
-    
-    find_package(SDL2 REQUIRED)
-    find_package(glm REQUIRED)
-    find_package(Bullet REQUIRED)
     
     if(GLP_DEBUG)
         target_link_libraries(${EXEC_NAME}
