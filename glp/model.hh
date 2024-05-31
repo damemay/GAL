@@ -3,29 +3,19 @@
 #include <limits>
 #include <vector>
 
-#ifdef USE_ASSIMP
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#endif
-
-#ifndef __vita__
-    #include "external/glad/glad.h"
-    #ifdef __APPLE__
-        #include <OpenGL/gl.h>
-    #else
-        #include <GL/gl.h>
-    #endif
+#include <glad/glad.h>
+#ifdef __APPLE__
+    #include <OpenGL/gl.h>
 #else
-    #include <vitaGL.h>
+    #include <GL/gl.h>
 #endif
 
-#include "external/glm/glm.hpp"
-#include "external/glm/gtc/matrix_transform.hpp"
-#include "external/glm/gtc/type_ptr.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "shader.hh"
-#include "material.hh"
+#include <shader.hh>
+#include <material.hh>
 
 namespace glp {
 
@@ -82,12 +72,6 @@ class Model {
         std::string directory;
         std::string name;
 
-#ifdef USE_ASSIMP
-        void assimp_load(const std::string& path);
-        void assimp_node_process(aiNode* node, const aiScene* scene);
-        Mesh* assimp_mesh_process(aiMesh* mesh, const aiScene* scene);
-        Texture* assimp_textures_load(aiMaterial* mat, aiTextureType type);
-#endif
         Texture* texture_load(const std::string& path);
         void deserialize_data(std::stringstream& s);
 

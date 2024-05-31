@@ -1,5 +1,5 @@
-#include "shader.hh"
-#include "utils.hh"
+#include <shader.hh>
+#include <utils.hh>
 
 namespace glp {
 

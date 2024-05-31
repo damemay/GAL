@@ -1,42 +1,16 @@
-#include "anim.hh"
-#include "external/glm/glm.hpp"
-#include "external/glm/gtc/matrix_transform.hpp"
-#include "external/glm/gtc/type_ptr.hpp"
-#include "external/glm/gtx/quaternion.hpp"
-#include "model.hh"
-#include "utils.hh"
+#include <anim.hh>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <model.hh>
+#include <utils.hh>
 #include <sstream>
 #include <fstream>
 
 namespace glp {
 
 namespace Animation {
-
-#ifdef USE_ASSIMP
-void Node::assimp_set_keys(const aiNodeAnim* channel) {
-    for(size_t i=0; i<channel->mNumPositionKeys; i++)
-        positions.emplace_back(
-                glm::vec3(channel->mPositionKeys[i].mValue.x,
-                    channel->mPositionKeys[i].mValue.y,
-                    channel->mPositionKeys[i].mValue.z),
-                channel->mPositionKeys[i].mTime);
-
-    for(size_t i=0; i<channel->mNumRotationKeys; i++)
-        rotations.emplace_back(
-                glm::quat(channel->mRotationKeys[i].mValue.w,
-                    channel->mRotationKeys[i].mValue.x,
-                    channel->mRotationKeys[i].mValue.y,
-                    channel->mRotationKeys[i].mValue.z),
-                channel->mRotationKeys[i].mTime);
-
-    for(size_t i=0; i<channel->mNumScalingKeys; i++)
-        scales.emplace_back(
-                glm::vec3(channel->mScalingKeys[i].mValue.x,
-                    channel->mScalingKeys[i].mValue.y,
-                    channel->mScalingKeys[i].mValue.z),
-                channel->mScalingKeys[i].mTime);
-}
-#endif
 
 void Node::update(float time) {
     auto t = interpolate_position(time);
@@ -97,41 +71,11 @@ glm::mat4 Node::interpolate_scale(float time) {
 }
 
 Animation::Animation(const std::string& path, const Model& model) {
-#ifdef USE_ASSIMP
-    Assimp::Importer import;
-    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate);
-    
-    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        glp_logv("assimp returned %s", import.GetErrorString());
-        return;
-    }
-    
-    if(!scene->HasAnimations() || scene->mNumAnimations < 0) {
-        glp_log("wowzie! you just tried to load an animation that has no animations!");
-        return;
-    }
-    
-    auto anim = scene->mAnimations[0];
-    name = anim->mName.C_Str();
-    duration = anim->mDuration;
-    ticks_per_second = anim->mTicksPerSecond;
-    
-    root_node = new Node;
-    read_assimp_hierarchy(root_node, scene->mRootNode, model);
-    
-    for(size_t i=0; i<anim->mNumChannels; i++) {
-        auto chan = anim->mChannels[i];
-        std::string name = chan->mNodeName.C_Str();
-        Node* node = find_node(root_node, name);
-        node->assimp_set_keys(chan);
-    }
-#else
     auto file = util::read_file(path);
     auto decompressed = util::decompress(file);
     std::stringstream s;
     s << decompressed;
     deserialize_data(model, s);
-#endif
 }
 
 void Animation::clear_nodes(Node* parent) {
@@ -153,23 +97,6 @@ Node* Animation::find_node(Node* root, const std::string& name) {
     }
     return nullptr;
 }
-
-#ifdef USE_ASSIMP
-void Animation::read_assimp_hierarchy(Node* dest, const aiNode* src, const Model& m) {
-    dest->name = src->mName.C_Str();
-    for(int i=0; i<m.get_bone_info().size(); i++) {
-        auto bone = m.get_bone_info().at(i);
-        if(bone.name == dest->name)
-            dest->bone_index = i;
-    }
-
-    for(size_t i=0; i<src->mNumChildren; i++) {
-        auto new_node = new Node;
-        read_assimp_hierarchy(new_node, src->mChildren[i], m);
-        dest->children.push_back(new_node);
-    }
-}
-#endif
 
 Animator::Animator(Animation* animation, Model* m) 
     : model{m}, current_animation{animation} {

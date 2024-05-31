@@ -2,7 +2,7 @@
 
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-#include "obj/renderable.hh"
+#include <renderable.hh>
 
 namespace glp {
 

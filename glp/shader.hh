@@ -4,21 +4,17 @@
 #include <string>
 #include <vector>
 
-#ifndef __vita__
-    #include "external/glad/glad.h"
-    #ifdef __APPLE__
-        #include <OpenGL/gl.h>
-    #else
-        #include <GL/gl.h>
-    #endif
+#include <glad/glad.h>
+#ifdef __APPLE__
+    #include <OpenGL/gl.h>
 #else
-    #include <vitaGL.h>
+    #include <GL/gl.h>
 #endif
 
-#include "external/glm/glm.hpp"
-#include "external/glm/gtc/type_ptr.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "utils.hh"
+#include <utils.hh>
 
 namespace glp {
 

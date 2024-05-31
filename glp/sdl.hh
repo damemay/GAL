@@ -6,19 +6,15 @@
 
 #include <SDL2/SDL.h>
 
-#ifndef __vita__
-    #include "external/glad/glad.h"
-    #ifdef __APPLE__
-        #include <OpenGL/gl.h>
-    #else
-        #include <GL/gl.h>
-    #endif
+#include <glad/glad.h>
+#ifdef __APPLE__
+    #include <OpenGL/gl.h>
 #else
-    #include <vitaGL.h>
+    #include <GL/gl.h>
 #endif
 
-#include "utils.hh"
-#include "external/glm/glm.hpp"
+#include <utils.hh>
+#include <glm/glm.hpp>
 
 namespace glp {
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shader.hh"
+#include <shader.hh>
 
 namespace glp {
 

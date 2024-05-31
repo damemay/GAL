@@ -4,6 +4,7 @@ project(glp)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+add_compile_definitions(GLM_ENABLE_EXPERIMENTAL)
 
 option(GLP_SAMPLE "Build sample" ON)
 option(GLP_DEBUG "Build with debug options" OFF)

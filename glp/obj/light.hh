@@ -1,7 +1,7 @@
 #pragma once
 
-#include "shader.hh"
-#include "material.hh"
+#include <shader.hh>
+#include <material.hh>
 
 namespace glp {
 

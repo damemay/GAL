@@ -1,4 +1,4 @@
-#include "sdl.hh"
+#include <sdl.hh>
 
 namespace glp {
 
@@ -25,20 +25,12 @@ void Window::window_init(const std::string title, const size_t width, const size
 }
 
 void Window::gl_init() {
-#ifndef __vita__
     SDL_GL_LoadLibrary(NULL);
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
-    SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
-    SDL_GL_CONTEXT_PROFILE_CORE);
-#else
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-#endif
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 }
 
 void Window::create_glcontext(SDL_Window*& window, SDL_GLContext& context, const size_t width, const size_t height) {
@@ -47,10 +39,8 @@ void Window::create_glcontext(SDL_Window*& window, SDL_GLContext& context, const
         glp_diev("could not create SDL_GLContext: %s", SDL_GetError());
     SDL_GL_MakeCurrent(window, context);
 
-#ifndef __vita__
     if(!gladLoadGLLoader(SDL_GL_GetProcAddress))
         glp_die("could not load glad!");
-#endif
 
     glViewport(0, 0, width, height);
     glClearColor(bg.x, bg.y, bg.z, 0.0f);

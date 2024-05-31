@@ -1,5 +1,5 @@
-#include "material.hh"
-#include "external/stb_image.h"
+#include <material.hh>
+#include <stb_image.h>
 
 namespace glp {
 

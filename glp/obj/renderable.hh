@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../shader.hh"
-#include "../model.hh"
-#include "../anim.hh"
-#include "camera.hh"
+#include <shader.hh>
+#include <model.hh>
+#include <anim.hh>
+#include <obj/camera.hh>
 
 namespace glp {
 

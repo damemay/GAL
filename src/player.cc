@@ -1,4 +1,4 @@
-#include "obj/player.hh"
+#include <obj/player.hh>
 
 namespace glp {
 

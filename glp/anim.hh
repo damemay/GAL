@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model.hh"
+#include <model.hh>
 
 namespace glp {
 
@@ -23,9 +23,6 @@ struct Node {
     std::vector<Key<glm::vec3>> scales;
 
     void update(float time);
-#ifdef USE_ASSIMP
-    void assimp_set_keys(const aiNodeAnim* channel);
-#endif
 
     int get_position_index(float time);
     int get_rotation_index(float time);
@@ -46,9 +43,6 @@ class Animation {
 
         Node* root_node;
 
-#ifdef USE_ASSIMP
-        void read_assimp_hierarchy(Node* dest, const aiNode* src, const Model& m);
-#endif
         void clear_nodes(Node* parent);
         void serialize_nodes(Node* parent, std::stringstream& s);
         void deserialize_nodes(Node*& parent, const Model& m, std::stringstream& s);

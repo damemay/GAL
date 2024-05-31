@@ -1,17 +1,12 @@
 #pragma once
 
 #include <string>
-#include <zstd.h>
 
-#ifndef __vita__
-    #include "external/glad/glad.h"
-    #ifdef __APPLE__
-        #include <OpenGL/gl.h>
-    #else
-        #include <GL/gl.h>
-    #endif
+#include <glad/glad.h>
+#ifdef __APPLE__
+    #include <OpenGL/gl.h>
 #else
-    #include <vitaGL.h>
+    #include <GL/gl.h>
 #endif
 
 #define glp_diev(msg, ...) printf("glp: " msg "\n", __VA_ARGS__), exit(EXIT_FAILURE)

@@ -1,7 +1,7 @@
-#include "obj/collidable.hh"
-#include "obj/light.hh"
-#include "obj/player.hh"
-#include "obj/renderable.hh"
+#include <obj/collidable.hh>
+#include <obj/light.hh>
+#include <obj/player.hh>
+#include <obj/renderable.hh>
 #include <obj/scene.hh>
 #include <sstream>
 #include <map>

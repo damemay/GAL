@@ -1,7 +1,7 @@
 #pragma once
 
-#include "camera.hh"
-#include "obj/collidable.hh"
+#include <camera.hh>
+#include <obj/collidable.hh>
 #include <SDL2/SDL.h>
 #include <vector>
 

@@ -1,9 +1,8 @@
-#include "fonts.hh"
-#include "utils.hh"
+#include <fonts.hh>
+#include <utils.hh>
 
 namespace glp {
 
-#ifndef __vita__
 constexpr auto text_vert = "#version 330 core\n"
 "layout(location = 0) in vec2 position;\n"
 "layout(location = 1) in vec2 uv_in;\n"
@@ -20,26 +19,6 @@ constexpr auto text_frag = "#version 330 core\n"
 "void main() {\n"
 "    out_color = texture(tex, vec2(uv.x, uv.y));\n"
 "}\n";
-#else
-constexpr auto text_vert = "void main(\n"
-"    float2 position,\n"
-"    float2 uv_in,\n"
-"    float4 out gl_Position : POSITION,\n"
-"    float2 out uv : TEXCOORD0)\n"
-"{\n"
-"    gl_Position = float4(position, 0.0, 1.0);\n"
-"    uv = uv_in;\n"
-"}\n";
-
-constexpr auto text_frag = "float4 main(\n"
-"    float4 gl_FragColor : COLOR,\n"
-"    float2 uv : TEXCOORD0,\n"
-"    uniform sampler2D tex\n"
-") {\n"
-"    gl_FragColor = tex2D(tex, float2(uv.x, uv.y));\n"
-"    return gl_FragColor;\n"
-"}\n";
-#endif
 const unsigned char karla_png[] =
 	"\211PNG\r\n\032\n\000\000\000\rIHDR\000\000\004\000\000\000\004\000\010\006\000\000\000\177\035+\203"
 	"\000\000 \000IDATx^\354\235\t\334n\325\330\377\337\336\327\254\314C\206t\222\212J\243JRN\021RDD\241\t"
@@ -2631,21 +2610,10 @@ void Text::update(const std::string& text, uint8_t size, uint16_t x, uint16_t y)
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, verts.size()*sizeof(glm::vec2), verts.data(), GL_STATIC_DRAW);
-#ifndef __vita__
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec2), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec2), (void*)(sizeof(glm::vec2)));
     glEnableVertexAttribArray(1);
-#else
-    font->shader->bind();
-    GLuint id = glGetAttribLocation(shader->get(), "position");
-    glVertexAttribPointer(id, 2, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec2), (void*)0);
-    glEnableVertexAttribArray(id);
-    id = glGetAttribLocation(shader->get(), "uv_in");
-    glVertexAttribPointer(id, 2, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec2), (void*)(sizeof(glm::vec2)));
-    glEnableVertexAttribArray(id);
-
-#endif
 }
 
 void Text::render() {

@@ -1,4 +1,4 @@
-#include "obj/renderable.hh"
+#include <obj/renderable.hh>
 
 namespace glp {
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "LinearMath/btIDebugDraw.h"
-#include "material.hh"
-#include "utils.hh"
+#include <LinearMath/btIDebugDraw.h>
+#include <material.hh>
+#include <utils.hh>
 #include <obj/camera.hh>
 #include <obj/player.hh>
 #include <obj/light.hh>
