@@ -31,6 +31,8 @@ add_library(glp STATIC
     src/sdl.cc
     src/gl.cc
 
+    src/scene.cc
+
     # src/shader.cc
     # src/model.cc
     # src/anim.cc

@@ -12,11 +12,10 @@ namespace glp {
                 if(event.type == SDL_QUIT) stop();
                 else sdl_events_.push_back(event);
             }
-            // glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             start_tick_ = SDL_GetTicks64();
             delta_time_ = (start_tick_ - last_tick_) / 1000.0f;
 
+            if(current_scene_) current_scene_->loop(delta_time_, sdl_events_);
             if(callback) callback();
 
             last_tick_ = start_tick_;

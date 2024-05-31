@@ -1,15 +1,19 @@
 #pragma once
 
-#include <glp.hh>
+#include <vector>
+#include <glm/glm.hpp>
+#include <SDL2/SDL.h>
 
 namespace glp {
     class Scene {
         glm::vec2 screen_dimensions_;
-        const GLP& glp_reference_;
+        glm::vec3 background_color_;
 
         public:
-            Scene(const GLP& glp);
+            Scene(const glm::vec2& screen_dimensions);
 
-            void loop();
+            void loop(float delta_time, const std::vector<SDL_Event>& sdl_events);
+
+            inline void set_background_color(const glm::vec3& color) { background_color_ = color; }
     };
 }
