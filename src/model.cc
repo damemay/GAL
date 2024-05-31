@@ -13,5 +13,21 @@ namespace glp {
             auto tinygltf_model = gltf::load_model(path);
             primitives_ = gltf::setup_primitives(tinygltf_model);
         }
+
+        Mesh::~Mesh() {
+            for(auto& prim: primitives_) {
+                glDeleteVertexArrays(1, &prim.vao);
+                glDeleteBuffers(1, &prim.vbo);
+                glDeleteBuffers(1, &prim.ebo);
+            }
+        }
+
+        void Mesh::draw() {
+            for(auto& prim: primitives_) {
+                glBindVertexArray(prim.vao);
+                glDrawElements(GL_TRIANGLES, prim.indices.size(), GL_UNSIGNED_INT, nullptr);
+                glBindVertexArray(0);
+            }
+        }
     }
 }
