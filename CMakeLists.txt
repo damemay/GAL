@@ -32,16 +32,6 @@ add_library(glp STATIC
     src/gl.cc
 
     src/scene.cc
-
-    # src/shader.cc
-    # src/model.cc
-    # src/anim.cc
-    # src/fonts.cc
-    # src/material.cc
-    # src/player.cc
-    # src/renderable.cc
-    # src/collidable.cc
-    # src/scene.cc
 )
 
 if(GLP_SAMPLE)
