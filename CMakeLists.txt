@@ -13,7 +13,7 @@ if(GLP_DEBUG)
     add_compile_options(-O1 -g -fsanitize=address -fno-omit-frame-pointer)
     add_compile_definitions(GLP_DEBUG)
 else()
-    add_compile_definitions(-O2)
+    add_compile_options(-O2)
 endif()
 
 set(TINYGLTF_HEADER_ONLY ON CACHE INTERNAL "" FORCE)
@@ -27,16 +27,19 @@ add_library(glp STATIC
     ext/tinygltf.cc
 
     src/utils.cc
+    src/glp.cc
     src/sdl.cc
-    src/shader.cc
-    src/model.cc
-    src/anim.cc
-    src/fonts.cc
-    src/material.cc
-    src/player.cc
-    src/renderable.cc
-    src/collidable.cc
-    src/scene.cc
+    src/gl.cc
+
+    # src/shader.cc
+    # src/model.cc
+    # src/anim.cc
+    # src/fonts.cc
+    # src/material.cc
+    # src/player.cc
+    # src/renderable.cc
+    # src/collidable.cc
+    # src/scene.cc
 )
 
 if(GLP_SAMPLE)

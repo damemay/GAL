@@ -1,27 +1,24 @@
+#include <stdexcept>
+#include <utils.hh>
 #include <fstream>
 #include <sstream>
-#include <cstring>
-
-#include <utils.hh>
+#include <format>
 
 namespace glp {
-
-namespace util {
-
-std::string read_file(const std::string& path) {
-    std::ifstream file;
-    std::stringstream content;
-    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    try {
-        file.open(path);
-        content << file.rdbuf();
-        file.close();
-    } catch(std::ifstream::failure& e) {
-        glp_logv("could not read file %s -- %s", path.c_str(), e.what());
+    namespace util {
+        std::string read_file(const std::string& path) {
+            std::ifstream file;
+            std::stringstream content;
+            file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+            try {
+                file.open(path);
+                content << file.rdbuf();
+                file.close();
+            } catch(std::ifstream::failure& e) {
+                auto exception = std::format("could not read file {}: {}", path, e.what());
+                throw std::runtime_error(exception);
+            }
+            return content.str();
+        }
     }
-    return content.str();
-}
-
-};
-
 }
