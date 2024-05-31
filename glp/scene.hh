@@ -20,6 +20,23 @@ namespace glp {
         };
         
         struct Camera {
+            glm::vec3 position      {0.0f, 1.0f, 3.0f};
+            glm::vec3 front         {0.0f, 0.0f, -1.0f};
+            glm::vec3 up            {0.0f, 1.0f, 0.0f};
+
+            float yaw               {-90.0f};
+            float pitch             {0.0f};
+    
+            float near              {0.1f};
+            float far               {100.0f};
+    
+            float fov               {60.0f};
+            float width             {960.0};
+            float height            {544.0};
+    
+            virtual void calculate() = 0;
+            virtual glm::mat4 view() const = 0;
+            virtual glm::mat4 view_projection() const = 0;
             virtual ~Camera() {};
         };
     }
@@ -48,19 +65,22 @@ namespace glp {
             inline void set_controller(const std::string& name) { current_controller_ = controllers_.at(name).get(); }
             inline void set_camera(const std::string& name) { current_camera_ = cameras_.at(name).get(); }
 
-            template<typename R, typename std::enable_if<std::is_base_of<scene::Renderable, R>::value>::type>
-            inline void add(const std::string& name, R& object) {
-                renderables_.insert_or_assign(name, std::make_unique<R>(object));
+            template<typename T>
+            inline void add_camera(const std::string& name, std::unique_ptr<T>& object) {
+                static_assert(std::is_base_of<scene::Camera, T>::value);
+                cameras_.insert_or_assign(name, std::move(object));
             }
 
-            template<typename Cr, typename std::enable_if<std::is_base_of<scene::Controller, Cr>::value>::type>
-            inline void add(const std::string& name, Cr& object) {
-                controllers_.insert_or_assign(name, std::make_unique<Cr>(object));
+            template<typename T>
+            inline void add_renderable(const std::string& name, std::unique_ptr<T>& object) {
+                static_assert(std::is_base_of<scene::Renderable, T>::value);
+                renderables_.insert_or_assign(name, std::move(object));
             }
 
-            template<typename Ca, typename std::enable_if<std::is_base_of<scene::Camera, Ca>::value>::type>
-            inline void add(const std::string& name, Ca& object) {
-                controllers_.insert_or_assign(name, std::make_unique<Ca>(object));
+            template<typename T>
+            inline void add_controller(const std::string& name, std::unique_ptr<T>& object) {
+                static_assert(std::is_base_of<scene::Controller, T>::value);
+                controllers_.insert_or_assign(name, std::move(object));
             }
     };
 }

@@ -32,6 +32,7 @@ add_library(glp STATIC
     src/gl.cc
 
     src/scene.cc
+    src/camera.cc
 )
 
 if(GLP_SAMPLE)

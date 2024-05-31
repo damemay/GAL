@@ -5,9 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include <shader.hh>
-#include <material.hh>
+#include <sdl.hh>
 
 namespace glp {
     namespace render {
