@@ -6,12 +6,15 @@ Graphics Layer Portable? I don't know what does it abbreviate.
 Checkout [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-compat) for old version that's compatible with vitaGL.
 
 ## current features
+- C++20 based
+- Scene-focused API
+- Accepting lambdas to extend internal loops
 - SDL2 windowing and event handling
 - OpenGL 4.1 rendering backend
 - GLTF mesh and material loader 
 - Material-based dynamic shader generation
 
-## features to reimplement from archived branch
+## features yet to be reimplemented from archived branch
 - Skeletons, bones and animations implementation
 - 2D text rendering interface
 - Customizing materials and saving data to custom format with zstd compression
