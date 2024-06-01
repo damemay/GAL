@@ -18,8 +18,16 @@ int main(int argc, char* argv[]) {
         auto fpp {std::make_unique<glp::Basic_FPP_Controller>(25.0f, 0.1f)};
         scene->add_controller("Player", fpp);
 
-        auto model {std::make_unique<glp::Render_Model>("/home/mar/glTF-Sample-Models/2.0/Box/glTF/Box.gltf")};
+        auto model {std::make_unique<glp::Render_Model>("/home/mar/glTF-Sample-Models/2.0/Sponza/glTF/Sponza.gltf")};
         scene->add_renderable("Model", model);
+    }
+
+    {
+        auto camera {scene->get_camera("Main Camera")};
+        camera->far = 1000.0f;
+
+        scene->set_fog_far(1000.0f);
+        scene->set_fog_color(glm::vec3{0.2f, 0.5f, 1.0f});
     }
 
     scene->set_camera("Main Camera");

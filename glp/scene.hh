@@ -110,6 +110,16 @@ namespace glp {
             void set_controller(const std::string& name);
             void set_camera(const std::string& name);
 
+            void set_fog(const glm::vec3& color, const float near, const float far);
+            void set_fog_color(const glm::vec3& color);
+            void set_fog_near(const float near);
+            void set_fog_far(const float far);
+    
+            void set_light(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& color);
+            void set_light_position(const glm::vec3& position);
+            void set_light_direction(const glm::vec3& direction);
+            void set_light_color(const glm::vec3& color);
+
             scene::Renderable* get_renderable(const std::string& name) { return renderables_.at(name).get(); }
             scene::Controller* get_controller(const std::string& name) { return controllers_.at(name).get(); }
             scene::Camera* get_camera(const std::string& name) { return cameras_.at(name).get(); }
