@@ -3,9 +3,9 @@
 GAL - Graphics/Game Abstraction Layer
 
 3D rendering scene-focused framework implementing OpenGL (and Vulkan in the future) for portability.
-Checkout [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-compat) for old version that's compatible with vitaGL.
+Check out [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-compat) for old version (glp) that's compatible with vitaGL.
 
-## current features
+## Current features
 - C++20 based
 - Scene-focused API
 - Accepting lambdas to extend internal loops
@@ -14,13 +14,13 @@ Checkout [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-co
 - GLTF mesh and material loader 
 - Material-based dynamic shader generation
 
-## features yet to be reimplemented from archived branch
+## Features from glp not reimplemented yet
 - Skeletons, bones and animations implementation
 - 2D text rendering interface
 - Customizing materials and saving data to custom format with zstd compression
 - Bullet3 integration
 
-## planned new features
+## Planned new features
 - Change shader generation to be scene-based, not material-based
 - Pipeline shader binding into scene-based queue on setting and loop for more performant GPU usage
 - UBOs and framebuffers
@@ -29,8 +29,8 @@ Checkout [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-co
 - Instancing
 - Vulkan implementation and option to choose rendering backend on instantiation and building
 
-## example usage
-Checkout [main.cc](main.cc) for a sample that builds with the library. It's used internally for testing new features.
+## Example usage
+See [main.cc](main.cc) for a sample that builds with the library. It's used internally for testing new features.
 
 ```c++
 int main(int argc, char* argv[]) {
@@ -52,14 +52,14 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-## building
+## Building
 
 ```
 mkdir build && cd build
 cmake .. && make
 ```
 
-### cmake options
+### CMake options
 | option       | description                                          | default |
 |--------------|------------------------------------------------------|---------|
 | `GAL_SAMPLE` | Build sample                                         | ON      |
