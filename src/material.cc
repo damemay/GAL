@@ -63,7 +63,6 @@ namespace glp {
                 "vec3 position;\n"
                 "vec3 direction;\n"
                 "vec3 color;\n"
-                "bool directional;\n"
                 "};\n"
                 "struct Fog {\n"
                 "vec3 color;\n"
@@ -140,18 +139,10 @@ namespace glp {
                 "f0 = mix(f0, albedo, metallic);\n"
                 "vec3 lo = vec3(0.0);\n"
                 "vec3 l;\n"
-                "if(light.directional) {\n"
                 "l = normalize(-light.direction);\n"
-                "} else {\n"
-                "l = normalize(light.position-wpos);\n"
-                "}\n"
                 "vec3 h = normalize(v+l);\n"
                 "float dist;\n"
-                "if(light.directional) {\n"
                 "dist = length(-light.direction);\n"
-                "} else {\n"
-                "dist = length(light.position-wpos);\n"
-                "}\n"
                 "float attent = 1.0/(dist*dist);\n"
                 "vec3 rad = light.color*attent;\n"
                 "float ndf = dist_ggx(normal,h,roughness);\n"
@@ -175,6 +166,34 @@ namespace glp {
                 "}\n";
             auto str_shader = sshader.str();
             shader = opengl::load_shader(static_vert, str_shader, false);
+
+            use();
+            uniforms.insert({"vp", glGetUniformLocation(shader, "vp")});
+            uniforms.insert({"camera_position", glGetUniformLocation(shader, "camera_position")});
+            uniforms.insert({"model", glGetUniformLocation(shader, "model")});
+            if(albedo_id >= 0) uniforms.insert({"material.albedo_tex", glGetUniformLocation(shader, "material.albedo_tex")});
+            else uniforms.insert({"material.albedo", glGetUniformLocation(shader, "material.albedo")});
+            if(metallic_id >= 0) uniforms.insert({"material.metallic_tex", glGetUniformLocation(shader, "material.metallic_tex")});
+            else uniforms.insert({"material.metallic", glGetUniformLocation(shader, "material.metallic")});
+            if(roughness_id >= 0) uniforms.insert({"material.roughness_tex", glGetUniformLocation(shader, "material.roughness_tex")});
+            else uniforms.insert({"material.roughness", glGetUniformLocation(shader, "material.roughness")});
+            if(occlusion_id >= 0) uniforms.insert({"material.occlusion_tex", glGetUniformLocation(shader, "material.occlusion_tex")});
+            if(normal_id >= 0) uniforms.insert({"material.normal_tex", glGetUniformLocation(shader, "material.normal_tex")});
+            uniforms.insert({"light.position", glGetUniformLocation(shader, "light.position")});
+            uniforms.insert({"light.direction", glGetUniformLocation(shader, "light.direction")});
+            uniforms.insert({"light.color", glGetUniformLocation(shader, "light.color")});
+            uniforms.insert({"fog.color", glGetUniformLocation(shader, "fog.color")});
+            uniforms.insert({"fog.near", glGetUniformLocation(shader, "fog.near")});
+            uniforms.insert({"fog.far", glGetUniformLocation(shader, "fog.far")});
+
+            if(albedo_id >= 0) set(uniforms.at("material.albedo_tex"), albedo_id);
+            else set(uniforms.at("material.albedo"), albedo);
+            if(metallic_id >= 0) set(uniforms.at("material.metallic_tex"), metallic_id);
+            else set(uniforms.at("material.metallic"), metallic);
+            if(roughness_id >= 0) set(uniforms.at("material.roughness_tex"), roughness_id);
+            else set(uniforms.at("material.roughness"), roughness);
+            if(occlusion_id >= 0) set(uniforms.at("material.occlusion_tex"), occlusion_id);
+            if(normal_id >= 0) set(uniforms.at("material.normal_tex"), normal_id);
         }
     }
 }
