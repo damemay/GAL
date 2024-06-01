@@ -6,22 +6,9 @@
 
 namespace glp {
     namespace render {
-        struct Material {
+        struct Shader {
             GLuint shader;
-            std::map<uint8_t, GLuint> textures;
-            std::map<std::string, GLint> uniforms;
 
-            glm::vec4 albedo {};
-            float metallic {};
-            float roughness {};
-
-            int8_t albedo_id {-1};
-            int8_t metallic_id {-1};
-            int8_t roughness_id {-1};
-            int8_t occlusion_id {-1};
-            int8_t normal_id {-1};
-
-            void generate_shader();
             void use() const { glUseProgram(shader); }
             void free() const { glUseProgram(0); }
 
@@ -42,6 +29,23 @@ namespace glp {
             void set(const std::string& name, const glm::quat& value) const { glUniform4fv(glGetUniformLocation(shader, name.c_str()), 1, &value[0]); }
             void set(const std::string& name, const glm::mat4& value) const { glUniformMatrix4fv(glGetUniformLocation(shader, name.c_str()), 1, GL_FALSE, &value[0][0]); }
             void set(const std::string& name, const std::vector<glm::mat4>& value) const { glUniformMatrix4fv(glGetUniformLocation(shader, name.c_str()), value.size(), GL_FALSE, &value.data()[0][0][0]); }
+        };
+
+        struct Material : Shader {
+            std::map<uint8_t, GLuint> textures;
+            std::map<std::string, GLint> uniforms;
+
+            glm::vec4 albedo {};
+            float metallic {};
+            float roughness {};
+
+            int8_t albedo_id {-1};
+            int8_t metallic_id {-1};
+            int8_t roughness_id {-1};
+            int8_t occlusion_id {-1};
+            int8_t normal_id {-1};
+
+            void generate_shader();
         };
     }
 }
