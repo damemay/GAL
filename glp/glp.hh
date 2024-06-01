@@ -21,16 +21,13 @@ namespace glp {
             ~GLP() = default;
 
             void loop(const std::function<void()>& callback);
-            inline void stop() { running_ = false; }
+            void stop() { running_ = false; }
 
-            inline const std::vector<SDL_Event>& get_sdl_events() { return sdl_events_; }
-            inline sdl::Window& get_window() { return window_; }
+            const std::vector<SDL_Event>& get_sdl_events() { return sdl_events_; }
+            sdl::Window& get_window() { return window_; }
 
-            inline Scene* get_scene(const std::string& name) { return scenes_.at(name).get(); }
-            inline void set_scene(const std::string& name) { current_scene_ = scenes_.at(name).get(); }
-            inline Scene* add_scene(const std::string& name) {
-                scenes_.insert_or_assign(name, std::make_unique<Scene>(glm::vec2{window_.get_width(), window_.get_height()}));
-                return get_scene(name);
-            }
+            Scene* get_scene(const std::string& name);
+            void set_scene(const std::string& name);
+            Scene* add_scene(const std::string& name);
     };
 }

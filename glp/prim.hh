@@ -30,9 +30,7 @@ namespace glp {
             std::vector<unsigned int>       indices;
         
             Primitive(const std::vector<Vertex>& vert, const std::vector<unsigned int>& idx);
-            bool operator==(const Primitive& o) const {
-                return (vao == o.vao && vbo == o.vbo && o.ebo);
-            }
+            bool operator==(const Primitive& o) const { return (vao == o.vao && vbo == o.vbo && o.ebo); }
         };
     }
 }

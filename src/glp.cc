@@ -23,4 +23,11 @@ namespace glp {
             SDL_GL_SwapWindow(window_.get_sdl_window());
         }
     }
+
+    Scene* GLP::get_scene(const std::string& name) { return scenes_.at(name).get(); }
+    void GLP::set_scene(const std::string& name) { current_scene_ = scenes_.at(name).get(); }
+    Scene* GLP::add_scene(const std::string& name) {
+        scenes_.insert_or_assign(name, std::make_unique<Scene>(glm::vec2{window_.get_width(), window_.get_height()}));
+        return get_scene(name);
+    }
 }
