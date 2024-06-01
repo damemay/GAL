@@ -4,7 +4,7 @@
 #include <model.hh>
 #include <tiny_gltf.h>
 
-namespace glp {
+namespace gal {
     namespace opengl {
         constexpr GLuint position_attribute_index   = 0;
         constexpr GLuint normal_attribute_index     = 1;
@@ -18,7 +18,7 @@ namespace glp {
         GLuint load_texture2d(const tinygltf::Image& image, const tinygltf::Sampler& sampler);
 
         void load(SDL_Window* window, SDL_GLContext& context, uint32_t width, uint32_t height);
-#ifdef GLP_DEBUG
+#ifdef GAL_DEBUG
         void APIENTRY debug(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* user_param);
 #endif
     }

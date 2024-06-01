@@ -1,4 +1,4 @@
-#include <glp.hh>
+#include <gal.hh>
 #include <camera.hh>
 #include <controller.hh>
 #include <model.hh>
@@ -6,19 +6,19 @@
 #include <memory>
 
 int main(int argc, char* argv[]) {
-    glp::GLP sample {"glp-bullet", 1280, 720};
+    gal::GAL sample {"GAL sample", 1280, 720};
 
     auto scene = sample.add_scene("Sample");
     scene->set_background_color(glm::vec3{0.2f, 0.5f, 1.0f});
 
     {
-        auto camera {std::make_unique<glp::Basic_Camera>()};
+        auto camera {std::make_unique<gal::Basic_Camera>()};
         scene->add_camera("Main Camera", camera);
 
-        auto fpp {std::make_unique<glp::Basic_FPP_Controller>(25.0f, 0.1f)};
+        auto fpp {std::make_unique<gal::Basic_FPP_Controller>(25.0f, 0.1f)};
         scene->add_controller("Player", fpp);
 
-        auto model {std::make_unique<glp::GLTF_Render_Model>("/home/mar/glTF-Sample-Models/2.0/Sponza/glTF/Sponza.gltf")};
+        auto model {std::make_unique<gal::GLTF_Render_Model>("/home/mar/glTF-Sample-Models/2.0/Sponza/glTF/Sponza.gltf")};
         scene->add_renderable("Model", model);
     }
 

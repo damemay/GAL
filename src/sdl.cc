@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <gl.hh>
 
-namespace glp {
+namespace gal {
     namespace sdl {
         void Window::init(const uint32_t flags) {
             if(SDL_Init(flags) > 0) {

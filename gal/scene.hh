@@ -10,7 +10,7 @@
 #include <prim.hh>
 #include <material.hh>
 
-namespace glp {
+namespace gal {
     namespace scene {
         struct Renderable {
             std::unordered_map<render::Primitive, render::Material> primitives;

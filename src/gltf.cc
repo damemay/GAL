@@ -5,7 +5,7 @@
 #include <map>
 #include <gltf.hh>
 
-namespace glp {
+namespace gal {
     namespace gltf {
         Model::Model(const std::string& path) {
             load(path);
@@ -26,7 +26,7 @@ namespace glp {
                 throw std::runtime_error("Provided non-GLTF filepath");
             }
         
-        #ifdef CG_DEBUG
+        #ifdef GAL_DEBUG
             if(!warn.empty()) printf("GLTF Warning: %s\n", warn.c_str());
             if(!err.empty()) printf("GLTF Error: %s\n", err.c_str());
         #endif

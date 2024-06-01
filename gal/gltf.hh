@@ -5,7 +5,7 @@
 #include <material.hh>
 #include <unordered_map>
 
-namespace glp {
+namespace gal {
     namespace gltf {
         struct Model {
             tinygltf::Model tinygltf_model;

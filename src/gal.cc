@@ -1,11 +1,11 @@
-#include <glp.hh>
+#include <gal.hh>
 
-namespace glp {
-    GLP::GLP(const std::string& window_title, const size_t window_width, const size_t window_height) : window_{window_title, window_width, window_height, SDL_INIT_VIDEO, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL} {
+namespace gal {
+    GAL::GAL(const std::string& window_title, const size_t window_width, const size_t window_height) : window_{window_title, window_width, window_height, SDL_INIT_VIDEO, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL} {
 
     }
 
-    void GLP::loop(const std::function<void()>& callback) {
+    void GAL::loop(const std::function<void()>& callback) {
         while(running_) {
             SDL_Event event;
             while(SDL_PollEvent(&event) != 0) {
@@ -24,9 +24,9 @@ namespace glp {
         }
     }
 
-    Scene* GLP::get_scene(const std::string& name) { return scenes_.at(name).get(); }
-    void GLP::set_scene(const std::string& name) { current_scene_ = scenes_.at(name).get(); }
-    Scene* GLP::add_scene(const std::string& name) {
+    Scene* GAL::get_scene(const std::string& name) { return scenes_.at(name).get(); }
+    void GAL::set_scene(const std::string& name) { current_scene_ = scenes_.at(name).get(); }
+    Scene* GAL::add_scene(const std::string& name) {
         scenes_.insert_or_assign(name, std::make_unique<Scene>(glm::vec2{window_.get_width(), window_.get_height()}));
         return get_scene(name);
     }

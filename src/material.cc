@@ -2,7 +2,7 @@
 #include <sstream>
 #include <gl.hh>
 
-namespace glp {
+namespace gal {
     namespace render {
         constexpr auto static_vert = "#version 410 core\n"
         "layout (location = 0) in vec3 position;\n"

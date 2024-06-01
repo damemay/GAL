@@ -1,7 +1,7 @@
 #include <scene.hh>
 #include <gl.hh>
 
-namespace glp {
+namespace gal {
     namespace scene {
         void Fog::set(const render::Material& material) {
             material.use();

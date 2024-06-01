@@ -1,5 +1,5 @@
 #include <gl.hh>
-#include <utils.hh>
+#include <util.hh>
 #include <stb_image.h>
 
 #include <cstdio>
@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <format>
 
-namespace glp {
+namespace gal {
     namespace opengl {
         void load_primitive(render::Primitive* mesh) {
             glGenVertexArrays(1, &mesh->vao);
@@ -171,19 +171,19 @@ namespace glp {
             glEnable(GL_DEPTH_TEST);
             glEnable(GL_CULL_FACE);
 
-#ifdef GLP_DEBUG
+#ifdef GAL_DEBUG
            int flags;
            glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
            if(flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
                glEnable(GL_DEBUG_OUTPUT);
                glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-               glDebugMessageCallback(opengl::debug, NULL);
+               glDebugMessageCallback(debug, NULL);
                glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
            }
 #endif
         }
 
-#ifdef GLP_DEBUG
+#ifdef GAL_DEBUG
         void APIENTRY debug(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* user_param) {
             if(id == 131169 || id == 131185 || id == 131218 || id == 131204)
                 return;

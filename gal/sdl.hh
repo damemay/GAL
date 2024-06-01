@@ -13,10 +13,9 @@
     #include <GL/gl.h>
 #endif
 
-#include <utils.hh>
 #include <glm/glm.hpp>
 
-namespace glp {
+namespace gal {
     namespace sdl {
         class Window {
             SDL_Window* window_ {nullptr};

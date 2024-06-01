@@ -6,7 +6,7 @@
 
 #include <scene.hh>
 
-namespace glp {
+namespace gal {
     struct Basic_Camera : scene::Camera {
         void calculate();
         glm::mat4 view() const;

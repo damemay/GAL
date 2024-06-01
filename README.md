@@ -1,6 +1,6 @@
-# glp
+# GAL
 
-Graphics Layer Portable? I don't know what does it abbreviate.
+GAL - Graphics/Game Abstraction Layer
 
 3D rendering scene-focused framework implementing OpenGL (and Vulkan in the future) for portability.
 Checkout [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-compat) for old version that's compatible with vitaGL.
@@ -22,6 +22,7 @@ Checkout [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-co
 
 ## planned new features
 - Change shader generation to be scene-based, not material-based
+- Pipeline shader binding into scene-based queue on setting and loop for more performant GPU usage
 - UBOs and framebuffers
 - Deferred rendering
 - IBL
@@ -33,7 +34,7 @@ Checkout [main.cc](main.cc) for a sample that builds with the library. It's used
 
 ```c++
 int main(int argc, char* argv[]) {
-    glp::GLP sample {"sample", 1280, 720};
+    gal::GAL sample {"sample", 1280, 720};
 
     auto scene = sample.add_scene("Sample");
 
@@ -61,5 +62,5 @@ cmake .. && make
 ### cmake options
 | option       | description                                          | default |
 |--------------|------------------------------------------------------|---------|
-| `GLP_SAMPLE` | Build sample                                         | ON      |
-| `GLP_DEBUG`  | Build with debug options (ASAN, OpenGL, GLP logging) | OFF     |
+| `GAL_SAMPLE` | Build sample                                         | ON      |
+| `GAL_DEBUG`  | Build with debug options (ASAN, OpenGL, GAL logging) | OFF     |

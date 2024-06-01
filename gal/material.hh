@@ -4,7 +4,7 @@
 #include <sdl.hh>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace glp {
+namespace gal {
     namespace render {
         struct Shader {
             GLuint shader;

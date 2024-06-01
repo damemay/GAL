@@ -1,6 +1,6 @@
 #include <camera.hh>
 
-namespace glp {
+namespace gal {
     void Basic_Camera::calculate() {
         if(pitch < -89.0f) pitch = -89.0f;
         if(pitch > 89.0f) pitch = 89.0f;

@@ -1,6 +1,6 @@
 #include <controller.hh>
 
-namespace glp {
+namespace gal {
     Basic_FPP_Controller::Basic_FPP_Controller(float move_speed, float mouse_sensitivity) : move_speed_{move_speed}, mouse_sensitivity_{mouse_sensitivity} {
         SDL_SetRelativeMouseMode(SDL_TRUE);
     }

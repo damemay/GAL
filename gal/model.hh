@@ -8,7 +8,7 @@
 #include <material.hh>
 #include <prim.hh>
 
-namespace glp {
+namespace gal {
     struct GLTF_Render_Model: scene::Renderable {
         GLTF_Render_Model(const std::string& path);
         ~GLTF_Render_Model();

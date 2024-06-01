@@ -2,7 +2,7 @@
 
 #include <scene.hh>
 
-namespace glp {
+namespace gal {
     struct Basic_FPP_Controller: scene::Controller {
         void mouse_update(int x, int y);
         void handle_sdl_events(const std::vector<SDL_Event>& sdl_events); 

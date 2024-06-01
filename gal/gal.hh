@@ -6,8 +6,8 @@
 #include <scene.hh>
 #include <functional>
 
-namespace glp {
-    class GLP {
+namespace gal {
+    class GAL {
         sdl::Window window_;
         bool running_ {true};
         float delta_time_ {0.0f};
@@ -17,8 +17,8 @@ namespace glp {
         Scene* current_scene_ {nullptr};
 
         public:
-            GLP(const std::string& window_title, const size_t window_width, const size_t window_height);
-            ~GLP() = default;
+            GAL(const std::string& window_title, const size_t window_width, const size_t window_height);
+            ~GAL() = default;
 
             void loop(const std::function<void()>& callback);
             void stop() { running_ = false; }

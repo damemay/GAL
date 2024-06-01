@@ -4,7 +4,7 @@
 #include <vector>
 #include <sdl.hh>
 
-namespace glp {
+namespace gal {
     namespace render {
         constexpr GLuint MAX_BONE_INFLUENCE             = 4;
         constexpr GLuint MAX_BONES                      = 100;
@@ -36,8 +36,8 @@ namespace glp {
 }
 
 template <>
-struct std::hash<glp::render::Primitive> {
-    std::size_t operator()(const glp::render::Primitive& k) const {
+struct std::hash<gal::render::Primitive> {
+    std::size_t operator()(const gal::render::Primitive& k) const {
         return ((std::hash<unsigned int>()(k.vao) ^ (std::hash<unsigned int>()(k.vbo) << 1)) >> 1) ^ (std::hash<unsigned int>()(k.ebo) << 1);
       }
 };

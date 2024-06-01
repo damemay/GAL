@@ -1,10 +1,10 @@
 #include <stdexcept>
-#include <utils.hh>
+#include <util.hh>
 #include <fstream>
 #include <sstream>
 #include <format>
 
-namespace glp {
+namespace gal {
     namespace util {
         std::string read_file(const std::string& path) {
             std::ifstream file;
@@ -22,7 +22,7 @@ namespace glp {
         }
 
         void print(const std::string& formatted_string) {
-            fprintf(stderr, "glp: %s\n", formatted_string.c_str());
+            fprintf(stderr, "GAL: %s\n", formatted_string.c_str());
         }
     }
 }
