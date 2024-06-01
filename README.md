@@ -3,6 +3,7 @@
 GAL - Graphics/Game Abstraction Layer
 
 3D rendering scene-focused framework implementing OpenGL (and Vulkan in the future) for portability.
+
 Check out [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-compat) for old version (glp) that's compatible with vitaGL.
 
 ## Current features
