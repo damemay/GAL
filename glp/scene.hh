@@ -15,7 +15,6 @@ namespace glp {
         struct Renderable {
             std::unordered_map<render::Primitive, render::Material> primitives;
 
-            virtual void render() = 0;
             virtual ~Renderable() {};
         };
 

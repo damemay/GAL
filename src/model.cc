@@ -10,13 +10,19 @@ namespace glp {
         }
     }
 
-    Render_Model::Render_Model(const std::string& path) {
+    GLTF_Render_Model::GLTF_Render_Model(const std::string& path) {
+#ifdef GLP_DEBUG
+        util::print(std::format("loading {}...", path));
+#endif
         auto tinygltf_model = gltf::Model(path);
         primitives = tinygltf_model.primitives;
+#ifdef GLP_DEBUG
+        util::print(std::format("generating shaders for {}...", path));
+#endif
         for(auto& [prim, mat]: primitives) mat.generate_shader();
     }
 
-    Render_Model::~Render_Model() {
+    GLTF_Render_Model::~GLTF_Render_Model() {
         for(auto& [prim, mat]: primitives) {
             glDeleteVertexArrays(1, &prim.vao);
             glDeleteBuffers(1, &prim.vbo);
@@ -25,14 +31,6 @@ namespace glp {
                 glDeleteTextures(1, &tex);
             }
             glDeleteProgram(mat.shader);
-        }
-    }
-
-    void Render_Model::render() {
-        for(auto& [prim, mat]: primitives) {
-            glBindVertexArray(prim.vao);
-            glDrawElements(GL_TRIANGLES, prim.indices.size(), GL_UNSIGNED_INT, nullptr);
-            glBindVertexArray(0);
         }
     }
 }

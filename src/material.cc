@@ -186,14 +186,9 @@ namespace glp {
             uniforms.insert({"fog.near", glGetUniformLocation(shader, "fog.near")});
             uniforms.insert({"fog.far", glGetUniformLocation(shader, "fog.far")});
 
-            // if(albedo_id >= 0) set(uniforms.at("material.albedo_tex"), albedo_id);
             if(albedo_id == -1) set(uniforms.at("material.albedo"), albedo);
-            // if(metallic_id >= 0) set(uniforms.at("material.metallic_tex"), metallic_id);
             if(metallic_id == -1) set(uniforms.at("material.metallic"), metallic);
-            // if(roughness_id >= 0) set(uniforms.at("material.roughness_tex"), roughness_id);
             if(roughness_id == -1) set(uniforms.at("material.roughness"), roughness);
-            // if(occlusion_id >= 0) set(uniforms.at("material.occlusion_tex"), occlusion_id);
-            // if(normal_id >= 0) set(uniforms.at("material.normal_tex"), normal_id);
         }
     }
 }

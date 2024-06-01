@@ -20,5 +20,9 @@ namespace glp {
             }
             return content.str();
         }
+
+        void print(const std::string& formatted_string) {
+            fprintf(stderr, "glp: %s\n", formatted_string.c_str());
+        }
     }
 }

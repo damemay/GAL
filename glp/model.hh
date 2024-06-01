@@ -9,10 +9,9 @@
 #include <prim.hh>
 
 namespace glp {
-    struct Render_Model: scene::Renderable {
-        Render_Model(const std::string& path);
-        ~Render_Model();
-        void render();
+    struct GLTF_Render_Model: scene::Renderable {
+        GLTF_Render_Model(const std::string& path);
+        ~GLTF_Render_Model();
     };
 }
 
