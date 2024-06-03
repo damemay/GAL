@@ -9,6 +9,12 @@ namespace gal {
     namespace gltf {
         Model::Model(const std::string& path) {
             load(path);
+
+            default_sampler.wrapS = GL_REPEAT;
+            default_sampler.wrapT = GL_REPEAT;
+            default_sampler.minFilter = GL_LINEAR_MIPMAP_LINEAR;
+            default_sampler.magFilter = GL_LINEAR;
+
             setup_primitives();
         }
 
@@ -35,13 +41,22 @@ namespace gal {
                 throw std::runtime_error(info);
             }
         }
+
+        void Model::setup_textures(int gltf_texture_id, int8_t& material_texture_id, std::map<uint8_t, GLuint>& material_textures) {
+            material_texture_id = gltf_texture_id;
+            const auto& texture = tinygltf_model.textures[gltf_texture_id];
+            const auto& sampler_id = texture.sampler;
+            const tinygltf::Sampler& sampler = sampler_id >= 0 ? tinygltf_model.samplers[sampler_id] : default_sampler;
+            const auto& image_id = texture.source;
+            const auto& image = tinygltf_model.images[image_id];
+            auto opengl_texture_handle = opengl::load_texture2d(image, sampler);
+            loaded_textures.insert({gltf_texture_id, opengl_texture_handle});
+            if(loaded_textures.find(gltf_texture_id) == loaded_textures.end())
+                material_textures.insert({gltf_texture_id, opengl::load_texture2d(image, sampler)});
+
+        }
         
         void Model::setup_primitives() {
-            tinygltf::Sampler default_sampler;
-            default_sampler.wrapS = GL_REPEAT;
-            default_sampler.wrapT = GL_REPEAT;
-            default_sampler.minFilter = GL_LINEAR_MIPMAP_LINEAR;
-            default_sampler.magFilter = GL_LINEAR;
             for(const auto& mesh: tinygltf_model.meshes) {
                 for(const auto& prim: mesh.primitives) {
                     std::vector<render::Vertex> vertices;
@@ -111,42 +126,14 @@ namespace gal {
                         material.metallic = mat.pbrMetallicRoughness.metallicFactor;
                         material.roughness = mat.pbrMetallicRoughness.roughnessFactor;
 
-                        if(auto id = mat.pbrMetallicRoughness.baseColorTexture.index; id >= 0) {
-                            material.albedo_id = id;
-                            const auto& texture = tinygltf_model.textures[id];
-                            const auto& sampler_id = texture.sampler;
-                            const tinygltf::Sampler& sampler = sampler_id >= 0 ? tinygltf_model.samplers[sampler_id] : default_sampler;
-                            const auto& image_id = texture.source;
-                            const auto& image = tinygltf_model.images[image_id];
-                            material.textures.insert({id, opengl::load_texture2d(image, sampler)});
-                        }
-                        if(auto id = mat.pbrMetallicRoughness.metallicRoughnessTexture.index; id >= 0) {
-                            material.metallic_id = id;
-                            const auto& texture = tinygltf_model.textures[id];
-                            const auto& sampler_id = texture.sampler;
-                            const tinygltf::Sampler& sampler = sampler_id >= 0 ? tinygltf_model.samplers[sampler_id] : default_sampler;
-                            const auto& image_id = texture.source;
-                            const auto& image = tinygltf_model.images[image_id];
-                            material.textures.insert({id, opengl::load_texture2d(image, sampler)});
-                        }
-                        if(auto id = mat.normalTexture.index; id >= 0) {
-                            material.normal_id = id;
-                            const auto& texture = tinygltf_model.textures[id];
-                            const auto& sampler_id = texture.sampler;
-                            const tinygltf::Sampler& sampler = sampler_id >= 0 ? tinygltf_model.samplers[sampler_id] : default_sampler;
-                            const auto& image_id = texture.source;
-                            const auto& image = tinygltf_model.images[image_id];
-                            material.textures.insert({id, opengl::load_texture2d(image, sampler)});
-                        }
-                        if(auto id = mat.occlusionTexture.index; id >= 0) {
-                            material.occlusion_id = id;
-                            const auto& texture = tinygltf_model.textures[id];
-                            const auto& sampler_id = texture.sampler;
-                            const tinygltf::Sampler& sampler = sampler_id >= 0 ? tinygltf_model.samplers[sampler_id] : default_sampler;
-                            const auto& image_id = texture.source;
-                            const auto& image = tinygltf_model.images[image_id];
-                            material.textures.insert({id, opengl::load_texture2d(image, sampler)});
-                        }
+                        if(auto id = mat.pbrMetallicRoughness.baseColorTexture.index; id >= 0)
+                            setup_textures(id, material.albedo_id, material.textures);
+                        if(auto id = mat.pbrMetallicRoughness.metallicRoughnessTexture.index; id >= 0)
+                            setup_textures(id, material.metallic_id, material.textures);
+                        if(auto id = mat.normalTexture.index; id >= 0)
+                            setup_textures(id, material.normal_id, material.textures);
+                        if(auto id = mat.occlusionTexture.index; id >= 0)
+                            setup_textures(id, material.occlusion_id, material.textures);
                     }
 
                     primitives.insert({render::Primitive{vertices, indices}, material});
