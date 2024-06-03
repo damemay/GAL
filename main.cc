@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
         auto camera {std::make_unique<gal::Basic_Camera>()};
         scene->add_camera("Main Camera", camera);
 
-        auto fpp {std::make_unique<gal::Basic_FPP_Controller>(25.0f, 0.1f)};
+        auto fpp {std::make_unique<gal::Basic_FPP_Controller>(100.0f, 0.1f)};
         scene->add_controller("Player", fpp);
 
         auto model {std::make_unique<gal::GLTF_Render_Model>("/home/mar/glTF-Sample-Models/2.0/Sponza/glTF/Sponza.gltf")};

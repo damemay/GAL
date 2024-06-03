@@ -22,7 +22,7 @@ Check out [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-c
 - Bullet3 integration
 
 ## Planned new features
-- Change shader generation to be scene-based, not material-based
+- ~~Change shader generation to be scene-based, not material-based~~
 - Pipeline shader binding into scene-based queue on setting and loop for more performant GPU usage
 - UBOs and framebuffers
 - Deferred rendering

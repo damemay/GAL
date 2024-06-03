@@ -25,7 +25,13 @@ namespace gal {
     }
 
     Scene* GAL::get_scene(const std::string& name) { return scenes_.at(name).get(); }
-    void GAL::set_scene(const std::string& name) { current_scene_ = scenes_.at(name).get(); }
+
+    void GAL::set_scene(const std::string& name) {
+        auto next_scene = get_scene(name); 
+        next_scene->init();
+        current_scene_ = next_scene;
+    }
+
     Scene* GAL::add_scene(const std::string& name) {
         scenes_.insert_or_assign(name, std::make_unique<Scene>(glm::vec2{window_.get_width(), window_.get_height()}));
         return get_scene(name);

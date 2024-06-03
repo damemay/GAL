@@ -51,34 +51,26 @@ namespace gal {
             virtual ~Controller() {};
         };
         
-        class Fog {
-            glm::vec3 color_ {0.4f};
-            float near_ {0.1f};
-            float far_ {100.0f};
+        struct Fog {
+            glm::vec3 color {0.4f};
+            float near {0.1f};
+            float far {100.0f};
 
-            public:
-                Fog() {}
-                ~Fog() = default;
+            Fog() {}
+            ~Fog() = default;
 
-                void set(const render::Material& material);
-                void set_color(const render::Material& material, const glm::vec3& color);
-                void set_near(const render::Material& material, const float near);
-                void set_far(const render::Material& material, const float far);
+            void set(const render::Material& material);
         };
 
-        class Directional_Light {
-            glm::vec3 position_ {1.2f, 1.0f, 2.0f};
-            glm::vec3 direction_ {-0.2f, -1.0f, -0.3f};
-            glm::vec3 color_ {300};
+        struct Directional_Light {
+            glm::vec3 position {1.2f, 1.0f, 2.0f};
+            glm::vec3 direction {-0.2f, -1.0f, -0.3f};
+            glm::vec3 color {300};
 
-            public:
-                Directional_Light() {}
-                ~Directional_Light() = default;
+            Directional_Light() {}
+            ~Directional_Light() = default;
 
-                void set(const render::Material& material);
-                void set_color(const render::Material& material, const glm::vec3& color);
-                void set_position(const render::Material& material, const glm::vec3& position);
-                void set_direction(const render::Material& material, const glm::vec3& direction);
+            void set(const render::Material& material);
         };
     }
 
@@ -101,6 +93,8 @@ namespace gal {
 
         public:
             Scene(const glm::vec2& screen_dimensions);
+
+            void init();
 
             void loop(float delta_time, const std::vector<SDL_Event>& sdl_events);
 
@@ -135,10 +129,6 @@ namespace gal {
             template<typename T>
             void add_renderable(const std::string& name, std::unique_ptr<T>& object) {
                 static_assert(std::is_base_of<scene::Renderable, T>::value);
-                for(auto& [prim, mat]: object->primitives) {
-                    light_.set(mat);
-                    fog_.set(mat);
-                }
                 renderables_.insert_or_assign(name, std::move(object));
             }
 

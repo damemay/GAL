@@ -45,7 +45,7 @@ namespace gal {
             int8_t occlusion_id {-1};
             int8_t normal_id {-1};
 
-            void generate_shader();
+            void setup_uniforms();
         };
     }
 }

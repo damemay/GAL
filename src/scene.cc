@@ -1,136 +1,76 @@
 #include <scene.hh>
 #include <gl.hh>
+#include <util.hh>
+#include <shader_generator.hh>
 
 namespace gal {
     namespace scene {
         void Fog::set(const render::Material& material) {
-            material.use();
-            material.set(material.uniforms.at("fog.color"), color_);
-            material.set(material.uniforms.at("fog.near"), near_);
-            material.set(material.uniforms.at("fog.far"), far_);
-            material.free();
-        }
-
-        void Fog::set_color(const render::Material& material, const glm::vec3& color) {
-            color_ = color;
-            material.use();
-            material.set(material.uniforms.at("fog.color"), color_);
-            material.free();
-        }
-
-        void Fog::set_near(const render::Material& material, const float near) {
-            near_ = near;
-            material.use();
-            material.set(material.uniforms.at("fog.near"), near_);
-            material.free();
-
-        }
-
-        void Fog::set_far(const render::Material& material, const float far) {
-            far_ = far;
-            material.use();
-            material.set(material.uniforms.at("fog.far"), far_);
-            material.free();
+            material.set(material.uniforms.at("fog.color"), color);
+            material.set(material.uniforms.at("fog.near"), near);
+            material.set(material.uniforms.at("fog.far"), far);
         }
 
         void Directional_Light::set(const render::Material& material) {
-            material.use();
-            material.set(material.uniforms.at("light.position"), position_);
-            material.set(material.uniforms.at("light.direction"), direction_);
-            material.set(material.uniforms.at("light.color"), color_);
-            material.free();
+            material.set(material.uniforms.at("light.position"), position);
+            material.set(material.uniforms.at("light.direction"), direction);
+            material.set(material.uniforms.at("light.color"), color);
         }
-
-        void Directional_Light::set_color(const render::Material& material, const glm::vec3& color) {
-            color_ = color;
-            material.use();
-            material.set(material.uniforms.at("light.color"), color_);
-            material.free();
-        }
-
-        void Directional_Light::set_position(const render::Material& material, const glm::vec3& position) {
-            position_ = position;
-            material.use();
-            material.set(material.uniforms.at("light.position"), position_);
-            material.free();
-        }
-
-        void Directional_Light::set_direction(const render::Material& material, const glm::vec3& direction) {
-            direction_ = direction;
-            material.use();
-            material.set(material.uniforms.at("light.direction"), direction_);
-            material.free();
-        }
-    };
+    }
 
     Scene::Scene(const glm::vec2& screen_dimensions) : screen_dimensions_{screen_dimensions} {}
 
-    void Scene::set_fog(const glm::vec3& color, const float near, const float far) {
-        for(const auto &[name, renderable]: renderables_) {
-            for(auto& [prim, mat]: renderable->primitives) {
-                fog_.set_color(mat, color);
-                fog_.set_near(mat, near);
-                fog_.set_far(mat, far);
-            }
+    void Scene::init() {
+#ifdef GAL_DEBUG
+        util::print(std::format("generating shaders for scene..."));
+#endif
+        std::vector<render::Material*> materials;
+        for(const auto &[name, renderable]: renderables_)
+            for(auto &[prim, mat]: renderable->primitives)
+                materials.push_back(&mat);
+        auto generator = render::Shader_Generator(materials);
+        for(const auto& material: materials) {
+            material->setup_uniforms();
+            auto deref_material = *material;
+            light_.set(deref_material);
+            fog_.set(deref_material);
         }
+    }
+
+    void Scene::set_fog(const glm::vec3& color, const float near, const float far) {
+        fog_.color = color;
+        fog_.near = near;
+        fog_.far = far;
     }
 
     void Scene::set_fog_color(const glm::vec3& color) {
-        for(const auto &[name, renderable]: renderables_) {
-            for(auto& [prim, mat]: renderable->primitives) {
-                fog_.set_color(mat, color);
-            }
-        }
+        fog_.color = color;
     }
 
     void Scene::set_fog_near(const float near) {
-        for(const auto &[name, renderable]: renderables_) {
-            for(auto& [prim, mat]: renderable->primitives) {
-                fog_.set_near(mat, near);
-            }
-        }
+        fog_.near = near;
     }
 
     void Scene::set_fog_far(const float far) {
-        for(const auto &[name, renderable]: renderables_) {
-            for(auto& [prim, mat]: renderable->primitives) {
-                fog_.set_far(mat, far);
-            }
-        }
+        fog_.far = far;
     }
     
     void Scene::set_light(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& color) {
-        for(const auto &[name, renderable]: renderables_) {
-            for(auto& [prim, mat]: renderable->primitives) {
-                light_.set_position(mat, position);
-                light_.set_direction(mat, direction);
-                light_.set_color(mat, color);
-            }
-        }
+        light_.position = position;
+        light_.direction = direction;
+        light_.color = color;
     }
 
     void Scene::set_light_position(const glm::vec3& position) {
-        for(const auto &[name, renderable]: renderables_) {
-            for(auto& [prim, mat]: renderable->primitives) {
-                light_.set_position(mat, position);
-            }
-        }
+        light_.position = position;
     }
 
     void Scene::set_light_direction(const glm::vec3& direction) {
-        for(const auto &[name, renderable]: renderables_) {
-            for(auto& [prim, mat]: renderable->primitives) {
-                light_.set_direction(mat, direction);
-            }
-        }
+        light_.direction = direction;
     }
 
     void Scene::set_light_color(const glm::vec3& color) {
-        for(const auto &[name, renderable]: renderables_) {
-            for(auto& [prim, mat]: renderable->primitives) {
-                light_.set_color(mat, color);
-            }
-        }
+        light_.color = color;
     }
 
     void Scene::loop(float delta_time, const std::vector<SDL_Event>& sdl_events) {
