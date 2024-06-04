@@ -24,7 +24,7 @@ namespace gal {
         };
 
         struct Directional_Light : Light {
-            glm::vec3 direction {-0.2f, -1.0f, -0.3f};
+            glm::vec3 direction {-0.2f, -0.5f, -0.3f};
 
             Directional_Light() {}
             ~Directional_Light() = default;

@@ -153,7 +153,9 @@ namespace gal {
         if(callback_) callback_();
 
         environment.use_depth_map();
+        glCullFace(GL_FRONT);
         render_depth_map(environment.depth_map_shader());
+        glCullFace(GL_BACK);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, screen_dimensions_.x, screen_dimensions_.y);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
