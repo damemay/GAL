@@ -10,12 +10,12 @@
 #include <SDL2/SDL.h>
 #include <prim.hh>
 #include <material.hh>
+#include <environment.hh>
 
 namespace gal {
     namespace scene {
         struct Renderable {
             std::unordered_map<render::Primitive, render::Material> primitives;
-
             virtual ~Renderable() {};
         };
 
@@ -51,28 +51,6 @@ namespace gal {
             virtual void delta_time_update(float delta_time) = 0;
             virtual ~Controller() {};
         };
-        
-        struct Fog {
-            glm::vec3 color {0.4f};
-            float near {0.1f};
-            float far {100.0f};
-
-            Fog() {}
-            ~Fog() = default;
-
-            void set(const render::Material& material);
-        };
-
-        struct Directional_Light {
-            glm::vec3 position {1.2f, 1.0f, 2.0f};
-            glm::vec3 direction {-0.2f, -1.0f, -0.3f};
-            glm::vec3 color {300};
-
-            Directional_Light() {}
-            ~Directional_Light() = default;
-
-            void set(const render::Material& material);
-        };
     }
 
     class Scene {
@@ -89,8 +67,7 @@ namespace gal {
             scene::Controller* current_controller_ {nullptr};
             scene::Camera* current_camera_ {nullptr};
 
-            scene::Fog fog_ {};
-            scene::Directional_Light light_ {};
+            render::Environment<render::Directional_Light> environment {};
 
             std::function<void()> callback_ {nullptr};
 
@@ -100,6 +77,8 @@ namespace gal {
             void init();
 
             void render();
+            void render_depth_map(const render::Shader& shader);
+            uint8_t bind_textures(const render::Material& material);
             void loop(float delta_time, const std::vector<SDL_Event>& sdl_events);
 
             void set_background_color(const glm::vec3& color) { background_color_ = color; }
@@ -120,8 +99,8 @@ namespace gal {
             scene::Renderable* get_renderable(const std::string& name) { return renderables_.at(name).get(); }
             scene::Controller* get_controller(const std::string& name) { return controllers_.at(name).get(); }
             scene::Camera* get_camera(const std::string& name) { return cameras_.at(name).get(); }
-            scene::Fog* get_fog() { return &fog_; }
-            scene::Directional_Light* get_light() { return &light_; }
+            render::Fog* get_fog() { return environment.fog(); }
+            render::Light* get_light() { return environment.light(); }
 
             template<typename T>
             void add_camera(const std::string& name, std::unique_ptr<T>& object) {

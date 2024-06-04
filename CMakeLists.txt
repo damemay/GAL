@@ -37,7 +37,9 @@ add_library(gal STATIC
     src/camera.cc
     src/controller.cc
     src/model.cc
+    src/shader.cc
     src/shader_generator.cc
+    src/environment.cc
 )
 
 if(GAL_SAMPLE)

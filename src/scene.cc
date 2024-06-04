@@ -5,20 +5,6 @@
 #include <utility>
 
 namespace gal {
-    namespace scene {
-        void Fog::set(const render::Material& material) {
-            material.set(material.uniforms.at("fog.color"), color);
-            material.set(material.uniforms.at("fog.near"), near);
-            material.set(material.uniforms.at("fog.far"), far);
-        }
-
-        void Directional_Light::set(const render::Material& material) {
-            material.set(material.uniforms.at("light.position"), position);
-            material.set(material.uniforms.at("light.direction"), direction);
-            material.set(material.uniforms.at("light.color"), color);
-        }
-    }
-
     Scene::Scene(const glm::vec2& screen_dimensions) : screen_dimensions_{screen_dimensions} {}
 
     void Scene::init() {
@@ -33,8 +19,8 @@ namespace gal {
         for(const auto& material: materials) {
             material->setup_uniforms();
             auto deref_material = *material;
-            light_.set(deref_material);
-            fog_.set(deref_material);
+            environment.light()->set(deref_material);
+            environment.fog()->set(deref_material);
         }
         for(const auto &[name, renderable]: renderables_) {
             for(auto &[prim, mat]: renderable->primitives) {
@@ -48,84 +34,106 @@ namespace gal {
     }
 
     void Scene::set_fog(const glm::vec3& color, const float near, const float far) {
-        fog_.color = color;
-        fog_.near = near;
-        fog_.far = far;
+        environment.fog()->color = color;
+        environment.fog()->near = near;
+        environment.fog()->far = far;
     }
 
     void Scene::set_fog_color(const glm::vec3& color) {
-        fog_.color = color;
+        environment.fog()->color = color;
     }
 
     void Scene::set_fog_near(const float near) {
-        fog_.near = near;
+        environment.fog()->near = near;
     }
 
     void Scene::set_fog_far(const float far) {
-        fog_.far = far;
+        environment.fog()->far = far;
     }
     
     void Scene::set_light(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& color) {
-        light_.position = position;
-        light_.direction = direction;
-        light_.color = color;
+        environment.light()->position = position;
+        environment.light()->direction = direction;
+        environment.light()->color = color;
     }
 
     void Scene::set_light_position(const glm::vec3& position) {
-        light_.position = position;
+        environment.light()->position = position;
     }
 
     void Scene::set_light_direction(const glm::vec3& direction) {
-        light_.direction = direction;
+        environment.light()->direction = direction;
     }
 
     void Scene::set_light_color(const glm::vec3& color) {
-        light_.color = color;
+        environment.light()->color = color;
+    }
+
+    void Scene::render_depth_map(const render::Shader& shader) {
+        glm::mat4 pos{1.0f};
+        shader.use();
+        shader.set("vp", current_camera_->view_projection());
+        shader.set("camera_position", current_camera_->position);
+        for(auto& [name, renderable]: renderables_) {
+            for(auto& [primitive, mat]: renderable->primitives) {
+                shader.set("model", pos);
+                glBindVertexArray(primitive.vao);
+                glDrawElements(GL_TRIANGLES, primitive.indices.size(), GL_UNSIGNED_INT, nullptr);
+                glBindVertexArray(0);
+            }
+        }
+    }
+
+    uint8_t Scene::bind_textures(const render::Material& material) {
+        uint8_t count = 0;
+        if(material.albedo_id >= 0) {
+            glActiveTexture(GL_TEXTURE0+count);
+            material.set(material.uniforms.at("material.albedo_tex"), count);
+            glBindTexture(GL_TEXTURE_2D, material.textures.at(material.albedo_id));
+            count++;
+        }
+        if(material.metallic_id >= 0) {
+            glActiveTexture(GL_TEXTURE0+count);
+            material.set(material.uniforms.at("material.metallic_tex"), count);
+            glBindTexture(GL_TEXTURE_2D, material.textures.at(material.metallic_id));
+            count++;
+        }
+        if(material.roughness_id >= 0) {
+            glActiveTexture(GL_TEXTURE0+count);
+            material.set(material.uniforms.at("material.roughness_tex"), count);
+            glBindTexture(GL_TEXTURE_2D, material.textures.at(material.roughness_id));
+            count++;
+        }
+        if(material.occlusion_id >= 0) {
+            glActiveTexture(GL_TEXTURE0+count);
+            material.set(material.uniforms.at("material.occlusion_tex"), count);
+            glBindTexture(GL_TEXTURE_2D, material.textures.at(material.occlusion_id));
+            count++;
+        }
+        if(material.normal_id >= 0) {
+            glActiveTexture(GL_TEXTURE0+count);
+            material.set(material.uniforms.at("material.normal_tex"), count);
+            glBindTexture(GL_TEXTURE_2D, material.textures.at(material.normal_id));
+            count++;
+        }
+        return count;
     }
 
     void Scene::render() {
         glm::mat4 pos{1.0f};
         for(auto &[shader, pairs]: shaders_materials_) {
             glUseProgram(shader);
+            render::Shader r_shader {shader};
+            r_shader.set("vp", current_camera_->view_projection());
+            r_shader.set("camera_position", current_camera_->position);
+            r_shader.set("light_space_mat", environment.light_space_matrix());
             for(auto& pair: pairs) {
                 auto primitive = pair.first;
                 auto material = pair.second;
-                material.set(material.uniforms.at("vp"), current_camera_->view_projection());
-                material.set(material.uniforms.at("camera_position"), current_camera_->position);
                 material.set(material.uniforms.at("model"), pos);
-                {
-                    uint8_t count = 0;
-                    if(material.albedo_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        material.set(material.uniforms.at("material.albedo_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.albedo_id));
-                        count++;
-                    }
-                    if(material.metallic_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        material.set(material.uniforms.at("material.metallic_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.metallic_id));
-                        count++;
-                    }
-                    if(material.roughness_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        material.set(material.uniforms.at("material.roughness_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.roughness_id));
-                        count++;
-                    }
-                    if(material.occlusion_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        material.set(material.uniforms.at("material.occlusion_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.occlusion_id));
-                        count++;
-                    }
-                    if(material.normal_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        material.set(material.uniforms.at("material.normal_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.normal_id));
-                        count++;
-                    }
-                }
+                auto count = bind_textures(material);
+                glActiveTexture(GL_TEXTURE0+count);
+                glBindTexture(GL_TEXTURE_2D, environment.depth_map_texture());
                 glBindVertexArray(primitive.vao);
                 glDrawElements(GL_TRIANGLES, primitive.indices.size(), GL_UNSIGNED_INT, nullptr);
                 glBindVertexArray(0);
@@ -144,6 +152,11 @@ namespace gal {
 
         if(callback_) callback_();
 
+        environment.use_depth_map();
+        render_depth_map(environment.depth_map_shader());
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, screen_dimensions_.x, screen_dimensions_.y);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         render();
     }
 

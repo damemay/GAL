@@ -2,9 +2,9 @@
 
 #include <map>
 #include <memory>
+#include <functional>
 #include <sdl.hh>
 #include <scene.hh>
-#include <functional>
 
 namespace gal {
     class GAL {
