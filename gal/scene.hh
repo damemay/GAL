@@ -2,6 +2,7 @@
 
 #include <map>
 #include <type_traits>
+#include <utility>
 #include <vector>
 #include <memory>
 #include <functional>
@@ -83,6 +84,8 @@ namespace gal {
             std::map<std::string, std::unique_ptr<scene::Controller>> controllers_;
             std::map<std::string, std::unique_ptr<scene::Camera>> cameras_;
 
+            std::map<GLuint, std::vector<std::pair<render::Primitive, render::Material>>> shaders_materials_;
+
             scene::Controller* current_controller_ {nullptr};
             scene::Camera* current_camera_ {nullptr};
 
@@ -96,6 +99,7 @@ namespace gal {
 
             void init();
 
+            void render();
             void loop(float delta_time, const std::vector<SDL_Event>& sdl_events);
 
             void set_background_color(const glm::vec3& color) { background_color_ = color; }

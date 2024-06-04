@@ -2,7 +2,7 @@
 
 GAL - Graphics/Game Abstraction Layer
 
-3D rendering scene-focused framework implementing OpenGL (and Vulkan in the future) for portability.
+3D rendering scene-focused framework implementing OpenGL for portability.
 
 Check out [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-compat) for old version (glp) that's compatible with vitaGL.
 
@@ -22,12 +22,11 @@ Check out [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-c
 - Bullet3 integration
 
 ## Planned new features
-- ~~Change shader generation to be scene-based, not material-based~~
-- Pipeline shader binding into scene-based queue on setting and loop for more performant GPU usage
 - UBOs and framebuffers
 - Deferred rendering
 - IBL
 - Instancing
+- Refactor shader, primitives and material storage for memory optimization
 - Vulkan implementation and option to choose rendering backend on instantiation and building
 
 ## Example usage

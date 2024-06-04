@@ -2,6 +2,7 @@
 #include <gl.hh>
 #include <util.hh>
 #include <shader_generator.hh>
+#include <utility>
 
 namespace gal {
     namespace scene {
@@ -34,6 +35,15 @@ namespace gal {
             auto deref_material = *material;
             light_.set(deref_material);
             fog_.set(deref_material);
+        }
+        for(const auto &[name, renderable]: renderables_) {
+            for(auto &[prim, mat]: renderable->primitives) {
+                if(auto it = shaders_materials_.find(mat.shader); it == shaders_materials_.end()) {
+                    shaders_materials_.insert({mat.shader, {std::make_pair(prim, mat)}});
+                } else {
+                    it->second.push_back(std::make_pair(prim, mat));
+                }
+            }
         }
     }
 
@@ -73,6 +83,56 @@ namespace gal {
         light_.color = color;
     }
 
+    void Scene::render() {
+        glm::mat4 pos{1.0f};
+        for(auto it = shaders_materials_.begin(); it != shaders_materials_.end(); it++) {
+            glUseProgram(it->first);
+            for(auto& pair: it->second) {
+                auto primitive = pair.first;
+                auto material = pair.second;
+                material.set(material.uniforms.at("vp"), current_camera_->view_projection());
+                material.set(material.uniforms.at("camera_position"), current_camera_->position);
+                material.set(material.uniforms.at("model"), pos);
+                {
+                    uint8_t count = 0;
+                    if(material.albedo_id >= 0) {
+                        glActiveTexture(GL_TEXTURE0+count);
+                        material.set(material.uniforms.at("material.albedo_tex"), count);
+                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.albedo_id));
+                        count++;
+                    }
+                    if(material.metallic_id >= 0) {
+                        glActiveTexture(GL_TEXTURE0+count);
+                        material.set(material.uniforms.at("material.metallic_tex"), count);
+                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.metallic_id));
+                        count++;
+                    }
+                    if(material.roughness_id >= 0) {
+                        glActiveTexture(GL_TEXTURE0+count);
+                        material.set(material.uniforms.at("material.roughness_tex"), count);
+                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.roughness_id));
+                        count++;
+                    }
+                    if(material.occlusion_id >= 0) {
+                        glActiveTexture(GL_TEXTURE0+count);
+                        material.set(material.uniforms.at("material.occlusion_tex"), count);
+                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.occlusion_id));
+                        count++;
+                    }
+                    if(material.normal_id >= 0) {
+                        glActiveTexture(GL_TEXTURE0+count);
+                        material.set(material.uniforms.at("material.normal_tex"), count);
+                        glBindTexture(GL_TEXTURE_2D, material.textures.at(material.normal_id));
+                        count++;
+                    }
+                }
+                glBindVertexArray(primitive.vao);
+                glDrawElements(GL_TRIANGLES, primitive.indices.size(), GL_UNSIGNED_INT, nullptr);
+                glBindVertexArray(0);
+            }
+        }
+    }
+
     void Scene::loop(float delta_time, const std::vector<SDL_Event>& sdl_events) {
         glClearColor(background_color_.x, background_color_.y, background_color_.z, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -84,52 +144,7 @@ namespace gal {
 
         if(callback_) callback_();
 
-        for(const auto &[name, renderable]: renderables_) {
-            for(auto& [prim, mat]: renderable->primitives) {
-                glm::mat4 pos{1.0f};
-                mat.use();
-                mat.set(mat.uniforms.at("vp"), current_camera_->view_projection());
-                mat.set(mat.uniforms.at("camera_position"), current_camera_->position);
-                mat.set(mat.uniforms.at("model"), pos);
-                {
-                    uint8_t count = 0;
-                    if(mat.albedo_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        mat.set(mat.uniforms.at("material.albedo_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, mat.textures.at(mat.albedo_id));
-                        count++;
-                    }
-                    if(mat.metallic_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        mat.set(mat.uniforms.at("material.metallic_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, mat.textures.at(mat.metallic_id));
-                        count++;
-                    }
-                    if(mat.roughness_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        mat.set(mat.uniforms.at("material.roughness_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, mat.textures.at(mat.roughness_id));
-                        count++;
-                    }
-                    if(mat.occlusion_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        mat.set(mat.uniforms.at("material.occlusion_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, mat.textures.at(mat.occlusion_id));
-                        count++;
-                    }
-                    if(mat.normal_id >= 0) {
-                        glActiveTexture(GL_TEXTURE0+count);
-                        mat.set(mat.uniforms.at("material.normal_tex"), count);
-                        glBindTexture(GL_TEXTURE_2D, mat.textures.at(mat.normal_id));
-                        count++;
-                    }
-                }
-                glBindVertexArray(prim.vao);
-                glDrawElements(GL_TRIANGLES, prim.indices.size(), GL_UNSIGNED_INT, nullptr);
-                glBindVertexArray(0);
-                mat.free();
-            }
-        }
+        render();
     }
 
     void Scene::set_controller(const std::string& name) {
