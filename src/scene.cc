@@ -85,9 +85,9 @@ namespace gal {
 
     void Scene::render() {
         glm::mat4 pos{1.0f};
-        for(auto it = shaders_materials_.begin(); it != shaders_materials_.end(); it++) {
-            glUseProgram(it->first);
-            for(auto& pair: it->second) {
+        for(auto &[shader, pairs]: shaders_materials_) {
+            glUseProgram(shader);
+            for(auto& pair: pairs) {
                 auto primitive = pair.first;
                 auto material = pair.second;
                 material.set(material.uniforms.at("vp"), current_camera_->view_projection());
