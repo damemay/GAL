@@ -13,7 +13,7 @@ Check out [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-c
 - SDL2 windowing and event handling
 - OpenGL 4.1 rendering backend
 - GLTF mesh and material loader 
-- Material-based dynamic shader generation
+- Dynamic PBR shader generation based on materials used within scene
 
 ## Features from glp not reimplemented yet
 - Skeletons, bones and animations implementation
