@@ -66,15 +66,15 @@ cmake .. && make
 | `GAL_SAMPLE` | Build sample                                         | ON      |
 | `GAL_DEBUG`  | Build with debug options (ASAN, OpenGL, GAL logging) | OFF     |
 
-### Dependecies
+## Dependecies
 
-#### Provided in repo
+### Provided in repo
 
 - [glad](https://github.com/Dav1dde/glad) loader with OpenGL 4.1 and GL_KHR_debug extension configuration
 - several [stb](https://github.com/nothings/stb.git) headers (notably [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h))
 - [tinygltf](https://github.com/syoyo/tinygltf/) - as a git submodule
 
-#### Not provided
+### Not provided
 
 These are looked for by CMake
 - [SDL2](https://github.com/libsdl-org/SDL.git)
