@@ -16,7 +16,7 @@ Check out [archived branch](https://github.com/damemay/glp/tree/archive-vitagl-c
 - Dynamic PBR shader generation based on materials used within scene
 
 ## Features from glp not reimplemented yet
-- Skeletons, bones and animations implementation
+- Skeletons, skinning and animations interface
 - 2D text rendering interface
 - Customizing materials and saving data to custom format with zstd compression
 - Bullet3 integration
@@ -60,7 +60,23 @@ cmake .. && make
 ```
 
 ### CMake options
+
 | option       | description                                          | default |
 |--------------|------------------------------------------------------|---------|
 | `GAL_SAMPLE` | Build sample                                         | ON      |
 | `GAL_DEBUG`  | Build with debug options (ASAN, OpenGL, GAL logging) | OFF     |
+
+### Dependecies
+
+#### Provided in repo
+
+- [glad](https://github.com/Dav1dde/glad) loader with OpenGL 4.1 and GL_KHR_debug extension configuration
+- several [stb](https://github.com/nothings/stb.git) headers (notably [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h))
+- [tinygltf](https://github.com/syoyo/tinygltf/) - as a git submodule
+
+#### Not provided
+
+These are looked for by CMake
+- [SDL2](https://github.com/libsdl-org/SDL.git)
+- [glm](https://github.com/g-truc/glm.git)
+- [Bullet3](https://github.com/bulletphysics/bullet3.git)
