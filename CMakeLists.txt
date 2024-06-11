@@ -45,35 +45,38 @@ add_library(gal STATIC
 if(GAL_SAMPLE)
     set(EXEC_NAME sample)
 
-    add_executable(${EXEC_NAME}
-        main.cc
-    )
+    if(MINGW)
+	add_executable(${EXEC_NAME} WIN32
+	    main.cc
+	)
+	add_compile_definitions(SDL_MAIN_HANDLED)
+    else()
+	add_executable(${EXEC_NAME}
+	    main.cc
+	)
+    endif()
     
     find_package(SDL2 REQUIRED)
     find_package(glm REQUIRED)
-    find_package(Bullet REQUIRED)
 
     include_directories(
         gal/
         ext/glad/include/
         ext/stb/include/
         ext/tinygltf/
-        ${BULLET_INCLUDE_DIRS}
     )
     
     if(GAL_DEBUG)
         target_link_libraries(${EXEC_NAME}
             gal
-            ${BULLET_LIBRARIES}
             glm::glm
             SDL2
             m
-            -fsanitize=address
+	    -fsanitize=address
         )
     else()
         target_link_libraries(${EXEC_NAME}
             gal
-            ${BULLET_LIBRARIES}
             glm::glm
             SDL2
             m
